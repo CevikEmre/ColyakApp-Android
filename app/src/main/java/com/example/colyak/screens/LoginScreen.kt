@@ -1,6 +1,5 @@
 package com.example.colyak.screens
 
-import SessionManager
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -39,7 +38,9 @@ import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
+import com.example.colyak.session.SessionManager
 import com.example.colyak.viewmodel.LoginViewModel
+import com.example.colyak.viewmodel.loginResponse
 import kotlinx.coroutines.launch
 
 @SuppressLint(
@@ -55,7 +56,8 @@ fun LoginScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     var showAlert by remember { mutableStateOf(false) }
     var isPassword by remember { mutableStateOf(true) }
-    val sessionManager = SessionManager(context = LocalContext.current)
+    val context = LocalContext.current
+    val sessionManager = SessionManager(context = context)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,6 +68,8 @@ fun LoginScreen(navController: NavController) {
             contentDescription = "",
             modifier = Modifier.size(250.dp)
         )
+        Text(text = "Hoşgeldiniz", fontSize = 18.sp, fontWeight = FontWeight.W600)
+        Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
         Input(
             tfValue = emailState.value,
             onValueChange = { emailState.value = it },
@@ -103,8 +107,15 @@ fun LoginScreen(navController: NavController) {
                 scope.launch {
                     val response = loginScreenViewModel.login(email = email, password)
                     if (response) {
+                        scope.launch {
+                        sessionManager.saveToken(
+                            token = loginResponse.token,
+                            refreshToken = loginResponse.refreshToken,
+                            userName = loginResponse.userName
+                        )
                         navController.navigate(Screens.MainScreen.screen)
                         sessionManager.saveEmail(emailState.value)
+                        }
                     } else {
                         showAlert = true
                     }
@@ -148,7 +159,7 @@ fun LoginScreen(navController: NavController) {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Henüz bir hesabınız yok mu  ?",
+                text = "Henüz bir hesabınız yok mu ? ",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W400
             )

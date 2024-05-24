@@ -2,7 +2,6 @@ package com.example.colyak.screens
 
 
 import BarcodeDetailScreen
-import SessionManager
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -53,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -72,7 +72,6 @@ import androidx.navigation.navArgument
 import com.example.colyak.R
 import com.example.colyak.barcode.BarcodeScreen
 import com.example.colyak.components.cards.MealCard
-import com.example.colyak.components.cards.NutritionInfoCard
 import com.example.colyak.model.BolusReport
 import com.example.colyak.model.CommentRepliesResponse
 import com.example.colyak.model.MealDetail
@@ -81,11 +80,13 @@ import com.example.colyak.model.Quiz
 import com.example.colyak.model.ReadyFoods
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.data.NavigationItem
+import com.example.colyak.session.SessionManager
 import com.example.colyak.ui.theme.ColyakTheme
 import com.example.colyak.viewmodel.QuizViewModel
 import com.example.colyak.viewmodel.ReadyFoodViewModel
 import com.example.colyak.viewmodel.ReceiptViewModel
 import com.example.colyak.viewmodel.answerList
+import com.example.colyak.viewmodel.loginResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -112,6 +113,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 
     private fun setLocale(language: String) {
@@ -122,6 +124,7 @@ class MainActivity : ComponentActivity() {
         resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -255,6 +258,7 @@ fun MainScreen(navController: NavController) {
     val receiptList by receiptViewModel.receiptList.collectAsState()
     val readyFoodList by readyFoodViewModel.readyFoodList.collectAsState()
     val quizViewModel: QuizViewModel = viewModel()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         receiptViewModel.getAll()
@@ -392,6 +396,7 @@ fun MainContent(navController: NavController) {
     val scope = rememberCoroutineScope()
     val selectedItemIndex by rememberSaveable { mutableIntStateOf(-1) }
     var showAlert by remember { mutableStateOf(false) }
+    var showTokenAlert by remember { mutableStateOf(loginResponse.userName.isEmpty()) }
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
     ModalNavigationDrawer(
@@ -485,44 +490,23 @@ fun MainContent(navController: NavController) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(padding),
-                            horizontalArrangement = Arrangement.Absolute.Center
+                                .padding(padding)
+                                .padding(horizontal = 15.dp, vertical = 15.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.person),
+                                contentDescription = "",
+                                tint = Color.LightGray
+                            )
                             Text(
-                                text = "Hoşgeldin",
+                                text = "Hoşgeldin " + loginResponse.userName,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.W600
                             )
                         }
-                    }
-                    items(1) {
-                        NutritionInfoCard(
-                            padding,
-                            caloriGoal = 2500,
-                            carbGoal = 150,
-                            carbTaken = 15,
-                            fatGoal = 75,
-                            fatTaken = 25,
-                            caloriTaken = 1500,
-                            proteinGoal = 125,
-                            proteinTaken = 32,
-                        )
-                    }
-                    items(1) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 15.dp, start = 18.dp, end = 18.dp)
-                        ) {
-                            Text(
-                                text = "Beslenme",
-                                fontWeight = FontWeight.Bold, fontSize = 20.sp
-                            )
-                            Text(
-                                text = "Fazlası",
-                                fontWeight = FontWeight.Bold, fontSize = 20.sp
-                            )
-                        }
+
                     }
                     items(mealList.count()) {
                         val meal = mealList[it]
@@ -531,7 +515,6 @@ fun MainContent(navController: NavController) {
                             meal,
                             onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
                         )
-
                     }
                 }
             }
@@ -548,6 +531,22 @@ fun MainContent(navController: NavController) {
                 Text(text = "Evet", modifier = Modifier.clickable {
                     showAlert = false
                     sessionManager.clearSession()
+                    navController.navigate(Screens.Login.screen)
+                }
+                )
+            }
+        )
+    }
+    if (showTokenAlert){
+        AlertDialog(
+            onDismissRequest = {
+                showAlert = false
+            },
+            title = { Text("Oturum Süresi") },
+            text = { Text("Oturum süreniz doldu lütfen tekrar giriş yapınız") },
+            confirmButton = {
+                Text(text = "Tamam", modifier = Modifier.clickable {
+                    showAlert = false
                     navController.navigate(Screens.Login.screen)
                 }
                 )

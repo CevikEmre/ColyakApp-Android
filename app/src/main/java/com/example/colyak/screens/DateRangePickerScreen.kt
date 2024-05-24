@@ -1,6 +1,6 @@
 package com.example.colyak.screens
 
-import SessionManager
+import com.example.colyak.session.SessionManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -41,8 +41,6 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,15 +49,12 @@ fun DateRangePickerScreen(navController: NavController) {
     val snackState = remember { SnackbarHostState() }
     val snackScope = rememberCoroutineScope()
     val state = rememberDateRangePickerState()
-    val (startDate, setStartDate) = remember { mutableStateOf<LocalDate?>(null) }
-    val (endDate, setEndDate) = remember { mutableStateOf<LocalDate?>(null) }
-    val sessionManager = SessionManager(LocalContext.current)
+    val (_, setStartDate) = remember { mutableStateOf<LocalDate?>(null) }
+    val (_, setEndDate) = remember { mutableStateOf<LocalDate?>(null) }
+    val context = LocalContext.current
+    val sessionManager = SessionManager(context)
     val bolusReportVM: BolusReportViewModel = viewModel()
 
-
-    val dateFormatter = remember {
-        DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("tr"))
-    }
 
     SnackbarHost(hostState = snackState, Modifier.zIndex(1f))
     Column(

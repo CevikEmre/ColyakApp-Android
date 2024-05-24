@@ -1,9 +1,9 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.PDFInterface
 import com.example.colyak.model.PDFResponse
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.PDFInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse

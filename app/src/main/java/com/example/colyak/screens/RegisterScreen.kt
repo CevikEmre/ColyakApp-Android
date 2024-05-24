@@ -124,7 +124,7 @@ fun RegisterScreen(navController: NavController) {
                                         email.value,
                                         username.value,
                                         password.value
-                                    )
+                                    ),
                                 )
                                 responseState.value = response
                                 if (responseState.value) {

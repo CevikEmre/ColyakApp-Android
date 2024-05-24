@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +43,7 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
     val commentList by commentVM.commentList.collectAsState()
     val scope = rememberCoroutineScope()
     var isReceiptFavorite by remember { mutableStateOf(false) }
+    LocalContext.current
 
     LaunchedEffect(Unit) {
         commentVM.getCommentsById(receipt.id)
@@ -95,7 +97,6 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
                                         favoriteVM.likeReceipt(favoriteData)
                                         isReceiptFavorite = true
                                     }
-
                             }
                         }
                     ) {

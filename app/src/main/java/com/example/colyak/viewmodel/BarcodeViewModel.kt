@@ -9,6 +9,7 @@ import com.example.colyak.service.BarcodeService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
 var barcode = Barcode(0, 0, "", 0, false, false, emptyList())
 class BarcodeViewModel : ViewModel() {
     private val _barcode = MutableLiveData(Barcode(0, 0, "", 0, false, false, emptyList()))

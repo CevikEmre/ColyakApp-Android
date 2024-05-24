@@ -1,11 +1,10 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.LoginInterface
 import com.example.colyak.model.LoginResponse
 import com.example.colyak.model.data.LoginData
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.LoginInterface
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

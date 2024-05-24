@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,8 +39,9 @@ import kotlinx.coroutines.launch
 fun QuizDetailScreen(quiz: Quiz, navController: NavController) {
     val scope = rememberCoroutineScope()
     val quizViewModel: QuizViewModel = viewModel()
-
+    val context = LocalContext.current
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
+
 
     val onNextQuestionClicked: () -> Unit = {
         currentQuestionIndex++

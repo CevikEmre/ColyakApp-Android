@@ -1,11 +1,11 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.QuizInterface
 import com.example.colyak.model.Quiz
 import com.example.colyak.model.QuizAnswer
 import com.example.colyak.model.data.AnswerData
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.QuizInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse

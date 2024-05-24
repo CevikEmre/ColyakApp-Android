@@ -16,7 +16,6 @@ class BolusReportViewModel : ViewModel() {
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
     private val _mealList = MutableStateFlow<List<BolusReport?>?>(emptyList())
-    var mealList: StateFlow<List<BolusReport?>?> = _mealList
 
     suspend fun getBolusReports(email: String, startDate: LocalDate, endDate: LocalDate) {
         viewModelScope.launch {
@@ -25,7 +24,6 @@ class BolusReportViewModel : ViewModel() {
                 val result = BolusReportService.getBolusReports(email, startDate, endDate)
                 _mealList.value = result ?: emptyList()
                 mealReportList = result as MutableList<BolusReport>
-                Log.e("mealListDeneme", mealList.value.toString())
 
             } catch (e: Exception) {
                 Log.e("ReceiptScreenVM", "Fail", e)

@@ -29,7 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.screens.ImageFromUrl
+import com.example.colyak.screens.Screens
 import com.example.colyak.viewmodel.barcode
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +70,33 @@ fun BarcodeDetailScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 if (barcode.id.toInt() == 0) {
-                    Text(text = "Barkod bulunamadı")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 24.dp, horizontal = 12.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Color.Black
+                            )
+                        ) {
+                            Text(text = "Barkod bulunamadı")
+                            Spacer(modifier = Modifier.height(18.dp))
+                            CustomizeButton(
+                                onClick = { navController.navigate(Screens.MainScreen.screen) },
+                                buttonText = "Ana Sayfa",
+                                backgroundColor = colorResource(id = R.color.appBarColor)
+                            )
+                        }
+
+                    }
                 } else {
                     Spacer(modifier = Modifier.height(12.dp))
                     ImageFromUrl(

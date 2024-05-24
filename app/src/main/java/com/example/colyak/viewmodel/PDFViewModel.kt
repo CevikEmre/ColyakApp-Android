@@ -15,7 +15,7 @@ class PDFViewModel:ViewModel() {
 
     private val _pdfList = MutableStateFlow<List<PDFResponse?>?>(emptyList())
     val pdfList: StateFlow<List<PDFResponse?>?> = _pdfList
-    suspend fun getAll() {
+    suspend fun getAllPdfs() {
         viewModelScope.launch {
             _loading.value = true
             try {

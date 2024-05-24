@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +50,7 @@ fun QuestionCard(
     val scope = rememberCoroutineScope()
     val answer by quizViewModel.answerResponse.collectAsState()
     var showAlert by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     Card(
@@ -91,7 +93,7 @@ fun QuestionCard(
                                         AnswerData(
                                             questionId = questionList.id,
                                             chosenAnswer = choice.choice
-                                        )
+                                        ),
                                     )
                                     onAnswered()
                                     delay(800)

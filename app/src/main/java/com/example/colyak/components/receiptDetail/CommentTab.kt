@@ -1,6 +1,7 @@
 package com.example.colyak.components.receiptDetail
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,6 +75,7 @@ fun CommentTab(
     val loading by replyVM.loading.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     val commentReplies by replyVM.commentRepliesList.observeAsState()
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         replyVM.getCommentsRepliesByReceiptId(receipt.id)
     }
@@ -162,10 +165,13 @@ fun CommentTab(
                                             if (comment.commentResponse.userName == loginResponse.userName) {
                                                 IconButton(onClick = {
                                                     scope.launch {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Silme İşlemi Başarılı",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
                                                         commentVM.deleteComment(comment.commentResponse.commentId)
-                                                        replyVM.getCommentsRepliesByReceiptId(
-                                                            receipt.id
-                                                        )
+                                                        replyVM.getCommentsRepliesByReceiptId(receipt.id)
                                                     }
                                                 }
                                                 ) {
@@ -210,9 +216,7 @@ fun CommentTab(
                                                 modifier = Modifier.clickable {
                                                     scope.launch {
                                                         comment.commentResponse.let { comment ->
-                                                            replyVM.getCommentsById(
-                                                                comment.commentId
-                                                            )
+                                                            replyVM.getCommentsById(comment.commentId)
                                                         }
                                                         val commentJson = Gson().toJson(comment)
                                                         navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
@@ -278,11 +282,13 @@ fun CommentTab(
                             CustomizeButton(
                                 onClick = {
                                     scope.launch {
+                                        Toast.makeText(
+                                            context,
+                                            "Yorum Başarıyla Eklendi",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         commentVM.createComment(
-                                            CommentData(
-                                                receipt.id,
-                                                commentTf.value
-                                            )
+                                            CommentData(receipt.id, commentTf.value)
                                         )
                                         commentTf.value = ""
                                         replyVM.getCommentsRepliesByReceiptId(receipt.id)

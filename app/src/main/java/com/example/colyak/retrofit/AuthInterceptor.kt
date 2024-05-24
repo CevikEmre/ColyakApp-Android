@@ -1,6 +1,5 @@
-package com.example.colyak.retrofit
-
 import com.example.colyak.viewmodel.loginResponse
+
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -21,4 +20,3 @@ object AuthInterceptor : Interceptor {
         return chain.proceed(modifiedRequest)
     }
 }
-

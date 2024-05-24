@@ -1,10 +1,10 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.CommentInterface
 import com.example.colyak.model.Comment
 import com.example.colyak.model.data.CommentData
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.CommentInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
@@ -23,7 +23,10 @@ class CommentService {
                     } else {
                         val errorCode = response.code()
                         val errorMessage = response.errorBody()?.string()
-                        Log.e("CommentService", "getCommentsById request failed with code: $errorCode, message: $errorMessage")
+                        Log.e(
+                            "CommentService",
+                            "getCommentsById request failed with code: $errorCode, message: $errorMessage"
+                        )
                         null
                     }
 
@@ -34,7 +37,7 @@ class CommentService {
             }
         }
 
-        suspend fun createComment(commentData: CommentData){
+        suspend fun createComment(commentData: CommentData) {
             return withContext(Dispatchers.IO) {
                 try {
                     val response = RetrofitClient.getClient(baseUrl)
@@ -45,7 +48,10 @@ class CommentService {
                     } else {
                         val errorCode = response.code()
                         val errorMessage = response.errorBody()?.string()
-                        Log.e("CommentService", "createComment request failed with code: $errorCode, message: $errorMessage")
+                        Log.e(
+                            "CommentService",
+                            "createComment request failed with code: $errorCode, message: $errorMessage"
+                        )
                     }
 
                 } catch (e: Exception) {
@@ -54,7 +60,8 @@ class CommentService {
                 }
             }
         }
-        suspend fun deleteComment(commentId: Long){
+
+        suspend fun deleteComment(commentId: Long) {
             return withContext(Dispatchers.IO) {
                 try {
                     val response = RetrofitClient.getClient(baseUrl)
@@ -65,7 +72,10 @@ class CommentService {
                     } else {
                         val errorCode = response.code()
                         val errorMessage = response.errorBody()?.string()
-                        Log.e("CommentService", "createComment request failed with code: $errorCode, message: $errorMessage")
+                        Log.e(
+                            "CommentService",
+                            "createComment request failed with code: $errorCode, message: $errorMessage"
+                        )
                     }
 
                 } catch (e: Exception) {

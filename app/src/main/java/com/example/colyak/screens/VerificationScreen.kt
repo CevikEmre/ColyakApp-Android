@@ -40,7 +40,6 @@ import com.example.colyak.R
 import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
 import com.example.colyak.model.data.VerificationData
-import com.example.colyak.viewmodel.RegisterViewModel
 import com.example.colyak.viewmodel.VerificationViewModel
 import com.example.colyak.viewmodel.verificationId
 import kotlinx.coroutines.launch
@@ -51,7 +50,6 @@ import kotlinx.coroutines.launch
 fun VerificationScreen(navController: NavController) {
     var tfvalue by remember { mutableStateOf("") }
     val verificationVM: VerificationViewModel = viewModel()
-    val registerVM: RegisterViewModel = viewModel()
     val scope = rememberCoroutineScope()
     val responseState = remember { mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,7 +100,7 @@ fun VerificationScreen(navController: NavController) {
                                 VerificationData(
                                     verificationId,
                                     tfvalue
-                                )
+                                ),
                             )
                             Log.e(
                                 "verify", response.toString()

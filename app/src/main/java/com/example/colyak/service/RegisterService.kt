@@ -1,10 +1,9 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.RegisterInterface
 import com.example.colyak.model.data.RegisterData
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.RegisterInterface
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,8 +18,7 @@ class RegisterService {
 
                     if (response.isSuccessful) {
                         response.body()
-                    }
-                    else {
+                    } else {
                         val errorCode = response.code()
                         val errorMessage = response.errorBody()?.string()
                         Log.e(

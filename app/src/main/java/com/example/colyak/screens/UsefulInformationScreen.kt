@@ -41,7 +41,7 @@ fun UsefulInformationScreen(navController: NavController) {
     val loading by pdfVM.loading.collectAsState()
 
     LaunchedEffect(Unit) {
-        pdfVM.getAll()
+        pdfVM.getAllPdfs()
     }
 
     Scaffold(

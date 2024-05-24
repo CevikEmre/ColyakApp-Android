@@ -1,9 +1,9 @@
 package com.example.colyak.service
 
 import android.util.Log
+import com.example.colyak.`interface`.SuggestionInterface
 import com.example.colyak.model.data.SuggestionData
 import com.example.colyak.retrofit.RetrofitClient
-import com.example.colyak.`interface`.SuggestionInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
