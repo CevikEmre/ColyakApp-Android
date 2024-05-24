@@ -66,6 +66,8 @@ fun LoginScreen(navController: NavController) {
             contentDescription = "",
             modifier = Modifier.size(250.dp)
         )
+        Text(text = "Hoşgeldiniz", fontSize = 18.sp, fontWeight = FontWeight.W600)
+        Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
         Input(
             tfValue = emailState.value,
             onValueChange = { emailState.value = it },
@@ -148,7 +150,7 @@ fun LoginScreen(navController: NavController) {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Henüz bir hesabınız yok mu  ?",
+                text = "Henüz bir hesabınız yok mu ? ",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W400
             )

@@ -65,7 +65,7 @@ fun MealCard(
                         drawArc(
                             color = Color(0xFFFF8911),
                             -90f,
-                            360 * (mealDetail.mealCaloriTaken.toFloat() / mealDetail.mealCaloriGoal.toFloat()),
+                            360 * 1f,
                             useCenter = false,
                             style = Stroke(12f, cap = StrokeCap.Round)
                         )

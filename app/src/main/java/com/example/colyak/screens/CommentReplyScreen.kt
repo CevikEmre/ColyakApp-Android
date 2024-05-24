@@ -2,6 +2,7 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +61,9 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
     val scope = rememberCoroutineScope()
     val replyVM: ReplyViewModel = viewModel()
     val loading by replyVM.loading.collectAsState()
+    val context = LocalContext.current
+
+
     LaunchedEffect(Unit) {
         replyVM.getCommentsById(comment.commentResponse.commentId)
         Log.e("globalCommentList", globalReplyList.toString())
@@ -112,7 +117,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(all = 6.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White,
                                 contentColor = Color.Black
@@ -124,7 +129,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 4.dp),
+                                        .padding(horizontal = 4.dp, vertical = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
@@ -207,6 +212,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                         if (reply.userName == loginResponse.userName) {
                                             IconButton(onClick = {
                                                 scope.launch {
+                                                    Toast.makeText(context, "Cevap Silindi", Toast.LENGTH_SHORT).show()
                                                     replyVM.deleteReply(reply.replyId)
                                                     replyVM.getCommentsById(comment.commentResponse.commentId)
                                                 }
@@ -283,3 +289,4 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
         },
     )
 }
+

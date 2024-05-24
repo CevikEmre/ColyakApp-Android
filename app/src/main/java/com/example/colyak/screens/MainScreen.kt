@@ -53,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -72,7 +73,6 @@ import androidx.navigation.navArgument
 import com.example.colyak.R
 import com.example.colyak.barcode.BarcodeScreen
 import com.example.colyak.components.cards.MealCard
-import com.example.colyak.components.cards.NutritionInfoCard
 import com.example.colyak.model.BolusReport
 import com.example.colyak.model.CommentRepliesResponse
 import com.example.colyak.model.MealDetail
@@ -86,6 +86,7 @@ import com.example.colyak.viewmodel.QuizViewModel
 import com.example.colyak.viewmodel.ReadyFoodViewModel
 import com.example.colyak.viewmodel.ReceiptViewModel
 import com.example.colyak.viewmodel.answerList
+import com.example.colyak.viewmodel.loginResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -485,44 +486,23 @@ fun MainContent(navController: NavController) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(padding),
-                            horizontalArrangement = Arrangement.Absolute.Center
+                                .padding(padding)
+                                .padding(horizontal = 15.dp, vertical = 15.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.person),
+                                contentDescription = "",
+                                tint = Color.LightGray
+                            )
                             Text(
-                                text = "Hoşgeldin",
+                                text = "Hoşgeldin " + loginResponse.userName,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.W600
                             )
                         }
-                    }
-                    items(1) {
-                        NutritionInfoCard(
-                            padding,
-                            caloriGoal = 2500,
-                            carbGoal = 150,
-                            carbTaken = 15,
-                            fatGoal = 75,
-                            fatTaken = 25,
-                            caloriTaken = 1500,
-                            proteinGoal = 125,
-                            proteinTaken = 32,
-                        )
-                    }
-                    items(1) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 15.dp, start = 18.dp, end = 18.dp)
-                        ) {
-                            Text(
-                                text = "Beslenme",
-                                fontWeight = FontWeight.Bold, fontSize = 20.sp
-                            )
-                            Text(
-                                text = "Fazlası",
-                                fontWeight = FontWeight.Bold, fontSize = 20.sp
-                            )
-                        }
+
                     }
                     items(mealList.count()) {
                         val meal = mealList[it]
@@ -531,7 +511,6 @@ fun MainContent(navController: NavController) {
                             meal,
                             onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
                         )
-
                     }
                 }
             }
