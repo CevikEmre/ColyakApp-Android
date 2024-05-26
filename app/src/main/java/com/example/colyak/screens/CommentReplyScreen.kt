@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.components.CircularIndeterminateProgressBar
+import com.example.colyak.components.cards.ReplyCommentCard
 import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
 import com.example.colyak.components.functions.timeSince
@@ -113,52 +114,11 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         .weight(1f)
                 ) {
                     items(1) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(all = 6.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.White,
-                                contentColor = Color.Black
-                            )
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 12.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = comment.commentResponse.userName,
-                                        fontWeight = FontWeight.W600,
-                                        fontSize = 18.sp
-                                    )
-                                    Text(text = timeSince(comment.commentResponse.createdDate)).toString()
-                                }
-                                HorizontalDivider(
-                                    thickness = 0.8.dp,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 12.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Start,
-                                ) {
-                                    Text(
-                                        text = comment.commentResponse.comment,
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.W400
-                                    )
-                                }
-                            }
-                        }
+                        ReplyCommentCard(
+                            userName = comment.commentResponse.userName,
+                            createDate = comment.commentResponse.createdDate,
+                            comment = comment.commentResponse.comment
+                        )
                     }
                     items(1) {
                         Row(
@@ -179,7 +139,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White,
                                 contentColor = Color.Black
@@ -187,13 +147,12 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 12.dp, horizontal = 8.dp)
+                                    .fillMaxWidth()
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = 4.dp),
+                                        .padding(horizontal = 8.dp, vertical = 12.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                 ) {
@@ -235,7 +194,9 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 8.dp, vertical = 12.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start,
                                 ) {

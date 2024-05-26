@@ -22,53 +22,49 @@ class SessionManager(context: Context) {
         private const val KEY_TOKEN_TIMESTAMP = "key_token_timestamp"
         private const val KEY_USERNAME = "key_username"
         private const val KEY_REFRESH_TOKEN_TIMESTAMP = "key_refresh_token_timestamp"
-        private const val TOKEN_VALIDITY_DURATION = 30 * 1000L
-        private const val REFRESH_TOKEN_VALIDITY_DURATION = 60 * 1000L
+        private const val TOKEN_VALIDITY_DURATION = 60 * 1000L
+        private const val REFRESH_TOKEN_VALIDITY_DURATION = 24 * 60 * 1000L
     }
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
     init {
-        startTokenRefresh(context)
+        startTokenRefresh()
     }
 
-    private fun startTokenRefresh(context: Context) {
+    private fun startTokenRefresh() {
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
-                val token = getToken()
-                val refreshToken = getRefreshToken()
+                val token = withContext(Dispatchers.IO) { getToken() }
+                val refreshToken = withContext(Dispatchers.IO) { getRefreshToken() }
+                val currentTime = System.currentTimeMillis()
 
-                // Access token check
                 if (token != null) {
                     val tokenTimestamp = sharedPreferences.getLong(KEY_TOKEN_TIMESTAMP, 0)
-                    val currentTime = System.currentTimeMillis()
                     if (currentTime - tokenTimestamp >= TOKEN_VALIDITY_DURATION) {
-                        clearSession()
-                        //DialogHelper.showSessionExpiredDialog(context)
-                        Log.e("SessionManager", "Access token expired, session cleared.")
-                    }
-                }
+                        Log.e("SessionManager", "Access token expired.")
 
-                // Refresh token check and refresh
-                if (refreshToken != null) {
-                    val refreshTokenTimestamp = sharedPreferences.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, 0)
-                    val currentTime = System.currentTimeMillis()
-                    if (currentTime - refreshTokenTimestamp >= REFRESH_TOKEN_VALIDITY_DURATION) {
-                        clearSession()
-                        //DialogHelper.showSessionExpiredDialog(context)
-                        Log.e("SessionManager", "Refresh token expired, session cleared.")
-                    } else {
-                        // Trigger refresh token request
-                        refreshToken(refreshToken)
+                        if (refreshToken != null) {
+                            val refreshTokenTimestamp =
+                                sharedPreferences.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, 0)
+                            if (currentTime - refreshTokenTimestamp < REFRESH_TOKEN_VALIDITY_DURATION) {
+                                Log.e("SessionManager", "Refreshing token...")
+                                refreshToken(refreshToken)
+                            } else {
+                                Log.e("SessionManager", "Refresh token expired.")
+                                clearSession()
+                            }
+                        } else {
+                            Log.e("SessionManager", "Refresh token is null.")
+                            clearSession()
+                        }
                     }
                 } else {
+                    Log.e("SessionManager", "Access token is null.")
                     clearSession()
-                    //DialogHelper.showSessionExpiredDialog(context)
-                    Log.e("SessionManager", "Refresh token is null, session cleared.")
                 }
 
-                // Wait for 30 seconds
                 delay(30 * 1000L)
             }
         }
@@ -98,7 +94,9 @@ class SessionManager(context: Context) {
     }
 
     private suspend fun refreshToken(refreshToken: String) {
-        val tokenResponse = RefreshTokenService.refreshToken(TokenData(refreshToken))
+        val tokenResponse = withContext(Dispatchers.IO) {
+            RefreshTokenService.refreshToken(TokenData(refreshToken))
+        }
         tokenResponse?.let {
             saveToken(it.token, it.refreshToken, it.userName)
             it.token?.let { token -> loginResponse.token = token }
@@ -111,7 +109,7 @@ class SessionManager(context: Context) {
         }
     }
 
-    suspend fun saveToken(token: String, refreshToken: String, userName: String) {
+    fun saveToken(token: String?, refreshToken: String?, userName: String?) {
         sharedPreferences.edit {
             putString(KEY_TOKEN, token)
             putString(KEY_REFRESH_TOKEN, refreshToken)
@@ -119,7 +117,10 @@ class SessionManager(context: Context) {
             putLong(KEY_TOKEN_TIMESTAMP, System.currentTimeMillis())
             putLong(KEY_REFRESH_TOKEN_TIMESTAMP, System.currentTimeMillis())
         }
-        Log.e("SessionManager", "Token saved: $token, Refresh Token saved: $refreshToken, Username saved: $userName")
+        Log.e(
+            "SessionManager",
+            "Token saved: $token, Refresh Token saved: $refreshToken, Username saved: $userName"
+        )
     }
 
     fun clearSession() {
@@ -127,5 +128,6 @@ class SessionManager(context: Context) {
         loginResponse.token = ""
         loginResponse.refreshToken = ""
         loginResponse.userName = ""
+        Log.e("SessionManager", "Session cleared.")
     }
 }

@@ -82,6 +82,7 @@ import com.example.colyak.model.Receipt
 import com.example.colyak.model.data.NavigationItem
 import com.example.colyak.session.SessionManager
 import com.example.colyak.ui.theme.ColyakTheme
+import com.example.colyak.viewmodel.LoginViewModel
 import com.example.colyak.viewmodel.QuizViewModel
 import com.example.colyak.viewmodel.ReadyFoodViewModel
 import com.example.colyak.viewmodel.ReceiptViewModel
@@ -124,7 +125,6 @@ class MainActivity : ComponentActivity() {
         resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
-
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -349,7 +349,6 @@ fun MainScreen(navController: NavController) {
                 2 -> BolusScreen()
             }
         }
-
     }
 }
 
@@ -399,6 +398,7 @@ fun MainContent(navController: NavController) {
     var showTokenAlert by remember { mutableStateOf(loginResponse.userName.isEmpty()) }
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
+    val loginVM: LoginViewModel = viewModel()
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -530,14 +530,21 @@ fun MainContent(navController: NavController) {
             confirmButton = {
                 Text(text = "Evet", modifier = Modifier.clickable {
                     showAlert = false
+                    loginVM.clearLoginResponse()
                     sessionManager.clearSession()
                     navController.navigate(Screens.Login.screen)
                 }
                 )
-            }
+            },
+            dismissButton = {
+                Text(text = "Hayır", modifier = Modifier.clickable {
+                    showAlert = false
+                }
+                )
+            },
         )
     }
-    if (showTokenAlert){
+    if (showTokenAlert) {
         AlertDialog(
             onDismissRequest = {
                 showAlert = false

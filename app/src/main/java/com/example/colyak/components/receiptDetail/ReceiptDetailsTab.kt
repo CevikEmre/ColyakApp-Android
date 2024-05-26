@@ -1,6 +1,10 @@
 package com.example.colyak.components.receiptDetail
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -8,9 +12,11 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,18 +27,34 @@ import com.example.colyak.R
 import com.example.colyak.model.Comment
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.ReceiptItem
+import kotlinx.coroutines.launch
 
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReceiptDetailsTab(
-    list:List<ReceiptItem?>?,
-    discription:List<String?>?,
+    list: List<ReceiptItem?>?,
+    discription: List<String?>?,
     receipt: Receipt,
-    commentList:MutableList<Comment>,
+    commentList: MutableList<Comment>,
     navController: NavController
 ) {
-    val titles = listOf("Malzeme\n Listesi", "Tarif", "Besin\n Değerleri","Yorumlar")
-    var tabIndex by remember { mutableStateOf(0) }
+    val titles = listOf("Malzeme\n Listesi", "Tarif", "Besin\n Değerleri", "Yorumlar")
+    var tabIndex by remember { mutableIntStateOf(0) }
+    val pageState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        4
+    }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(tabIndex) {
+        pageState.scrollToPage(tabIndex)
+    }
+
+    LaunchedEffect(pageState.currentPage) {
+        tabIndex = pageState.currentPage
+    }
 
     Scaffold(
         topBar = {
@@ -54,24 +76,31 @@ fun ReceiptDetailsTab(
                             Text(
                                 title,
                                 fontSize = 15.sp
-                            ) },
+                            )
+                        },
                         selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                        onClick = {
+                            coroutineScope.launch {
+                                tabIndex = index
+                                pageState.animateScrollToPage(index)
+                            }
+                        }
                     )
                 }
             }
         },
-        content = { paddingValues ->
-            when (tabIndex) {
-                0 -> ProductsTab(paddingValues,list)
-
-                1 -> ReceiptTab(paddingValues,discription)
-
-                2 -> NutritionValuesTab(paddingValues, receipt)
-
-                3 -> CommentTab(paddingValues,receipt,navController)
+        content = { innerPadding ->
+            HorizontalPager(
+                state = pageState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> ProductsTab(innerPadding, list)
+                    1 -> ReceiptTab(innerPadding, discription)
+                    2 -> NutritionValuesTab(innerPadding, receipt)
+                    3 -> CommentTab(innerPadding, receipt, navController)
+                }
             }
-
         }
     )
 }

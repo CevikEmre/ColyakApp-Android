@@ -176,7 +176,7 @@ fun RegisterScreen(navController: NavController) {
                             horizontalArrangement = Arrangement.Start
                         ) {
                             Text(
-                                text = "Kullanıcı Oluşturuldu",
+                                text = "Kullanıcı oluşturuldu doğrulama ekranına yönlendiriliyorsunuz",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.W400
                             )
