@@ -165,11 +165,7 @@ fun CommentTab(
                                             if (comment.commentResponse.userName == loginResponse.userName) {
                                                 IconButton(onClick = {
                                                     scope.launch {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Silme İşlemi Başarılı",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
+                                                        Toast.makeText(context, "Silme İşlemi Başarılı", Toast.LENGTH_SHORT).show()
                                                         commentVM.deleteComment(comment.commentResponse.commentId)
                                                         replyVM.getCommentsRepliesByReceiptId(receipt.id)
                                                     }
@@ -216,7 +212,9 @@ fun CommentTab(
                                                 modifier = Modifier.clickable {
                                                     scope.launch {
                                                         comment.commentResponse.let { comment ->
-                                                            replyVM.getCommentsById(comment.commentId)
+                                                            replyVM.getCommentsById(
+                                                                comment.commentId
+                                                            )
                                                         }
                                                         val commentJson = Gson().toJson(comment)
                                                         navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
@@ -282,13 +280,12 @@ fun CommentTab(
                             CustomizeButton(
                                 onClick = {
                                     scope.launch {
-                                        Toast.makeText(
-                                            context,
-                                            "Yorum Başarıyla Eklendi",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Toast.makeText(context, "Yorum Başarıyla Eklendi", Toast.LENGTH_SHORT).show()
                                         commentVM.createComment(
-                                            CommentData(receipt.id, commentTf.value)
+                                            CommentData(
+                                                receipt.id,
+                                                commentTf.value
+                                            )
                                         )
                                         commentTf.value = ""
                                         replyVM.getCommentsRepliesByReceiptId(receipt.id)

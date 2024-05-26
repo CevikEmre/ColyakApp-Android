@@ -27,6 +27,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.components.consts.CustomizeButton
@@ -67,7 +68,7 @@ fun BarcodeDetailScreen(navController: NavController) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.Center
             ) {
                 if (barcode.id.toInt() == 0) {
                     Column(
@@ -87,14 +88,19 @@ fun BarcodeDetailScreen(navController: NavController) {
                                 contentColor = Color.Black
                             )
                         ) {
-                            Text(text = "Barkod bulunamadı")
-                            Spacer(modifier = Modifier.height(18.dp))
-                            CustomizeButton(
-                                onClick = { navController.navigate(Screens.MainScreen.screen) },
-                                buttonText = "Ana Sayfa",
-                                backgroundColor = colorResource(id = R.color.appBarColor)
+                            Text(
+                                text = "Barkod bulunamadı",
+                                fontWeight = FontWeight.W500,
+                                fontSize = 24.sp,
+                                modifier = Modifier.padding(vertical = 12.dp)
                             )
                         }
+                        Spacer(modifier = Modifier.height(18.dp))
+                        CustomizeButton(
+                            onClick = { navController.navigate(Screens.MainScreen.screen) },
+                            buttonText = "Ana Sayfa",
+                            backgroundColor = colorResource(id = R.color.appBarColor)
+                        )
 
                     }
                 } else {

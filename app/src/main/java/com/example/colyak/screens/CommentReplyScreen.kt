@@ -43,7 +43,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.components.CircularIndeterminateProgressBar
-import com.example.colyak.components.cards.ReplyCommentCard
 import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
 import com.example.colyak.components.functions.timeSince
@@ -114,11 +113,52 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         .weight(1f)
                 ) {
                     items(1) {
-                        ReplyCommentCard(
-                            userName = comment.commentResponse.userName,
-                            createDate = comment.commentResponse.createdDate,
-                            comment = comment.commentResponse.comment
-                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(all = 6.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Color.Black
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp, vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = comment.commentResponse.userName,
+                                        fontWeight = FontWeight.W600,
+                                        fontSize = 18.sp
+                                    )
+                                    Text(text = timeSince(comment.commentResponse.createdDate)).toString()
+                                }
+                                HorizontalDivider(
+                                    thickness = 0.8.dp,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(all = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                ) {
+                                    Text(
+                                        text = comment.commentResponse.comment,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.W400
+                                    )
+                                }
+                            }
+                        }
                     }
                     items(1) {
                         Row(
@@ -139,7 +179,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White,
                                 contentColor = Color.Black
@@ -147,12 +187,13 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxSize()
+                                    .padding(vertical = 10.dp, horizontal = 10.dp)
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                                        .padding(vertical = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                 ) {
@@ -171,13 +212,9 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                         if (reply.userName == loginResponse.userName) {
                                             IconButton(onClick = {
                                                 scope.launch {
+                                                    Toast.makeText(context, "Cevap Silindi", Toast.LENGTH_SHORT).show()
                                                     replyVM.deleteReply(reply.replyId)
                                                     replyVM.getCommentsById(comment.commentResponse.commentId)
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Cevap Silindi",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
                                                 }
                                             }
                                             ) {
@@ -194,9 +231,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                                    modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start,
                                 ) {
@@ -232,11 +267,6 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                     CustomizeButton(
                         onClick = {
                             scope.launch {
-                                Toast.makeText(
-                                    context,
-                                    "Cevap Başarıyla Eklendi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
                                 replyVM.createReply(
                                     ReplyData(
                                         commentId = comment.commentResponse.commentId,
@@ -244,7 +274,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                     )
                                 )
                                 replyTf.value = ""
-                                replyVM.getCommentsById(comment.commentResponse.commentId)
+                                    replyVM.getCommentsById(comment.commentResponse.commentId)
                             }
                         },
                         buttonText = "Ekle",
