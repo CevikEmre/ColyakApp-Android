@@ -17,9 +17,15 @@ class ReceiptViewModel : ViewModel() {
     private val _receiptList = MutableStateFlow<List<Receipt?>?>(emptyList())
     val receiptList: StateFlow<List<Receipt?>?> = _receiptList
 
+    private val _favoriteReceiptList = MutableStateFlow<List<Receipt?>?>(emptyList())
+    val favroiteReceiptList: StateFlow<List<Receipt?>?> = _favoriteReceiptList
+
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
+
+    private val _favoriteLoading = MutableStateFlow(false)
+    val favoriteLoading: StateFlow<Boolean> = _favoriteLoading
 
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> = _isSearching
@@ -58,6 +64,22 @@ class ReceiptViewModel : ViewModel() {
                 Log.e("ReceiptScreenVM", "Fail", e)
             } finally {
                 _loading.value = false
+            }
+
+        }
+    }
+    suspend fun getFavorite5Receipts() {
+        viewModelScope.launch {
+            _favoriteLoading.value = true
+            try {
+                val result = ReceiptService.getFavorite5Receipts()
+                _favoriteReceiptList.value= result ?: emptyList()
+                Log.e("ReceiptList12", receiptList.value.toString())
+
+            } catch (e: Exception) {
+                Log.e("ReceiptScreenVM", "Fail", e)
+            } finally {
+                _favoriteLoading.value = false
             }
 
         }

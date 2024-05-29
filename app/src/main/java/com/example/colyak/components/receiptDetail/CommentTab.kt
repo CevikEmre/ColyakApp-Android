@@ -280,7 +280,6 @@ fun CommentTab(
                             CustomizeButton(
                                 onClick = {
                                     scope.launch {
-                                        Toast.makeText(context, "Yorum Başarıyla Eklendi", Toast.LENGTH_SHORT).show()
                                         commentVM.createComment(
                                             CommentData(
                                                 receipt.id,
@@ -290,6 +289,7 @@ fun CommentTab(
                                         commentTf.value = ""
                                         replyVM.getCommentsRepliesByReceiptId(receipt.id)
                                         isVisible.value = false
+                                        Toast.makeText(context, "Yorum Başarıyla Eklendi", Toast.LENGTH_SHORT).show()
                                     }
                                 },
                                 buttonText = "Ekle",

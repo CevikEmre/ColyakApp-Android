@@ -53,6 +53,7 @@ fun RegisterScreen(navController: NavController) {
     val responseState = remember { mutableStateOf(false) }
     var isPassword by remember { mutableStateOf(true) }
     var isPasswordRepeat by remember { mutableStateOf(true) }
+    val errorMessage = remember { mutableStateOf("") }
 
     Scaffold(
         content = { padding ->
@@ -112,27 +113,45 @@ fun RegisterScreen(navController: NavController) {
                 CustomizeButton(
                     onClick = {
                         scope.launch {
-                            if (password.value != passwordRepeat.value) {
-                                responseState.value = false
-                                snackbarHostState.showSnackbar(
-                                    "",
-                                    duration = SnackbarDuration.Short
-                                )
-                            } else {
-                                val response = registerVM.register(
-                                    RegisterData(
-                                        email.value,
-                                        username.value,
-                                        password.value
-                                    ),
-                                )
-                                responseState.value = response
-                                if (responseState.value) {
+                            when {
+                                password.value.length < 8 -> {
+                                    responseState.value = false
+                                    errorMessage.value = "Şifre en az 8 karakter olmalıdır."
                                     snackbarHostState.showSnackbar(
                                         "",
                                         duration = SnackbarDuration.Short
                                     )
-                                    navController.navigate(Screens.VerificationScreen.screen)
+                                }
+                                password.value != passwordRepeat.value -> {
+                                    responseState.value = false
+                                    errorMessage.value = "Şifreler eşleşmiyor."
+                                    snackbarHostState.showSnackbar(
+                                        "",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                else -> {
+                                    val response = registerVM.register(
+                                        RegisterData(
+                                            email.value,
+                                            username.value,
+                                            password.value
+                                        ),
+                                    )
+                                    responseState.value = response
+                                    if (responseState.value) {
+                                        snackbarHostState.showSnackbar(
+                                            "",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        navController.navigate(Screens.VerificationScreen.screen)
+                                    } else {
+                                        errorMessage.value = "Kullanıcı oluşturulurken hata."
+                                        snackbarHostState.showSnackbar(
+                                            "",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -158,50 +177,30 @@ fun RegisterScreen(navController: NavController) {
                             navController.navigate(Screens.Login.screen)
                         }
                     )
-
                 }
             }
         },
         snackbarHost = {
-            if (responseState.value) {
-                SnackbarHost(hostState = snackbarHostState) {
-                    Snackbar(
-                        contentColor = Color.White
+            SnackbarHost(hostState = snackbarHostState) {
+                Snackbar(
+                    contentColor = Color.White
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Text(
-                                text = "Kullanıcı oluşturuldu doğrulama ekranına yönlendiriliyorsunuz",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W400
-                            )
-                        }
-
-                    }
-                }
-            } else {
-                SnackbarHost(hostState = snackbarHostState) {
-                    Snackbar(
-                        contentColor = Color.White
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Text(
-                                text = "Kullanıcı Oluştururken Hata",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W400
-                            )
-                        }
+                        Text(
+                            text = if (responseState.value) {
+                                "Kullanıcı oluşturuldu doğrulama ekranına yönlendiriliyorsunuz."
+                            } else {
+                                errorMessage.value
+                            },
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W400
+                        )
                     }
                 }
             }

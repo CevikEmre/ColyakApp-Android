@@ -96,7 +96,6 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                                 text = bolusReport.bolus.bolusValue.toString(),
                                 Modifier.padding(vertical = 10.dp),
                                 fontWeight = FontWeight.W500,
-
                                 )
                         }
                         HorizontalDivider(thickness = 1.dp)

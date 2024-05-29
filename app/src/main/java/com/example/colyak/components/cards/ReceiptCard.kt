@@ -21,11 +21,10 @@ import androidx.compose.ui.unit.sp
 fun ReceiptCard(
     cardName: String?,
     modifier: Modifier,
-    carb: String,
     image: @Composable () -> Unit
 ) {
     Card( modifier = modifier.height(270.dp).width(200.dp),
-        elevation = CardDefaults.cardElevation(12.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -43,10 +42,7 @@ fun ReceiptCard(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text =  carb,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
-            )
+
         }
     }
 }

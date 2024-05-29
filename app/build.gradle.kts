@@ -86,6 +86,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("io.github.grizzi91:bouquet:1.1.2")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("io.coil-kt:coil-compose:1.3.2")
     //cameraX
     implementation("androidx.camera:camera-camera2:1.3.3")
     implementation("androidx.camera:camera-lifecycle:1.3.3")

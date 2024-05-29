@@ -39,7 +39,6 @@ class QuizViewModel : ViewModel() {
     }
 
     suspend fun questionAnswer(answerData: AnswerData): QuizAnswer? {
-        viewModelScope.launch {
             try {
                 val response = QuizService().answer(answerData)
                 if (response != null) {
@@ -51,7 +50,6 @@ class QuizViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("questionAnswer", "Fail", e)
             }
-        }
         return _answerResponse.value
     }
 

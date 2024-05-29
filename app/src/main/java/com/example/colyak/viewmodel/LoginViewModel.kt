@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.example.colyak.model.LoginResponse
 import com.example.colyak.service.LoginService
 import com.example.colyak.session.SessionManager
@@ -19,10 +20,10 @@ class LoginViewModel : ViewModel() {
     private val _checkToken = MutableStateFlow<Boolean>(false)
     val checkToken = _checkToken
     @SuppressLint("SuspiciousIndentation")
-    suspend fun login(email: String, password: String): Boolean {
+    suspend fun login(email: String, password: String,navController: NavController,context: Context): Boolean {
         var isLoginSuccessful = false
         try {
-            val result = LoginService.login(email, password)
+            val result = LoginService.login(context,navController,email, password)
             if (result != null) {
                 loginResponse = result
                 isLoginSuccessful = true

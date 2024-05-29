@@ -11,7 +11,9 @@ data class LoginResponse(
     @SerializedName("refreshToken")
     @Expose
     var refreshToken: String,
+
     @SerializedName("userName")
     @Expose
-    var userName: String
+    var userName: String,
+
 )

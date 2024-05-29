@@ -48,7 +48,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                     id = R.color.appBarColor
                 )
             ) {
-                Icon(Icons.Sharp.Add, contentDescription = "")
+                Icon(Icons.Sharp.Add, contentDescription = "", tint = Color.White)
             }
         },
         topBar = {

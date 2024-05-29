@@ -12,20 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
-import com.example.colyak.model.Comment
+import com.example.colyak.components.ImageFromUrl
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.ReceiptItem
-import com.example.colyak.screens.ImageFromUrl
-import com.example.colyak.viewmodel.ReplyViewModel
 
 @Composable
 fun ReceiptDetailCard(
@@ -33,11 +29,8 @@ fun ReceiptDetailCard(
     description: List<String?>?,
     modifier: Modifier,
     receipt: Receipt,
-    commentList:MutableList<Comment>,
     navController: NavController
 ) {
-    val replyVM:ReplyViewModel = viewModel()
-
     Box(modifier = modifier) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,7 +51,7 @@ fun ReceiptDetailCard(
                     )
                 }
             }
-            ReceiptDetailsTab(productList, description, receipt,commentList,navController)
+            ReceiptDetailsTab(productList, description, receipt,navController)
         }
     }
 }

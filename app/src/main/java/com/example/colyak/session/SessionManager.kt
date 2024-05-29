@@ -22,7 +22,7 @@ class SessionManager(context: Context) {
         private const val KEY_TOKEN_TIMESTAMP = "key_token_timestamp"
         private const val KEY_USERNAME = "key_username"
         private const val KEY_REFRESH_TOKEN_TIMESTAMP = "key_refresh_token_timestamp"
-        private const val TOKEN_VALIDITY_DURATION = 60 * 1000L
+        private const val TOKEN_VALIDITY_DURATION = 1 * 60 * 1000L
         private const val REFRESH_TOKEN_VALIDITY_DURATION = 24 * 60 * 1000L
     }
 
@@ -65,7 +65,7 @@ class SessionManager(context: Context) {
                     clearSession()
                 }
 
-                delay(30 * 1000L)
+                delay(1 * 60 * 1000L)
             }
         }
     }

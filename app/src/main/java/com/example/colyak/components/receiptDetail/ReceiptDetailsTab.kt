@@ -21,10 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
-import com.example.colyak.model.Comment
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.ReceiptItem
 import kotlinx.coroutines.launch
@@ -35,7 +35,6 @@ fun ReceiptDetailsTab(
     list: List<ReceiptItem?>?,
     discription: List<String?>?,
     receipt: Receipt,
-    commentList: MutableList<Comment>,
     navController: NavController
 ) {
     val titles = listOf("Malzeme\n Listesi", "Tarif", "Besin\n Değerleri", "Yorumlar")
@@ -48,9 +47,6 @@ fun ReceiptDetailsTab(
     }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(tabIndex) {
-        pageState.scrollToPage(tabIndex)
-    }
 
     LaunchedEffect(pageState.currentPage) {
         tabIndex = pageState.currentPage
@@ -75,7 +71,9 @@ fun ReceiptDetailsTab(
                         text = {
                             Text(
                                 title,
-                                fontSize = 15.sp
+                                fontSize = 13.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Visible
                             )
                         },
                         selected = tabIndex == index,

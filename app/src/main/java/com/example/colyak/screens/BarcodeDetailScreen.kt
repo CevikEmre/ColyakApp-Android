@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.components.ImageFromUrl
 import com.example.colyak.components.consts.CustomizeButton
-import com.example.colyak.screens.ImageFromUrl
 import com.example.colyak.screens.Screens
 import com.example.colyak.viewmodel.barcode
 

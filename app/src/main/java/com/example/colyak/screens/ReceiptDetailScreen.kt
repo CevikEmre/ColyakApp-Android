@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +44,7 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
     val commentList by commentVM.commentList.collectAsState()
     val scope = rememberCoroutineScope()
     var isReceiptFavorite by remember { mutableStateOf(false) }
-    LocalContext.current
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         commentVM.getCommentsById(receipt.id)
@@ -90,12 +91,14 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
                                         val favoriteData = FavoriteData(receipt.id)
                                         favoriteVM.unlikeReceipt(favoriteData)
                                         isReceiptFavorite = false
+                                        Toast.makeText(context, "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     scope.launch {
                                         val favoriteData = FavoriteData(receipt.id)
                                         favoriteVM.likeReceipt(favoriteData)
                                         isReceiptFavorite = true
+                                        Toast.makeText(context, "Favorilere eklendi", Toast.LENGTH_SHORT).show()
                                     }
                             }
                         }
@@ -115,7 +118,6 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
                 description = receipt.receiptDetails,
                 modifier = Modifier.padding(padding),
                 receipt,
-                commentList.toMutableList(),
                 navController
             )
         }

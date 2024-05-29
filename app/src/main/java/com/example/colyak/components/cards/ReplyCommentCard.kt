@@ -50,7 +50,7 @@ fun ReplyCommentCard(
                     fontWeight = FontWeight.W600,
                     fontSize = 18.sp
                 )
-                Text(text = timeSince(createDate)).toString()
+                Text(text = timeSince(createDate),fontSize = 12.sp).toString()
             }
             HorizontalDivider(
                 thickness = 0.8.dp,

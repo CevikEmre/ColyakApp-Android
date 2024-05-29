@@ -5,6 +5,7 @@ import BarcodeDetailScreen
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -12,13 +13,16 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +41,9 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -71,7 +78,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.colyak.R
 import com.example.colyak.barcode.BarcodeScreen
+import com.example.colyak.components.CircularIndeterminateProgressBar
+import com.example.colyak.components.ImageFromUrl
 import com.example.colyak.components.cards.MealCard
+import com.example.colyak.components.cards.ReceiptCard
 import com.example.colyak.model.BolusReport
 import com.example.colyak.model.CommentRepliesResponse
 import com.example.colyak.model.MealDetail
@@ -258,12 +268,14 @@ fun MainScreen(navController: NavController) {
     val receiptList by receiptViewModel.receiptList.collectAsState()
     val readyFoodList by readyFoodViewModel.readyFoodList.collectAsState()
     val quizViewModel: QuizViewModel = viewModel()
-    val context = LocalContext.current
+    val favoriteReceipts by receiptViewModel.favroiteReceiptList.collectAsState()
+    Log.e("favoriteReceipts", favoriteReceipts.toString())
 
     LaunchedEffect(Unit) {
         receiptViewModel.getAll()
         readyFoodViewModel.getAllReadyFoods()
         quizViewModel.getAllQuiz()
+        receiptViewModel.getFavorite5Receipts()
     }
 
     globalReceiptList = receiptList
@@ -306,7 +318,6 @@ fun MainScreen(navController: NavController) {
             BottomAppBar(
                 contentColor = MaterialTheme.colorScheme.primary,
                 containerColor = colorResource(id = R.color.appBarColor),
-
                 content = {
                     for (page in bottomNavList.indices) {
                         NavigationBarItem(
@@ -395,10 +406,15 @@ fun MainContent(navController: NavController) {
     val scope = rememberCoroutineScope()
     val selectedItemIndex by rememberSaveable { mutableIntStateOf(-1) }
     var showAlert by remember { mutableStateOf(false) }
-    var showTokenAlert by remember { mutableStateOf(loginResponse.userName.isEmpty()) }
+    val showTokenAlert by remember { mutableStateOf(loginResponse.userName.isEmpty()) }
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
     val loginVM: LoginViewModel = viewModel()
+    val receiptViewModel: ReceiptViewModel = viewModel()
+    val favoriteReceipts by receiptViewModel.favroiteReceiptList.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val loading by receiptViewModel.favoriteLoading.collectAsState()
+
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -484,37 +500,106 @@ fun MainContent(navController: NavController) {
                         .clip(RoundedCornerShape(12.dp)),
                 )
             },
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+                    Snackbar(snackbarData = snackbarData)
+                }
+            },
             content = { padding ->
-                LazyColumn {
-                    items(1) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(padding),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.person),
+                            contentDescription = "",
+                            tint = Color.LightGray
+                        )
+                        Text(
+                            text = "Hoşgeldin ," + loginResponse.userName + " !",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.W600
+                        )
+                    }
+                    Column {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(padding)
-                                .padding(horizontal = 15.dp, vertical = 15.dp),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(padding),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.person),
-                                contentDescription = "",
-                                tint = Color.LightGray
-                            )
                             Text(
-                                text = "Hoşgeldin " + loginResponse.userName,
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.W600
+                                text = "En çok tercih edilen 5 tarifimiz :)",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.W400,
+                                color = Color.Black
                             )
                         }
-
                     }
-                    items(mealList.count()) {
-                        val meal = mealList[it]
-                        val mealJson = Gson().toJson(meal)
-                        MealCard(
-                            meal,
-                            onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
+                    if (loading) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            CircularIndeterminateProgressBar(isDisplay = loading)
+                        }
+                    } else {
+                        LazyRow(
+                            modifier = Modifier.padding(padding),
+                            content = {
+                                items(favoriteReceipts?.size ?: 0) {
+                                    val receipt = favoriteReceipts?.get(it)
+                                    ReceiptCard(
+                                        cardName = receipt?.receiptName,
+                                        image = {
+                                            ImageFromUrl(
+                                                url = "https://api.colyakdiyabet.com.tr/api/image/get/${receipt?.imageId}",
+                                                modifier = Modifier.aspectRatio(ratio = 1.28f)
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .clickable {
+                                                scope.launch {
+                                                    try {
+                                                        val receiptJson = Gson().toJson(receipt)
+                                                        navController.navigate("${Screens.ReceiptDetailScreen.screen}/$receiptJson")
+                                                    } catch (e: Exception) {
+                                                        Log.e(
+                                                            "NavigationError",
+                                                            "Tarif detayına yönlendirilirken bir hata oluştu",
+                                                            e
+                                                        )
+                                                        snackbarHostState.showSnackbar(
+                                                            "Tarif detayına yönlendirilirken bir hata oluştu."
+                                                        )
+                                                    }
+                                                }
+
+                                            }
+                                            .padding(all = 5.dp)
+                                    )
+                                }
+                            }
                         )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    LazyColumn {
+                        items(mealList.count()) {
+                            val meal = mealList[it]
+                            val mealJson = Gson().toJson(meal)
+                            MealCard(
+                                meal,
+                                onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
+                            )
+                        }
                     }
                 }
             }

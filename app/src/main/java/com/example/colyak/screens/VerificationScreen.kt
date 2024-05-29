@@ -53,6 +53,7 @@ fun VerificationScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val responseState = remember { mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
+    Log.e("verification", verificationId)
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
