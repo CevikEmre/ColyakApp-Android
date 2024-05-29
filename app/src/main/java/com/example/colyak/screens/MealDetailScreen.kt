@@ -92,7 +92,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${calculateTotalCarbs(eatenMealList)}",
+                            text = "${calculateTotalCarbs(eatenMealList)} g",
                             fontWeight = FontWeight.W800
                         )
                         Text(text = "Karbonhidrat")

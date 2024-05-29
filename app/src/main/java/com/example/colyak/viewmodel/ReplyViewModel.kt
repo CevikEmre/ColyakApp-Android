@@ -82,4 +82,15 @@ class ReplyViewModel : ViewModel() {
             _loading.value = false
         }
     }
+
+    suspend fun updateReply(replyId: Long,newReply: String) {
+        try {
+            _loading.value = true
+            ReplyService().updateReply(replyId,newReply)
+        } catch (e: Exception) {
+            Log.e("ReplyViewModel", "Fail", e)
+        } finally {
+            _loading.value = false
+        }
+    }
 }

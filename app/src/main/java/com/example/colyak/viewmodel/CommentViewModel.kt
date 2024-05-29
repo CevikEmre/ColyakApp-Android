@@ -17,6 +17,10 @@ class CommentViewModel : ViewModel() {
     private var _comment = MutableStateFlow(CommentData(0, ""))
     val comment: StateFlow<CommentData> = _comment
 
+    private var _updatedComment = MutableStateFlow("")
+    val updatedComment = _updatedComment
+
+
 
     suspend fun getCommentsById(receiptId: Long) {
         viewModelScope.launch {
@@ -48,5 +52,14 @@ class CommentViewModel : ViewModel() {
             Log.e("CommentViewModel", "Fail", e)
 
         }
+    }
+
+    suspend fun updateComment(commentId: Long,comment:String) {
+        try {
+            CommentService.updateComment(commentId,comment)
+        } catch (e: Exception) {
+            Log.e("CommentViewModel", "Fail", e)
+        }
+
     }
 }

@@ -507,13 +507,13 @@ fun MainContent(navController: NavController) {
             },
             content = { padding ->
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(padding),
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(padding),
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -523,17 +523,16 @@ fun MainContent(navController: NavController) {
                             tint = Color.LightGray
                         )
                         Text(
-                            text = "Hoşgeldin ," + loginResponse.userName + " !",
+                            text = "Hoşgeldin , " + loginResponse.userName + " !",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.W600
                         )
                     }
                     Column {
                         Row(
-                            modifier = Modifier
-                                .padding(padding),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(vertical = 4.dp)
                         ) {
                             Text(
                                 text = "En çok tercih edilen 5 tarifimiz :)",
@@ -553,7 +552,6 @@ fun MainContent(navController: NavController) {
                         }
                     } else {
                         LazyRow(
-                            modifier = Modifier.padding(padding),
                             content = {
                                 items(favoriteReceipts?.size ?: 0) {
                                     val receipt = favoriteReceipts?.get(it)

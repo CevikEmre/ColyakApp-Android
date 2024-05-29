@@ -89,12 +89,38 @@ class ReplyService {
             }
         }
     }
+
     suspend fun deleteReply(replyId: Long) {
         return withContext(Dispatchers.IO) {
             try {
                 val response = RetrofitClient.getClient(baseUrl)
                     .create(ReplyInterface::class.java)
                     .deleteReply(replyId)
+                if (response.isSuccessful) {
+                    response.body()
+                    Log.e("asd", response.toString())
+                } else {
+                    val errorCode = response.code()
+                    val errorMessage = response.errorBody()?.string()
+                    Log.e(
+                        "ReplyService",
+                        "createReply request failed with code: $errorCode, message: $errorMessage"
+                    )
+                }
+
+            } catch (e: Exception) {
+                Log.e("ReplyService", "Error sending createReply request", e)
+
+            }
+        }
+    }
+
+    suspend fun updateReply(replyId: Long, newReply: String) {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.getClient(baseUrl)
+                    .create(ReplyInterface::class.java)
+                    .updateReply(replyId,newReply)
                 if (response.isSuccessful) {
                     response.body()
                     Log.e("asd", response.toString())

@@ -9,6 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CommentInterface {
@@ -17,6 +18,10 @@ interface CommentInterface {
 
     @POST("/api/comments/add")
     suspend fun createComment(@Body commentData: CommentData): Response<CommentData?>
+
     @DELETE("/api/comments/{commentId}")
     suspend fun deleteComment(@Path("commentId") commentId: Long):Response<Void>
+
+    @PUT("/api/comments/{commentId}")
+    suspend fun uptadeComment(@Path("commentId") commentId: Long, @Body comment: String): Response<Void>
 }

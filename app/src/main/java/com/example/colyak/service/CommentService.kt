@@ -85,5 +85,27 @@ class CommentService {
             }
         }
 
+        suspend fun updateComment(commentId: Long,comment:String) {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = RetrofitClient.getClient(baseUrl)
+                        .create(CommentInterface::class.java)
+                        .uptadeComment(commentId,comment)
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                    } else {
+                        val errorCode = response.code()
+                        val errorMessage = response.errorBody()?.string()
+                        Log.e(
+                            "CommentService",
+                            "updateComment request failed with code: $errorCode, message: $errorMessage"
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e("CommentService", "Error sending updateComment request", e)
+                }
+            }
+        }
+
     }
 }

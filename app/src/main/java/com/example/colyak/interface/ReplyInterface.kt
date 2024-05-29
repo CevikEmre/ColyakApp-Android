@@ -11,7 +11,9 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ReplyInterface {
     @GET("/api/replies/comments/{commentId}")
@@ -24,4 +26,7 @@ interface ReplyInterface {
     fun getCommentRepliesByReceiptId(@Path("receiptId") receiptId: Long): Call<List<CommentRepliesResponse?>?>
     @DELETE("/api/replies/{replyId}")
     suspend fun deleteReply(@Path("replyId") replyId: Long): Response<Void>
+
+    @PUT("/api/replies/{replyId}")
+    suspend fun updateReply(@Path("replyId") replyId: Long,@Query("newReply") newReply: String): Response<Void>
 }

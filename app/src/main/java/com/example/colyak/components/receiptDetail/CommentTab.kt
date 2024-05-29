@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -68,6 +73,8 @@ fun CommentTab(
     navController: NavController
 ) {
     val isVisible = remember { mutableStateOf(false) }
+    val isUpdating = remember { mutableStateOf(false) }
+    val updatingCommentId = remember { mutableLongStateOf(0L) }
     val replyVM: ReplyViewModel = viewModel()
     val commentTf = remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -88,11 +95,11 @@ fun CommentTab(
                 onClick = {
                     scope.launch {
                         isVisible.value = true
+                        isUpdating.value = false
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.appBarColor))
-            )
-            {
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -161,19 +168,60 @@ fun CommentTab(
                                         if (comment != null) {
                                             Text(text = timeSince(comment.commentResponse.createdDate)).toString()
                                         }
+                                        val expanded = remember { mutableStateOf(false) }
                                         if (comment != null) {
                                             if (comment.commentResponse.userName == loginResponse.userName) {
                                                 IconButton(onClick = {
-                                                    scope.launch {
-                                                        Toast.makeText(context, "Silme İşlemi Başarılı", Toast.LENGTH_SHORT).show()
-                                                        commentVM.deleteComment(comment.commentResponse.commentId)
-                                                        replyVM.getCommentsRepliesByReceiptId(receipt.id)
-                                                    }
-                                                }
-                                                ) {
+                                                    expanded.value = !expanded.value
+                                                }) {
                                                     Icon(
-                                                        painter = painterResource(id = R.drawable.delete),
-                                                        contentDescription = ""
+                                                        imageVector = Icons.Default.MoreVert,
+                                                        contentDescription = null
+                                                    )
+                                                }
+                                                DropdownMenu(
+                                                    expanded = expanded.value,
+                                                    onDismissRequest = { expanded.value = false },
+                                                    modifier = Modifier.fillMaxWidth(0.5f)
+                                                ) {
+                                                    DropdownMenuItem(
+                                                        text = { Text("Düzenle") },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.edit_icon),
+                                                                contentDescription = ""
+                                                            )
+                                                        },
+                                                        onClick = {
+                                                            expanded.value = false
+                                                            commentTf.value = comment.commentResponse.comment
+                                                            isVisible.value = true
+                                                            isUpdating.value = true
+                                                            updatingCommentId.longValue = comment.commentResponse.commentId
+                                                        }
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text("Sil") },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.delete),
+                                                                contentDescription = ""
+                                                            )
+                                                        },
+                                                        onClick = {
+                                                            expanded.value = false
+                                                            scope.launch {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Silme İşlemi Başarılı",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                                commentVM.deleteComment(comment.commentResponse.commentId)
+                                                                replyVM.getCommentsRepliesByReceiptId(
+                                                                    receipt.id
+                                                                )
+                                                            }
+                                                        }
                                                     )
                                                 }
                                             }
@@ -192,7 +240,7 @@ fun CommentTab(
                                         horizontalArrangement = Arrangement.Start,
                                     ) {
                                         Text(
-                                            text = comment?.commentResponse?.comment ?: "",
+                                            text = comment?.commentResponse?.comment?.trim('"') ?: "",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W400
                                         )
@@ -256,7 +304,7 @@ fun CommentTab(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                text = "Yorum Ekle",
+                                text = if (isUpdating.value) "Yorumu Güncelle" else "Yorum Ekle",
                                 fontWeight = FontWeight.W700,
                                 fontSize = 16.sp
                             )
@@ -272,7 +320,7 @@ fun CommentTab(
                                     commentTf.value = it
                                 },
 
-                                label = "Yorum Ekle",
+                                label = if (isUpdating.value) "Yorumu Güncelle" else "Yorum Ekle",
                                 isPassword = false
                             )
 
@@ -280,19 +328,35 @@ fun CommentTab(
                             CustomizeButton(
                                 onClick = {
                                     scope.launch {
-                                        commentVM.createComment(
-                                            CommentData(
-                                                receipt.id,
-                                                commentTf.value
+                                        if (isUpdating.value) {
+                                            commentVM.updateComment(
+                                                commentId = updatingCommentId.longValue,
+                                                comment = commentTf.value
                                             )
-                                        )
+                                            Toast.makeText(
+                                                context,
+                                                "Yorum Başarıyla Güncellendi",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            commentVM.createComment(
+                                                CommentData(
+                                                    receipt.id,
+                                                    commentTf.value
+                                                )
+                                            )
+                                            Toast.makeText(
+                                                context,
+                                                "Yorum Başarıyla Eklendi",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                         commentTf.value = ""
                                         replyVM.getCommentsRepliesByReceiptId(receipt.id)
                                         isVisible.value = false
-                                        Toast.makeText(context, "Yorum Başarıyla Eklendi", Toast.LENGTH_SHORT).show()
                                     }
                                 },
-                                buttonText = "Ekle",
+                                buttonText = if (isUpdating.value) "Güncelle" else "Ekle",
                                 backgroundColor = colorResource(id = R.color.appBarColor)
                             )
                             Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
@@ -303,4 +367,3 @@ fun CommentTab(
         }
     )
 }
-
