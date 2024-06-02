@@ -25,7 +25,9 @@ import androidx.navigation.NavController
 import com.example.colyak.screens.Screens
 import com.example.colyak.viewmodel.BarcodeViewModel
 import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import readedBarcode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -75,8 +77,9 @@ fun CameraPreview(navController: NavController) {
                                     scope.launch {
                                         try {
                                             barcodeVM.getBarcode(barcodeValue)
+                                            readedBarcode = barcodeValue
                                             Toast.makeText(context, barcodeValue, Toast.LENGTH_SHORT).show()
-                                            //delay(2500)
+                                            delay(1200)
                                             navController.navigate(Screens.BarcodeDetailScreen.screen)
                                         } catch (e: Exception) {
                                             Log.e("BARKOD_ERROR", "Error fetching barcode: ${e.localizedMessage}")

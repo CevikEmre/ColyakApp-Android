@@ -29,12 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.colyak.R
-import com.example.colyak.components.ImageFromUrl
+import com.example.colyak.components.functions.ImageFromUrl
 import com.example.colyak.model.QuestionList
 import com.example.colyak.model.QuizAnswer
 import com.example.colyak.model.data.AnswerData
@@ -56,6 +57,7 @@ fun QuestionCard(
     answer = quizViewModel.answerResponse.collectAsState().value
 
     var showAlert by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -128,12 +130,12 @@ fun QuestionCard(
                                                 AnswerData(
                                                     questionId = questionList.id,
                                                     chosenAnswer = choice.choice
-                                                )
+                                                ),
                                             )
 
                                             if (response != null) {
                                                 answer = response
-                                                // Call onAnswered after receiving the response
+
                                                 onAnswered()
                                                 delay(800)
                                                 showAlert = true

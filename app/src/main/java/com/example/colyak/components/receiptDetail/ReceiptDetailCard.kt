@@ -19,7 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colyak.R
-import com.example.colyak.components.ImageFromUrl
+import com.example.colyak.components.functions.ImageFromUrl
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.ReceiptItem
 

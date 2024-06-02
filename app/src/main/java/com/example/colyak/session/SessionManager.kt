@@ -7,10 +7,7 @@ import androidx.core.content.edit
 import com.example.colyak.model.TokenData
 import com.example.colyak.service.RefreshTokenService
 import com.example.colyak.viewmodel.loginResponse
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SessionManager(context: Context) {
@@ -22,18 +19,18 @@ class SessionManager(context: Context) {
         private const val KEY_TOKEN_TIMESTAMP = "key_token_timestamp"
         private const val KEY_USERNAME = "key_username"
         private const val KEY_REFRESH_TOKEN_TIMESTAMP = "key_refresh_token_timestamp"
-        private const val TOKEN_VALIDITY_DURATION = 1 * 60 * 1000L
-        private const val REFRESH_TOKEN_VALIDITY_DURATION = 24 * 60 * 1000L
+        private const val TOKEN_VALIDITY_DURATION =   10 * 1000L
+        private const val REFRESH_TOKEN_VALIDITY_DURATION = 30 * 1000L
     }
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    init {
+    /*init {
         startTokenRefresh()
-    }
+    }*/
 
-    private fun startTokenRefresh() {
+    /*private fun startTokenRefresh() {
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
                 val token = withContext(Dispatchers.IO) { getToken() }
@@ -58,17 +55,17 @@ class SessionManager(context: Context) {
                         } else {
                             Log.e("SessionManager", "Refresh token is null.")
                             clearSession()
+
                         }
                     }
                 } else {
                     Log.e("SessionManager", "Access token is null.")
                     clearSession()
                 }
-
-                delay(1 * 60 * 1000L)
+                delay(10 * 1000L)
             }
         }
-    }
+    }*/
 
     suspend fun getToken(): String? = withContext(Dispatchers.IO) {
         sharedPreferences.getString(KEY_TOKEN, null)
@@ -93,7 +90,7 @@ class SessionManager(context: Context) {
         }
     }
 
-    private suspend fun refreshToken(refreshToken: String) {
+     suspend fun refreshToken(refreshToken: String) {
         val tokenResponse = withContext(Dispatchers.IO) {
             RefreshTokenService.refreshToken(TokenData(refreshToken))
         }

@@ -39,6 +39,7 @@ import com.example.colyak.model.PrintedMeal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(

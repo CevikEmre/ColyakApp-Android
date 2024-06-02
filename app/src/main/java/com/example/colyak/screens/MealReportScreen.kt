@@ -82,6 +82,19 @@ fun MealReportScreen(navController: NavController) {
             content = { padding ->
                 LazyColumn(modifier = Modifier.padding(padding)) {
                     items(mealReportList.size) {
+                        if (mealReportList.size == 0) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Rapor yok",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
                         val meal = mealReportList[it]
                         Card(
                             modifier = Modifier

@@ -79,7 +79,8 @@ fun BolusCard(
                     },
                     label = label,
                     isPassword = false,
-                    keybordType = KeyboardType.Number
+                    keybordType = KeyboardType.Number,
+                    modifier = Modifier
                 )
             }
             Row(

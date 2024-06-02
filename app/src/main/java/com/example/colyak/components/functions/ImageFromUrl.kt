@@ -1,4 +1,4 @@
-package com.example.colyak.components
+package com.example.colyak.components.functions
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

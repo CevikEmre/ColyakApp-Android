@@ -22,7 +22,6 @@ class PDFViewModel:ViewModel() {
                 val result = PDFService.getPDFs()
                 _pdfList.value = result ?: emptyList()
                 Log.e("ReceiptList12", pdfList.value.toString())
-
             } catch (e: Exception) {
                 Log.e("ReceiptScreenVM", "Fail", e)
             } finally {

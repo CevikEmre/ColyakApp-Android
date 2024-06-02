@@ -1,6 +1,7 @@
 package com.example.colyak.service
 
 import android.util.Log
+import barcodeAlert
 import com.example.colyak.`interface`.BarcodeInterface
 import com.example.colyak.model.Barcode
 import com.example.colyak.retrofit.RetrofitClient
@@ -22,8 +23,9 @@ class BarcodeService {
                     } else {
 
                         val errorCode = response.code()
+                        Log.e("BarcodeService", "getBarcode request failed with code: $errorCode")
                         if (errorCode == 404){
-                            return@withContext null
+                            barcodeAlert = true
                             }
                         val errorMessage = response.errorBody()?.string()
                         Log.e("BarcodeService", "getBarcode request failed with code: $errorCode, message: $errorMessage")

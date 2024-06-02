@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class Barcode(
     @SerializedName("id")
     @Expose
-    val id: Long,
+    var id: Long,
 
     @SerializedName("code")
     @Expose
@@ -18,7 +18,7 @@ data class Barcode(
 
     @SerializedName("imageId")
     @Expose
-    val imageId: Long?,
+    var imageId: Long?,
 
     @SerializedName("glutenFree")
     @Expose

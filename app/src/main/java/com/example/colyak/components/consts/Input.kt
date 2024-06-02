@@ -34,11 +34,11 @@ fun Input(
     leadingIcon: Int? = null,
     trailingIcon: Int? = null,
     trailingIconClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     TextField(
         leadingIcon = if (leadingIcon != null) {
             {
-
                 Icon(
                     painter = painterResource(id = leadingIcon),
                     contentDescription = ""
@@ -60,7 +60,7 @@ fun Input(
         readOnly = readOnly,
         textStyle = TextStyle(fontSize = 18.sp),
         onValueChange = onValueChange,
-        modifier = Modifier
+        modifier = modifier // Use the passed modifier here
             .fillMaxWidth()
             .padding(horizontal = 30.dp),
         shape = RoundedCornerShape(16.dp),

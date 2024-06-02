@@ -22,8 +22,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,12 +37,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.components.functions.SearchTextField
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.viewmodel.ReceiptViewModel
 import com.google.gson.Gson
@@ -93,30 +91,6 @@ fun AddMealScreen(mealName: String, navController: NavController) {
 }
 
 var eatenMealList = mutableStateListOf<PrintedMeal>()
-
-@Composable
-fun SearchTextField(onSearch: (String) -> Unit) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
-    TextField(
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = ""
-            )
-        },
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        value = text,
-        onValueChange = {
-            text = it
-            onSearch(it.text)
-        },
-        placeholder = { Text("Ara") },
-        modifier = Modifier.fillMaxWidth()
-    )
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

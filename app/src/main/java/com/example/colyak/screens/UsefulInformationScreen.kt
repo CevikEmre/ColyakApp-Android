@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ fun UsefulInformationScreen(navController: NavController) {
     val pdfVM: PDFViewModel = viewModel()
     val pdfList by pdfVM.pdfList.collectAsState()
     val loading by pdfVM.loading.collectAsState()
+    Log.e("pdfList", pdfList.toString())
 
     LaunchedEffect(Unit) {
         pdfVM.getAllPdfs()
@@ -96,10 +98,7 @@ fun UsefulInformationScreen(navController: NavController) {
                     },
                     modifier = Modifier.padding(padding)
                 )
-
             }
         }
     )
-
-
 }

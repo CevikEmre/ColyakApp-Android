@@ -55,14 +55,4 @@ class ReadyFoodViewModel : ViewModel() {
             }
         }
     }
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
-    }
-
-    fun onToogleSearch() {
-        _isSearching.value = !_isSearching.value
-        if (!_isSearching.value) {
-            onSearchTextChange("")
-        }
-    }
 }

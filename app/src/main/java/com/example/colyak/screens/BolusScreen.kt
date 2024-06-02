@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -92,7 +93,11 @@ fun BolusScreen() {
     val timePickerState = rememberTimePickerState()
     var showTimePicker by remember { mutableStateOf(false) }
     var printedEatTime by remember { mutableStateOf("") }
-    var mealEatTime by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) }
+    var mealEatTime by remember {
+        mutableStateOf(
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+    }
 
     carbohydrateTf.value = carbohydrate.toString()
     Scaffold(
@@ -170,7 +175,11 @@ fun BolusScreen() {
                                 trailingIconClick = {
                                     showTimePicker = true
                                 },
-                                readOnly = true
+                                readOnly = true,
+                                modifier = Modifier.clickable {
+                                    showTimePicker = true
+                                }
+
                             )
                         }
                         Row(
@@ -234,7 +243,8 @@ fun BolusScreen() {
                                 },
                                 label = "Kan Şekeri",
                                 isPassword = false,
-                                keybordType = KeyboardType.Number
+                                keybordType = KeyboardType.Number,
+                                modifier = Modifier
                             )
                         }
                         Row(
@@ -299,7 +309,8 @@ fun BolusScreen() {
                                 },
                                 label = "Hedef Kan Şekeri",
                                 isPassword = false,
-                                keybordType = KeyboardType.Number
+                                keybordType = KeyboardType.Number,
+                                modifier = Modifier
                             )
                         }
                         Row(
@@ -366,7 +377,8 @@ fun BolusScreen() {
                                 },
                                 label = "Karbonhidrat Miktarı",
                                 isPassword = false,
-                                keybordType = KeyboardType.Number
+                                keybordType = KeyboardType.Number,
+                                modifier = Modifier
                             )
 
                         }
@@ -432,7 +444,8 @@ fun BolusScreen() {
                                 },
                                 label = "İnsülin / Karbonhidrat Oranı",
                                 isPassword = false,
-                                keybordType = KeyboardType.Number
+                                keybordType = KeyboardType.Number,
+                                modifier = Modifier
                             )
                         }
                         Row(
@@ -496,7 +509,7 @@ fun BolusScreen() {
                                 },
                                 label = "IDF (İnsülin Duyarlılık Faktörü)",
                                 isPassword = false,
-                                keybordType = KeyboardType.Number
+                                keybordType = KeyboardType.Number,
                             )
                         }
                         Row(
@@ -592,8 +605,10 @@ fun BolusScreen() {
                         onConfirm = {
                             showTimePicker = false
                             printedEatTime = "${timePickerState.hour}:${timePickerState.minute}"
-                            val selectedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
-                            val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                            val selectedTime =
+                                LocalTime.of(timePickerState.hour, timePickerState.minute)
+                            val currentDateTime =
+                                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                             val updatedDateTime = LocalDateTime(
                                 year = currentDateTime.year,
                                 monthNumber = currentDateTime.monthNumber,

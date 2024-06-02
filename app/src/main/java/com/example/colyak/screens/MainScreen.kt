@@ -79,9 +79,9 @@ import androidx.navigation.navArgument
 import com.example.colyak.R
 import com.example.colyak.barcode.BarcodeScreen
 import com.example.colyak.components.CircularIndeterminateProgressBar
-import com.example.colyak.components.ImageFromUrl
 import com.example.colyak.components.cards.MealCard
 import com.example.colyak.components.cards.ReceiptCard
+import com.example.colyak.components.functions.ImageFromUrl
 import com.example.colyak.model.BolusReport
 import com.example.colyak.model.CommentRepliesResponse
 import com.example.colyak.model.MealDetail
@@ -141,6 +141,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PageNavigations() {
     val navController = rememberNavController()
+    NavControllerHolder.navController = navController
     NavHost(
         navController = navController,
         startDestination = Screens.Login.screen,

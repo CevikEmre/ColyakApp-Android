@@ -87,7 +87,6 @@ fun CommentTab(
         replyVM.getCommentsRepliesByReceiptId(receipt.id)
     }
 
-
     Scaffold(
         floatingActionButton = {
             Button(
@@ -139,7 +138,18 @@ fun CommentTab(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(all = 6.dp),
+                                    .padding(all = 6.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            comment?.commentResponse?.let { comment ->
+                                                replyVM.getCommentsById(
+                                                    comment.commentId
+                                                )
+                                            }
+                                            val commentJson = Gson().toJson(comment)
+                                            navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
+                                        }
+                                    },
                                 elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White,
@@ -194,10 +204,12 @@ fun CommentTab(
                                                         },
                                                         onClick = {
                                                             expanded.value = false
-                                                            commentTf.value = comment.commentResponse.comment
+                                                            commentTf.value =
+                                                                comment.commentResponse.comment
                                                             isVisible.value = true
                                                             isUpdating.value = true
-                                                            updatingCommentId.longValue = comment.commentResponse.commentId
+                                                            updatingCommentId.longValue =
+                                                                comment.commentResponse.commentId
                                                         }
                                                     )
                                                     DropdownMenuItem(
@@ -226,7 +238,6 @@ fun CommentTab(
                                                 }
                                             }
                                         }
-
                                     }
                                     HorizontalDivider(
                                         thickness = 0.8.dp,
@@ -240,7 +251,8 @@ fun CommentTab(
                                         horizontalArrangement = Arrangement.Start,
                                     ) {
                                         Text(
-                                            text = comment?.commentResponse?.comment?.trim('"') ?: "",
+                                            text = comment?.commentResponse?.comment?.trim('"')
+                                                ?: "",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W400
                                         )
@@ -249,7 +261,7 @@ fun CommentTab(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(top = 5.dp),
-                                        horizontalArrangement = Arrangement.End,
+                                        horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         if (comment?.replyResponses?.isNotEmpty() == true) {

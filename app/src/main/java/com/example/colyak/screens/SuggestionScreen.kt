@@ -37,12 +37,13 @@ import com.example.colyak.components.consts.Input
 import com.example.colyak.model.data.SuggestionData
 import com.example.colyak.viewmodel.SuggestionViewModel
 import kotlinx.coroutines.launch
+import readedBarcode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SuggestionScreen(navController: NavController) {
-    val tfValue = remember { mutableStateOf("") }
+    val tfValue = remember { mutableStateOf(readedBarcode) }
     var showAlert by mutableStateOf(false)
     val scope = rememberCoroutineScope()
     val suggestionVM: SuggestionViewModel = viewModel()
@@ -67,9 +68,11 @@ fun SuggestionScreen(navController: NavController) {
                 }
             )
         },
-        content = {padding ->
+        content = { padding ->
             Column(
-                modifier = Modifier.fillMaxSize().padding(padding),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -120,7 +123,6 @@ fun SuggestionScreen(navController: NavController) {
 
         }
     )
-
 
 
 }

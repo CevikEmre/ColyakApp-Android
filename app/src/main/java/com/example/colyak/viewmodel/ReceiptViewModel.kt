@@ -58,7 +58,6 @@ class ReceiptViewModel : ViewModel() {
             try {
                 val result = ReceiptService.getAll()
                 _receiptList.value = result ?: emptyList()
-                Log.e("ReceiptList12", receiptList.value.toString())
 
             } catch (e: Exception) {
                 Log.e("ReceiptScreenVM", "Fail", e)
@@ -84,16 +83,4 @@ class ReceiptViewModel : ViewModel() {
 
         }
     }
-
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
-    }
-
-    fun onToogleSearch() {
-        _isSearching.value = !_isSearching.value
-        if (!_isSearching.value) {
-            onSearchTextChange("")
-        }
-    }
-
 }

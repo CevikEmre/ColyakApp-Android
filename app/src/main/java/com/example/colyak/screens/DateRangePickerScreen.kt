@@ -1,6 +1,5 @@
 package com.example.colyak.screens
 
-import com.example.colyak.session.SessionManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -36,6 +35,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.session.SessionManager
 import com.example.colyak.viewmodel.BolusReportViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant

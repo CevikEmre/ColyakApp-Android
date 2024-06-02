@@ -62,11 +62,4 @@ fun PdfDetailScreen(pdfResponse: PDFResponse,navController: NavController) {
             )
         }
     )
-
-    VerticalPDFReader(
-        state = pdfState,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Gray)
-    )
 }

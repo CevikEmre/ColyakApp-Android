@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,22 +56,26 @@ fun ProductsTab(
                                 text = "${list[it]?.productName}",
                                 fontSize = 16.sp,
                                 maxLines = 2,
-                                softWrap = true
+                                softWrap = true,
+                                modifier = Modifier.weight(1f)
                             )
                             Text(
                                 text = "${list?.get(it)?.unit?.toInt()} ${list?.get(it)?.type}",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.W500,
                                 maxLines = 2,
-                                overflow = TextOverflow.Visible,
-                                modifier = Modifier.padding(bottom = 5.dp)
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.End
                             )
                         }
-
                     }
                 } else {
                     items(1) {
-                        Text(text = "Malzeleme Bulunamadı")
+                        Text(
+                            text = "Malzeme Bulunamadı",
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
             }

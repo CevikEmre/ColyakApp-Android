@@ -21,7 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    onPrimary = Color.Black // Karanlık modda metin rengini siyah yap
+    onPrimary = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -42,7 +42,7 @@ fun ColyakTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> LightColorScheme
         else -> LightColorScheme
     }
     val view = LocalView.current

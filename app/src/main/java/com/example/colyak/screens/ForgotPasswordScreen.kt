@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +48,7 @@ fun ForgotPasswordScreen(navController: NavController) {
     var showAlert by mutableStateOf(false)
     val forgotPasswordVM: ForgotPasswordViewModel = viewModel()
     val scope = rememberCoroutineScope()
-    LocalContext.current
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = { Text(text = "Şifremi Unuttum") },
@@ -91,8 +92,8 @@ fun ForgotPasswordScreen(navController: NavController) {
                 CustomizeButton(
                     onClick = {
                         scope.launch {
-                            showAlert = true
-                            forgotPasswordVM.forgotPassword(tfValue.value)
+                            val result = forgotPasswordVM.forgotPassword(tfValue.value,context,navController)
+                            Log.e("passwordReset",result.toString())
                         }
                     }, buttonText = "Gönder",
                     backgroundColor = colorResource(id = R.color.statusBarColor)

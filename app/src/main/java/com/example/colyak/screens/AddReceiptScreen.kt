@@ -5,10 +5,15 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -38,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.components.consts.CustomizeButton
-import com.example.colyak.components.consts.Input
 import com.example.colyak.model.FoodList
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.model.Receipt
@@ -121,14 +127,13 @@ fun AddReceiptScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            LazyRow(
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
                                 modifier = Modifier
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth(0.66f),
+                                    .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.Bottom
-
-                            ) {
+                                ) {
                                 val typeList = mutableListOf<String>()
                                 receipt.nutritionalValuesList?.forEach { receipt ->
                                     if (receipt != null) {
@@ -161,54 +166,47 @@ fun AddReceiptScreen(
                                     }
                                 }
                             }
-                            Card(
-                                colors = CardDefaults.cardColors(containerColor = Color.White),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 15.dp),
-                                modifier = Modifier.padding(8.dp)
+                        }
+                        Spacer(modifier = Modifier.height(25.dp))
+                        Card(
+                            modifier = Modifier.padding(5.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                        ){
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
+                                TextButton(
+                                    onClick = {
+                                        tfAmount.intValue += 1
+                                    }
                                 ) {
-                                    Button(
-                                        onClick = {
-                                            tfAmount.intValue += 1
-                                        },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = colorResource(
-                                                id = R.color.appBarColor
-                                            )
-                                        ),
-                                    ) {
-                                        Text(text = "+")
+                                    Text(text = "+",fontSize = 18.sp)
+                                }
+
+                                TextField(
+                                    value = tfAmount.intValue.toString(),
+                                    onValueChange = { newText ->
+                                        if (newText.isEmpty()) {
+                                            tfAmount.intValue = 0
+                                        } else if (newText.all { it.isDigit() }) {
+                                            tfAmount.intValue = newText.toInt()
+                                        }
+                                    },
+                                    modifier = Modifier.width(75.dp),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                                )
+                                TextButton(
+                                    onClick = {
+                                        tfAmount.intValue -= 1
                                     }
-                                    Input(
-                                        tfValue = tfAmount.intValue.toString(),
-                                        onValueChange = { newText ->
-                                            if (newText.isEmpty()) {
-                                                tfAmount.intValue = 0
-                                            } else if (newText.all { it.isDigit() }) {
-                                                tfAmount.intValue = newText.toInt()
-                                            }
-                                        },
-                                        label = "",
-                                        isPassword = false,
-                                        keybordType = KeyboardType.Number
-                                    )
-                                    Button(
-                                        onClick = {
-                                            tfAmount.intValue -= 1
-                                        }, colors = ButtonDefaults.buttonColors(
-                                            containerColor = colorResource(
-                                                id = R.color.appBarColor
-                                            )
-                                        )
-                                    ) {
-                                        Text(text = "-")
-                                    }
+                                ) {
+                                    Text(text = "-", fontSize = 20.sp)
                                 }
                             }
                         }
+
                     }
                 }
                 Column(
