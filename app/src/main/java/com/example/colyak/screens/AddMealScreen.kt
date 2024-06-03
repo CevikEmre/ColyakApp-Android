@@ -2,16 +2,11 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,12 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.components.cards.AddMealCard
 import com.example.colyak.components.functions.SearchTextField
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.viewmodel.ReceiptViewModel
@@ -136,12 +131,22 @@ fun AddMealToList(navController: NavController) {
         when (selectedTypeIndex.intValue) {
             0 -> {
                 val filteredReceiptList =
-                    receiptList?.filter { it?.receiptName!!.contains(searchQuery, ignoreCase = true) }
+                    receiptList?.filter {
+                        it?.receiptName!!.contains(
+                            searchQuery,
+                            ignoreCase = true
+                        )
+                    }
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     if (filteredReceiptList != null) {
                         items(filteredReceiptList.size) {
-                            val choose = filteredReceiptList[it]
-                            Card(
+                            val receipt = filteredReceiptList[it]
+                            AddMealCard(cardName = receipt?.receiptName, onClick = {
+                                val chooseJson = Gson().toJson(receipt)
+                                navController.navigate("${Screens.AddReceiptScreen.screen}/$chooseJson")
+                            }
+                            )
+                           /* Card(
                                 elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White,
@@ -151,7 +156,7 @@ fun AddMealToList(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                                     .clickable {
-                                        val chooseJson = Gson().toJson(choose)
+                                        val chooseJson = Gson().toJson(receipt)
                                         navController.navigate("${Screens.AddReceiptScreen.screen}/$chooseJson")
                                     }
                             ) {
@@ -162,8 +167,8 @@ fun AddMealToList(navController: NavController) {
                                         .fillMaxWidth()
                                         .padding(horizontal = 3.dp)
                                 ) {
-                                    if (choose != null) {
-                                        choose.receiptName?.let { it1 ->
+                                    if (receipt != null) {
+                                        receipt.receiptName?.let { it1 ->
                                             Text(
                                                 text = it1,
                                                 fontSize = 24.sp,
@@ -181,7 +186,7 @@ fun AddMealToList(navController: NavController) {
                                         tint = colorResource(id = R.color.appBarColor)
                                     )
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
@@ -198,41 +203,10 @@ fun AddMealToList(navController: NavController) {
                     if (filteredReadyFoodList != null) {
                         items(filteredReadyFoodList.size) {
                             val readyFood = filteredReadyFoodList[it]
-                            Card(
-                                elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White,
-                                    contentColor = Color.Black
-                                ),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                                    .clickable {
-                                        val readyFoodJson = Gson().toJson(readyFood)
-                                        navController.navigate("${Screens.AddReadyFoodScreen.screen}/$readyFoodJson")
-                                    }
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 3.dp)
-                                ) {
-                                    if (readyFood != null) {
-                                        Text(
-                                            text = readyFood.name ?: "BOŞ",
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.W500,
-                                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp)
-                                        )
-                                    }
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.arrow_right),
-                                        contentDescription = ""
-                                    )
-                                }
-                            }
+                            AddMealCard(cardName = readyFood?.name, onClick = {
+                                val readyFoodJson = Gson().toJson(readyFood)
+                                navController.navigate("${Screens.AddReadyFoodScreen.screen}/$readyFoodJson")
+                            })
                         }
                     }
                 }

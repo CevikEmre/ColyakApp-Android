@@ -73,7 +73,7 @@ fun QuestionCard(
                 .padding(vertical = 5.dp, horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = questionList.question)
+            Text(text = questionList.question.trimEnd('?'))
 
             if (questionList.choicesList.any { it.imageId != null && it.imageId.toInt() != 0 }) {
                 LazyVerticalGrid(

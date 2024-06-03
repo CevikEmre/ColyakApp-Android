@@ -39,8 +39,7 @@ fun QuestionCardWithImage(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 4.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

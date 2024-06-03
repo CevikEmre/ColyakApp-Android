@@ -109,6 +109,7 @@ val mealList = listOf(
 var globalReceiptList: List<Receipt?>? = emptyList()
 var globalReadyFoodList: List<ReadyFoods?>? = emptyList()
 
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,10 +202,11 @@ fun PageNavigations() {
             navArgument("quiz") {
                 type = NavType.StringType
             }
-            val json = it.arguments?.getString("quiz")
+            val json = it.arguments?.getString("quiz")?.replace("?", "")
             val quiz = Gson().fromJson(json, Quiz::class.java)
             QuizDetailScreen(quiz, navController)
         }
+
         composable(Screens.QuizReportScreen.screen) {
             QuizReportScreen(quizReportList = answerList, navController = navController)
         }

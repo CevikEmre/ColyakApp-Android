@@ -45,7 +45,6 @@ fun UsefulInformationScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         pdfVM.getAllPdfs()
     }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -79,19 +78,21 @@ fun UsefulInformationScreen(navController: NavController) {
             } else {
                 LazyColumn(
                     content = {
-                        if (pdfList?.isNotEmpty() == true) {
-                            items(pdfList!!.size) {
-                                val pdf = pdfList!![it]
-                                if (pdf != null) {
-                                    PdfCard(
-                                        topic = pdf.name,
-                                        modifier = Modifier
-                                            .padding(8.dp)
-                                            .clickable {
-                                                val pdfJson = Gson().toJson(pdf)
-                                                navController.navigate("${Screens.PdfDetailScreen.screen}/$pdfJson")
-                                            }
-                                    )
+                        pdfList?.let { list ->
+                            if (list.isNotEmpty()) {
+                                items(list.size) { index ->
+                                    val pdf = list[index]
+                                    pdf?.let {
+                                        PdfCard(
+                                            topic = pdf.name,
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .clickable {
+                                                    val pdfJson = Gson().toJson(pdf)
+                                                    navController.navigate("${Screens.PdfDetailScreen.screen}/$pdfJson")
+                                                }
+                                        )
+                                    }
                                 }
                             }
                         }

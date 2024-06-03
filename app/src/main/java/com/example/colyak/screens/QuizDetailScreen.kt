@@ -20,10 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -39,9 +39,7 @@ import kotlinx.coroutines.launch
 fun QuizDetailScreen(quiz: Quiz, navController: NavController) {
     val scope = rememberCoroutineScope()
     val quizViewModel: QuizViewModel = viewModel()
-    val context = LocalContext.current
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
-
 
     val onNextQuestionClicked: () -> Unit = {
         currentQuestionIndex++
@@ -77,9 +75,15 @@ fun QuizDetailScreen(quiz: Quiz, navController: NavController) {
                     .fillMaxSize()
                     .padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) { items(1){
-                Text(text = "${currentQuestionIndex + 1} / ${quiz.questionList.size}", fontSize = 18.sp, fontWeight = FontWeight.W600)
-            }
+            ) {
+                items(1) {
+                    Text(
+                        text = "${currentQuestionIndex + 1} / ${quiz.questionList.size}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
                 items(quiz.questionList.size) { index ->
                     if (index == currentQuestionIndex) {
                         QuestionCard(

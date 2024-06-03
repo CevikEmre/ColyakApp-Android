@@ -2,6 +2,7 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +51,7 @@ import com.example.colyak.model.FoodList
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.enum.FoodType
+import kotlinx.coroutines.launch
 
 var bolusList = mutableStateListOf<FoodList>()
 
@@ -65,6 +68,8 @@ fun AddReceiptScreen(
     val printedMealList = remember { mutableStateOf(emptyList<PrintedMeal>()) }
     val foodList = remember { mutableStateListOf<FoodList>() }
     val amountType = remember { mutableStateOf("") }
+    val iconButtonEnabled = remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -79,9 +84,12 @@ fun AddReceiptScreen(
                     containerColor = colorResource(id = R.color.appBarColor)
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        },
+                        enabled = iconButtonEnabled.value
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
@@ -133,7 +141,7 @@ fun AddReceiptScreen(
                                     .padding(horizontal = 4.dp)
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Start,
-                                ) {
+                            ) {
                                 val typeList = mutableListOf<String>()
                                 receipt.nutritionalValuesList?.forEach { receipt ->
                                     if (receipt != null) {
@@ -172,7 +180,7 @@ fun AddReceiptScreen(
                             modifier = Modifier.padding(5.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.White),
                             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                        ){
+                        ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center,
@@ -182,7 +190,7 @@ fun AddReceiptScreen(
                                         tfAmount.intValue += 1
                                     }
                                 ) {
-                                    Text(text = "+",fontSize = 18.sp)
+                                    Text(text = "+", fontSize = 18.sp)
                                 }
 
                                 TextField(
@@ -241,8 +249,14 @@ fun AddReceiptScreen(
                                 bolusList += foodList
                                 printedMealList.value = emptyList()
                                 foodList.removeAll(elements = foodList)
+                                scope.launch {
+                                    iconButtonEnabled.value = false
+                                    Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
+                                    navController.popBackStack()
+                                }
                             }
                         },
+                        enabled = !receipt.nutritionalValuesList.isNullOrEmpty(),
                         buttonText = "Ekle",
                         backgroundColor = colorResource(id = R.color.appBarColor)
                     )

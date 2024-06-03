@@ -55,7 +55,7 @@ fun ReceiptTab(
                             if (description != null) {
                                 Text(
                                     text = description,
-                                    fontSize = 16.sp,
+                                    fontSize = 18.sp,
                                 )
 
                             } else {

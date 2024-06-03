@@ -26,7 +26,6 @@ class RetrofitClient() {
                 .disableHtmlEscaping()
                 .setLenient()
                 .setPrettyPrinting()
-                .serializeNulls()
                 .create()
             return Retrofit.Builder()
                 .client(client)

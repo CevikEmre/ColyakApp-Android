@@ -73,6 +73,7 @@ fun LoginScreen(navController: NavController) {
                 loginResponse.token = token
                 loginResponse.refreshToken = refreshToken.toString()
                 loginResponse.userName = userName.toString()
+                sessionManager.refreshToken(loginResponse.refreshToken)
                 navController.navigate(Screens.MainScreen.screen)
             } else {
                 clearLoginResponse()

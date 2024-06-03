@@ -46,7 +46,7 @@ fun ColyakTheme(
         else -> LightColorScheme
     }
     val view = LocalView.current
-    val statusBarColor = colorResource(id = R.color.statusBarColor).toArgb()
+    val statusBarColor = colorResource(id = R.color.appBarColor).toArgb()
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window

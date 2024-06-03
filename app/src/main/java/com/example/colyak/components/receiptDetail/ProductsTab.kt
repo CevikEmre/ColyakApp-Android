@@ -48,21 +48,21 @@ fun ProductsTab(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 6.dp),
+                                .padding(vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
                                 text = "${list[it]?.productName}",
-                                fontSize = 16.sp,
+                                fontSize = 18.sp,
                                 maxLines = 2,
                                 softWrap = true,
                                 modifier = Modifier.weight(1f)
                             )
                             Text(
                                 text = "${list?.get(it)?.unit?.toInt()} ${list?.get(it)?.type}",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W500,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.weight(1f),

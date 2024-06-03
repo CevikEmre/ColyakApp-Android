@@ -16,6 +16,7 @@ fun ImageFromUrl(url: String, modifier: Modifier) {
         builder = {
             crossfade(false)
             placeholder(android.R.drawable.ic_menu_gallery)
+            error(android.R.drawable.stat_notify_error)
         }
     )
 

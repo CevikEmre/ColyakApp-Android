@@ -46,7 +46,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                 onClick = {
                     navController.navigate("${Screens.AddMealScreen.screen}/${mealDetail.mealName}")
                 }, containerColor = colorResource(
-                    id = R.color.appBarColor
+                    id = R.color.statusBarColor
                 )
             ) {
                 Icon(Icons.Sharp.Add, contentDescription = "", tint = Color.White)
@@ -55,7 +55,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "${mealDetail.mealName} Detay")
+                    Text(text = "${mealDetail.mealName} Detay", color = Color.White)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -94,9 +94,14 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                     ) {
                         Text(
                             text = "${calculateTotalCarbs(eatenMealList)} g",
-                            fontWeight = FontWeight.W800
+                            fontWeight = FontWeight.W700,
+                            fontSize = 20.sp
                         )
-                        Text(text = "Karbonhidrat")
+                        Text(
+                            text = "Karbonhidrat",
+                            fontWeight = FontWeight.W500,
+                            fontSize = 20.sp
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))

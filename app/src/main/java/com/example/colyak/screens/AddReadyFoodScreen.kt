@@ -1,7 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +48,8 @@ import com.example.colyak.model.FoodList
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.model.ReadyFoods
 import com.example.colyak.model.enum.FoodType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,6 +65,8 @@ fun AddReadyFoodScreen(
     val printedMealList = remember { mutableStateOf(emptyList<PrintedMeal>()) }
     var foodList = remember { mutableStateListOf<FoodList>() }
     val amountType = remember { mutableStateOf("") }
+    val iconButtonEnabled = remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -228,9 +233,15 @@ fun AddReadyFoodScreen(
                             bolusList += foodList
                             printedMealList.value = emptyList()
                             foodList.removeAll(foodList)
-                            Log.e("BolusList", bolusList.toString())
+                            scope.launch {
+                                iconButtonEnabled.value = false
+                                Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
+                                delay(500)
+                                navController.popBackStack()
+                            }
                         },
                         buttonText = "Ekle",
+                        enabled = !readyFoods.nutritionalValuesList.isNullOrEmpty(),
                         backgroundColor = colorResource(id = R.color.appBarColor)
                     )
                     Text("Liste:")

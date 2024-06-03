@@ -73,7 +73,7 @@ fun MealCard(
                     }
                 }
                 Column(Modifier.padding(start = 10.dp), verticalArrangement = Arrangement.Center) {
-                    Text(text = mealDetail.mealName + " Ekle", fontWeight = FontWeight.W800)
+                    Text(text = mealDetail.mealName + " Ekle", fontWeight = FontWeight.SemiBold)
                 }
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {

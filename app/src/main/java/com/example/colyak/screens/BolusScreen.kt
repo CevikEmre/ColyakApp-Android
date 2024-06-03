@@ -69,6 +69,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.time.LocalTime
+import java.util.Locale
 import kotlin.math.roundToLong
 
 
@@ -172,9 +173,9 @@ fun BolusScreen() {
                                 isPassword = false,
                                 keybordType = KeyboardType.Number,
                                 trailingIcon = R.drawable.time,
-                                trailingIconClick = {
+                               /* trailingIconClick = {
                                     showTimePicker = true
-                                },
+                                },*/
                                 readOnly = true,
                                 modifier = Modifier.clickable {
                                     showTimePicker = true
@@ -604,7 +605,12 @@ fun BolusScreen() {
                         onCancel = { showTimePicker = false },
                         onConfirm = {
                             showTimePicker = false
-                            printedEatTime = "${timePickerState.hour}:${timePickerState.minute}"
+                            printedEatTime = String.format(
+                                Locale.getDefault(),
+                                "%02d:%02d",
+                                timePickerState.hour,
+                                timePickerState.minute
+                            )
                             val selectedTime =
                                 LocalTime.of(timePickerState.hour, timePickerState.minute)
                             val currentDateTime =

@@ -63,6 +63,7 @@ fun ReceiptScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var searchQuery by remember { mutableStateOf("") }
+    val favoriteLoading by favoriteVM.loading.collectAsState()
 
     LaunchedEffect(Unit) {
         receiptViewModel.getAll()
@@ -188,51 +189,63 @@ fun ReceiptScreen(navController: NavController) {
                                     ignoreCase = true
                                 ) == true
                             }
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                content = {
-                                    if (!filteredFavoriteList.isNullOrEmpty()) {
-                                        items(filteredFavoriteList.size) { index ->
-                                            val receipt = filteredFavoriteList[index]
-                                            if (receipt != null) {
-                                                val trimmedName =
-                                                    if (receipt.receiptName?.length ?: 0 > 50) {
-                                                        receipt.receiptName?.substring(
-                                                            0,
-                                                            50
-                                                        ) + "..."
-                                                    } else {
-                                                        receipt.receiptName
-                                                    }
-                                                ReceiptCard(
-                                                    cardName = trimmedName ?: "",
-                                                    image = {
-                                                        ImageFromUrl(
-                                                            url = "https://api.colyakdiyabet.com.tr/api/image/get/${receipt.imageId}",
-                                                            modifier = Modifier.aspectRatio(ratio = 1.28f)
-                                                        )
-                                                    },
-                                                    modifier = Modifier
-                                                        .clickable {
-                                                            scope.launch {
-                                                                try {
-                                                                    val receiptJson =
-                                                                        Gson().toJson(receipt)
-                                                                    navController.navigate("receiptDetailScreen/$receiptJson")
-                                                                } catch (e: Exception) {
-                                                                    snackbarHostState.showSnackbar(
-                                                                        "Tarif detayına yönlendirilirken bir hata oluştu."
-                                                                    )
+                            if (loading) {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    CircularIndeterminateProgressBar(isDisplay = loading)
+                                }
+                            } else {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    content = {
+                                        if (!filteredFavoriteList.isNullOrEmpty()) {
+                                            items(filteredFavoriteList.size) { index ->
+                                                val receipt = filteredFavoriteList[index]
+                                                if (receipt != null) {
+                                                    val trimmedName =
+                                                        if (receipt.receiptName?.length ?: 0 > 50) {
+                                                            receipt.receiptName?.substring(
+                                                                0,
+                                                                50
+                                                            ) + "..."
+                                                        } else {
+                                                            receipt.receiptName
+                                                        }
+                                                    ReceiptCard(
+                                                        cardName = trimmedName ?: "",
+                                                        image = {
+                                                            ImageFromUrl(
+                                                                url = "https://api.colyakdiyabet.com.tr/api/image/get/${receipt.imageId}",
+                                                                modifier = Modifier.aspectRatio(
+                                                                    ratio = 1.28f
+                                                                )
+                                                            )
+                                                        },
+                                                        modifier = Modifier
+                                                            .clickable {
+                                                                scope.launch {
+                                                                    try {
+                                                                        val receiptJson =
+                                                                            Gson().toJson(receipt)
+                                                                        navController.navigate("receiptDetailScreen/$receiptJson")
+                                                                    } catch (e: Exception) {
+                                                                        snackbarHostState.showSnackbar(
+                                                                            "Tarif detayına yönlendirilirken bir hata oluştu."
+                                                                        )
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                        .padding(all = 5.dp)
-                                                )
+                                                            .padding(all = 5.dp)
+                                                    )
+                                                }
                                             }
                                         }
-                                    }
-                                }, modifier = Modifier.padding(paddingValues)
-                            )
+                                    }, modifier = Modifier.padding(paddingValues)
+                                )
+                            }
                         }
                     }
                 }
