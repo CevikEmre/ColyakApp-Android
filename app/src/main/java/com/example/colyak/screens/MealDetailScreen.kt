@@ -55,7 +55,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "${mealDetail.mealName} Detay", color = Color.White)
+                    Text(text = "${mealDetail.mealName} Ekle", color = Color.White)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -176,7 +176,6 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                                     }
                                 }
                             }
-
                         }
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 18.dp),

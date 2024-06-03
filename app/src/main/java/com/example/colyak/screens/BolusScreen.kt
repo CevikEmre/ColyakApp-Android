@@ -173,9 +173,9 @@ fun BolusScreen() {
                                 isPassword = false,
                                 keybordType = KeyboardType.Number,
                                 trailingIcon = R.drawable.time,
-                               /* trailingIconClick = {
+                                trailingIconClick = {
                                     showTimePicker = true
-                                },*/
+                                },
                                 readOnly = true,
                                 modifier = Modifier.clickable {
                                     showTimePicker = true
@@ -684,10 +684,10 @@ fun TimePickerDialog(
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         onClick = onCancel
-                    ) { Text("Cancel") }
+                    ) { Text("Vazgeç") }
                     TextButton(
                         onClick = onConfirm
-                    ) { Text("OK") }
+                    ) { Text("Tamam") }
                 }
             }
         }

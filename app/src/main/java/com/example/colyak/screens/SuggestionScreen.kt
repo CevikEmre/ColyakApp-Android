@@ -37,7 +37,6 @@ import com.example.colyak.components.consts.Input
 import com.example.colyak.model.data.SuggestionData
 import com.example.colyak.viewmodel.SuggestionViewModel
 import kotlinx.coroutines.launch
-import readedBarcode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")

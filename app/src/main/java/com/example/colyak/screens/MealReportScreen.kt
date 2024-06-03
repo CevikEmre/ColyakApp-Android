@@ -114,12 +114,12 @@ fun MealReportScreen(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 12.dp, horizontal = 5.dp)
+                                    .padding(vertical = 18.dp, horizontal = 8.dp)
                             ) {
                                 Text(
                                     text = convertDateTime(meal.dateTime),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold
                                 )
                                 Icon(
                                     painter = painterResource(id = R.drawable.arrow_right),

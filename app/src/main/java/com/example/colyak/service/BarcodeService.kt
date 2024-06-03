@@ -1,7 +1,7 @@
 package com.example.colyak.service
 
 import android.util.Log
-import barcodeAlert
+import com.example.colyak.screens.barcodeAlert
 import com.example.colyak.`interface`.BarcodeInterface
 import com.example.colyak.model.Barcode
 import com.example.colyak.retrofit.RetrofitClient

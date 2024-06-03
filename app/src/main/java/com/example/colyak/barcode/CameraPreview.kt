@@ -27,7 +27,7 @@ import com.example.colyak.viewmodel.BarcodeViewModel
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import readedBarcode
+import com.example.colyak.screens.readedBarcode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

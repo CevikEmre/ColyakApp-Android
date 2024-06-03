@@ -253,6 +253,7 @@ fun AddReceiptScreen(
                                     iconButtonEnabled.value = false
                                     Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                                     navController.popBackStack()
+                                    iconButtonEnabled.value = true
                                 }
                             }
                         },

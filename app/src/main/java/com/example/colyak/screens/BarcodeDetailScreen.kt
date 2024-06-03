@@ -1,3 +1,5 @@
+package com.example.colyak.screens
+
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -29,11 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +50,6 @@ import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
 import com.example.colyak.components.functions.ImageFromUrl
 import com.example.colyak.model.data.SuggestionData
-import com.example.colyak.screens.Screens
 import com.example.colyak.viewmodel.SuggestionViewModel
 import com.example.colyak.viewmodel.barcode
 import kotlinx.coroutines.launch
@@ -62,7 +61,6 @@ var barcodeAlert = false
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BarcodeDetailScreen(navController: NavController) {
-    var showAlert by remember { mutableStateOf(false) }
     val isVisible = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val sugggestionTf = remember { mutableStateOf(readedBarcode) }
@@ -301,7 +299,7 @@ fun BarcodeDetailScreen(navController: NavController) {
                         },
                         dismissButton = {
                             Text(text = "Tekrar Tara", modifier = Modifier.clickable {
-                                showAlert = false
+                                barcodeAlert = false
                                 navController.popBackStack()
                             }
                             )

@@ -71,9 +71,9 @@ fun ReceiptDetailsTab(
                         text = {
                             Text(
                                 title,
-                                fontSize = 13.sp,
+                                fontSize = 14.sp,
                                 maxLines = 2,
-                                overflow = TextOverflow.Visible
+                                overflow = TextOverflow.Ellipsis,
                             )
                         },
                         selected = tabIndex == index,

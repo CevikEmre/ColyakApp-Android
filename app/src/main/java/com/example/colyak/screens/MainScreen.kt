@@ -1,7 +1,6 @@
 package com.example.colyak.screens
 
 
-import BarcodeDetailScreen
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle

@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,6 +68,7 @@ fun ReceiptScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         receiptViewModel.getAll()
+        favoriteVM.getAllFavoriteReceipts()
     }
 
     Scaffold(
@@ -180,9 +182,6 @@ fun ReceiptScreen(navController: NavController) {
                         }
 
                         1 -> {
-                            LaunchedEffect(Unit) {
-                                favoriteVM.getAllFavoriteReceipts()
-                            }
                             val filteredFavoriteList = favoriteList?.filter {
                                 it?.receiptName?.contains(
                                     searchQuery,
@@ -206,7 +205,7 @@ fun ReceiptScreen(navController: NavController) {
                                                 val receipt = filteredFavoriteList[index]
                                                 if (receipt != null) {
                                                     val trimmedName =
-                                                        if (receipt.receiptName?.length ?: 0 > 50) {
+                                                        if ((receipt.receiptName?.length ?: 0) > 50) {
                                                             receipt.receiptName?.substring(
                                                                 0,
                                                                 50
@@ -245,6 +244,19 @@ fun ReceiptScreen(navController: NavController) {
                                         }
                                     }, modifier = Modifier.padding(paddingValues)
                                 )
+                            }
+                            if (favoriteList.isNullOrEmpty()) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "Henüz herhangi bir tarifi favorilere eklemediniz.",
+                                        fontSize = 20.sp,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
                     }

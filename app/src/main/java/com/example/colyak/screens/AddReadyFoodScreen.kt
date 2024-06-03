@@ -48,7 +48,6 @@ import com.example.colyak.model.FoodList
 import com.example.colyak.model.PrintedMeal
 import com.example.colyak.model.ReadyFoods
 import com.example.colyak.model.enum.FoodType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -236,7 +235,6 @@ fun AddReadyFoodScreen(
                             scope.launch {
                                 iconButtonEnabled.value = false
                                 Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
-                                delay(500)
                                 navController.popBackStack()
                             }
                         },
