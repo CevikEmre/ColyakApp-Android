@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.colyak.model.Receipt
+import kotlin.math.roundToInt
 
 
 @Composable
@@ -39,6 +40,19 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                 containerColor = Color.White
             )
         ) {
+            if (receipt.nutritionalValuesList?.isEmpty() == true) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Besin değerleri eklenmemiştir",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    )
+                }
+            }
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 receipt.nutritionalValuesList?.let { nutritionalValuesList ->
                     items(nutritionalValuesList.size) {
@@ -47,7 +61,7 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 15.dp, horizontal = 12.dp),
-                            elevation = CardDefaults.cardElevation(12.dp),
+                            elevation = CardDefaults.cardElevation(6.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color(0xFFFFF1EC),
                             )
@@ -62,65 +76,63 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                                             Text(
                                                 text = it1,
                                                 Modifier.padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.W500,
-
-                                            )
+                                                fontWeight = FontWeight.W600,)
                                         }
                                     } else Text(text = "")
                                 }
                             }
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                if (nutritionalValues != null) {
-                                    Text(text = "Kalori " )
-                                    Text(text = nutritionalValues.calorieAmount.toString())
-                                } else Text(text = "")
-                            }
-                            HorizontalDivider(thickness = 1.dp)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                if (nutritionalValues != null) {
-                                    Text(text = "Karbonhidrat  ")
-                                    Text(text = nutritionalValues.carbohydrateAmount.toString())
-                                } else Text(text = "")
-                            }
-                            HorizontalDivider(thickness = 1.dp)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                if (nutritionalValues != null) {
-                                    Text(text = "Protein ")
-                                    Text(text = nutritionalValues.proteinAmount.toString())
-                                } else Text(text = "")
-                            }
-                            HorizontalDivider(thickness = 1.dp)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                if (nutritionalValues != null) {
-                                    Text(text = "Yağ ")
-                                    Text(text = nutritionalValues.fatAmount.toString())
-                                } else Text(text = "")
-                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            if (nutritionalValues != null) {
+                                Text(text = "Kalori ")
+                                Text(text = nutritionalValues.calorieAmount?.roundToInt().toString())
+                            } else Text(text = "")
+                        }
+                        HorizontalDivider(thickness = 1.dp)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            if (nutritionalValues != null) {
+                                Text(text = "Karbonhidrat  ")
+                                Text(text = nutritionalValues.carbohydrateAmount?.roundToInt().toString())
+                            } else Text(text = "")
+                        }
+                        HorizontalDivider(thickness = 1.dp)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            if (nutritionalValues != null) {
+                                Text(text = "Protein ")
+                                Text(text = nutritionalValues.proteinAmount?.roundToInt().toString())
+                            } else Text(text = "")
+                        }
+                        HorizontalDivider(thickness = 1.dp)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            if (nutritionalValues != null) {
+                                Text(text = "Yağ ")
+                                Text(text = nutritionalValues.fatAmount?.roundToInt().toString())
+                            } else Text(text = "")
+                        }
                     }
                 }
             }

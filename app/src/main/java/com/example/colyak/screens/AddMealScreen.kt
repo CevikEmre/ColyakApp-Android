@@ -146,47 +146,6 @@ fun AddMealToList(navController: NavController) {
                                 navController.navigate("${Screens.AddReceiptScreen.screen}/$chooseJson")
                             }
                             )
-                           /* Card(
-                                elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White,
-                                    contentColor = Color.Black
-                                ),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                                    .clickable {
-                                        val chooseJson = Gson().toJson(receipt)
-                                        navController.navigate("${Screens.AddReceiptScreen.screen}/$chooseJson")
-                                    }
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 3.dp)
-                                ) {
-                                    if (receipt != null) {
-                                        receipt.receiptName?.let { it1 ->
-                                            Text(
-                                                text = it1,
-                                                fontSize = 24.sp,
-                                                fontWeight = FontWeight.W500,
-                                                modifier = Modifier.padding(
-                                                    vertical = 6.dp,
-                                                    horizontal = 4.dp
-                                                )
-                                            )
-                                        }
-                                    }
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.arrow_right),
-                                        contentDescription = "",
-                                        tint = colorResource(id = R.color.appBarColor)
-                                    )
-                                }
-                            }*/
                         }
                     }
                 }

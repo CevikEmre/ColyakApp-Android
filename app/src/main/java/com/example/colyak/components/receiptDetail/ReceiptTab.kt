@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ReceiptTab(
     paddingValues: PaddingValues,
-    description: List<String?>?
+    descriptionList: List<String?>?
 ) {
     Column(
         modifier = Modifier
@@ -42,9 +42,9 @@ fun ReceiptTab(
             )
         ) {
             LazyColumn(modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
-                if (description != null) {
-                    items(description.size) {
-                        val description = description[it]
+                if (descriptionList != null) {
+                    items(descriptionList.size) { index ->
+                        val description = descriptionList[index]
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start,
@@ -54,18 +54,21 @@ fun ReceiptTab(
                         ) {
                             if (description != null) {
                                 Text(
-                                    text = description,
+                                    text = "${index.inc()} - " + description,
                                     fontSize = 18.sp,
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
 
                             } else {
                                 Text(text = "")
                             }
                         }
-                        HorizontalDivider(
-                            thickness = 0.8.dp,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        if (index < descriptionList.size - 1){
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 } else {
                     items(1) {

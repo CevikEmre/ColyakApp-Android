@@ -150,7 +150,7 @@ fun CommentTab(
                                             navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
                                         }
                                     },
-                                elevation = CardDefaults.cardElevation(defaultElevation = 18.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White,
                                     contentColor = Color.Black
@@ -272,9 +272,7 @@ fun CommentTab(
                                                 modifier = Modifier.clickable {
                                                     scope.launch {
                                                         comment.commentResponse.let { comment ->
-                                                            replyVM.getCommentsById(
-                                                                comment.commentId
-                                                            )
+                                                            replyVM.getCommentsById(comment.commentId)
                                                         }
                                                         val commentJson = Gson().toJson(comment)
                                                         navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
@@ -352,10 +350,7 @@ fun CommentTab(
                                             ).show()
                                         } else {
                                             commentVM.createComment(
-                                                CommentData(
-                                                    receipt.id,
-                                                    commentTf.value
-                                                )
+                                                CommentData(receipt.id, commentTf.value)
                                             )
                                             Toast.makeText(
                                                 context,
