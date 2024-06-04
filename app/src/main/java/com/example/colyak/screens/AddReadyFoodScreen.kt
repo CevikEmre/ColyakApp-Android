@@ -62,7 +62,7 @@ fun AddReadyFoodScreen(
     val tfAmount = remember { mutableIntStateOf(1) }
     val verticalScrollState = rememberScrollState()
     val printedMealList = remember { mutableStateOf(emptyList<PrintedMeal>()) }
-    var foodList = remember { mutableStateListOf<FoodList>() }
+    val foodList = remember { mutableStateListOf<FoodList>() }
     val amountType = remember { mutableStateOf("") }
     val iconButtonEnabled = remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
@@ -211,6 +211,7 @@ fun AddReadyFoodScreen(
                 ) {
                     CustomizeButton(
                         onClick = {
+                            scope.launch {
                             val lastCarbAmount: Int =
                                 (tfAmount.intValue.toDouble() * (readyFoods.nutritionalValuesList?.get(
                                     selectedButtonIndex.intValue
@@ -232,7 +233,7 @@ fun AddReadyFoodScreen(
                             bolusList += foodList
                             printedMealList.value = emptyList()
                             foodList.removeAll(foodList)
-                            scope.launch {
+
                                 iconButtonEnabled.value = false
                                 Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()

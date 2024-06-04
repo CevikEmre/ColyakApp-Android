@@ -15,6 +15,9 @@ val poppinsFontFamily = FontFamily(
     Font(R.font.poppins_semibold, FontWeight.SemiBold),
     Font(R.font.poppins_black, FontWeight.Black)
 )
+val urbanistFontFamily = FontFamily(
+    Font(R.font.urbanist_regular, FontWeight.Normal),
+)
 
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -24,14 +27,14 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
     ),
-    /*titleLarge = TextStyle(
-        fontFamily = poppinsFontFamily,
+    titleLarge = TextStyle(
+        fontFamily = urbanistFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
+    /*labelSmall = TextStyle(
         fontFamily = poppinsFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,

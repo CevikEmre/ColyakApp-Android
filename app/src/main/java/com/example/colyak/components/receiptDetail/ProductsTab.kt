@@ -54,14 +54,15 @@ fun ProductsTab(
                         ) {
                             Text(
                                 text = "${list[it]?.productName}",
-                                fontSize = 17.sp,
+                                fontSize = 16.sp,
                                 maxLines = 2,
-                                softWrap = true,
-                                modifier = Modifier.weight(1f)
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.Start
                             )
                             Text(
                                 text = "${list?.get(it)?.unit?.toInt()} ${list?.get(it)?.type}",
-                                fontSize = 17.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,

@@ -33,7 +33,7 @@ fun ReceiptTab(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
-            elevation = CardDefaults.cardElevation(18.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -41,7 +41,7 @@ fun ReceiptTab(
                 containerColor = Color.White
             )
         ) {
-            LazyColumn(modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
+            LazyColumn(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
                 if (descriptionList != null) {
                     items(descriptionList.size) { index ->
                         val description = descriptionList[index]
@@ -50,7 +50,6 @@ fun ReceiptTab(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 3.dp)
                         ) {
                             if (description != null) {
                                 Text(

@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -21,6 +24,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +57,7 @@ import kotlinx.coroutines.launch
 
 val titles = listOf("Tarifler", "Favori Tarifler")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun ReceiptScreen(navController: NavController) {
@@ -73,8 +79,22 @@ fun ReceiptScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
+
             Column {
-                Card(Modifier.padding(5.dp)) {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(text = "Tarifler")
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = colorResource(id = R.color.appBarColor),
+                        titleContentColor = Color.White
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp,vertical = 12.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+
+                    )
+                Card(Modifier.padding(horizontal = 5.dp)) {
                     SearchTextField { query ->
                         searchQuery = query
                     }
@@ -86,7 +106,7 @@ fun ReceiptScreen(navController: NavController) {
                     containerColor = Color.White,
                     indicator = { tabPositions ->
                         SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[tabIndex]).padding(top = 2.dp),
                             color = colorResource(id = R.color.appBarColor)
                         )
                     }

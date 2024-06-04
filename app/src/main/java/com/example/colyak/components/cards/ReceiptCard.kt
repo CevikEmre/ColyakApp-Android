@@ -25,7 +25,7 @@ fun ReceiptCard(
 ) {
     Card( modifier = modifier.height(270.dp).width(200.dp),
         elevation = CardDefaults.cardElevation(6.dp),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )

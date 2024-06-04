@@ -225,6 +225,7 @@ fun AddReceiptScreen(
                 ) {
                     CustomizeButton(
                         onClick = {
+                            scope.launch {
                             val selectedTypeIndex = selectedButtonIndex.intValue
                             if (selectedTypeIndex != -1) {
                                 val selectedType =
@@ -249,11 +250,10 @@ fun AddReceiptScreen(
                                 bolusList += foodList
                                 printedMealList.value = emptyList()
                                 foodList.removeAll(elements = foodList)
-                                scope.launch {
+
                                     iconButtonEnabled.value = false
                                     Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                                     navController.popBackStack()
-                                    iconButtonEnabled.value = true
                                 }
                             }
                         },
