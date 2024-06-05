@@ -1,6 +1,7 @@
 package com.example.colyak.components.receiptDetail
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,7 +86,7 @@ fun CommentTab(
     val commentReplies by replyVM.commentRepliesList.observeAsState()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        replyVM.getCommentsRepliesByReceiptId(receipt.id)
+        receipt.id?.let { replyVM.getCommentsRepliesByReceiptId(it) }
     }
 
     Scaffold(
@@ -127,6 +129,19 @@ fun CommentTab(
                         .fillMaxSize()
                         .padding(padding)
                 ) {
+                    if (commentReplies.isNullOrEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize().padding(paddingValues),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Henüz bu tarife herhangi bir yorum yapılmadı.",
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f),
@@ -147,7 +162,8 @@ fun CommentTab(
                                                 )
                                             }
                                             val commentJson = Gson().toJson(comment)
-                                            navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
+                                            val formattedCommentJson = Uri.encode(commentJson)
+                                            navController.navigate("${Screens.CommentReplyScreen.screen}/$formattedCommentJson")
                                         }
                                     },
                                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -229,9 +245,11 @@ fun CommentTab(
                                                                     Toast.LENGTH_SHORT
                                                                 ).show()
                                                                 commentVM.deleteComment(comment.commentResponse.commentId)
-                                                                replyVM.getCommentsRepliesByReceiptId(
-                                                                    receipt.id
-                                                                )
+                                                                receipt.id?.let { receiptId ->
+                                                                    replyVM.getCommentsRepliesByReceiptId(
+                                                                        receiptId
+                                                                    )
+                                                                }
                                                             }
                                                         }
                                                     )
@@ -251,7 +269,7 @@ fun CommentTab(
                                         horizontalArrangement = Arrangement.Start,
                                     ) {
                                         Text(
-                                            text = comment?.commentResponse?.comment?.trim('"')
+                                            text = comment?.commentResponse?.comment
                                                 ?: "",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W400
@@ -269,30 +287,11 @@ fun CommentTab(
                                                 text = "${comment.replyResponses.size}" + " Cevap",
                                                 fontSize = 12.sp,
                                                 color = Color.Blue,
-                                                modifier = Modifier.clickable {
-                                                    scope.launch {
-                                                        comment.commentResponse.let { comment ->
-                                                            replyVM.getCommentsById(comment.commentId)
-                                                        }
-                                                        val commentJson = Gson().toJson(comment)
-                                                        navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
-                                                    }
-                                                }
                                             )
                                         } else {
                                             Text(
                                                 text = "Cevap Ekle",
                                                 fontSize = 12.sp,
-                                                modifier = Modifier.clickable {
-                                                    scope.launch {
-                                                        if (comment != null) {
-                                                            replyVM.getCommentsById(comment.commentResponse.commentId)
-                                                        }
-                                                        val commentJson = Gson().toJson(comment)
-                                                        navController.navigate("${Screens.CommentReplyScreen.screen}/$commentJson")
-                                                    }
-
-                                                }
                                             )
                                         }
                                     }
@@ -349,9 +348,10 @@ fun CommentTab(
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         } else {
-                                            commentVM.createComment(
-                                                CommentData(receipt.id, commentTf.value)
-                                            )
+                                            receipt.id?.let { CommentData(it, commentTf.value) }
+                                                ?.let { receiptId ->
+                                                    commentVM.createComment(receiptId)
+                                                }
                                             Toast.makeText(
                                                 context,
                                                 "Yorum Başarıyla Eklendi",
@@ -359,7 +359,7 @@ fun CommentTab(
                                             ).show()
                                         }
                                         commentTf.value = ""
-                                        replyVM.getCommentsRepliesByReceiptId(receipt.id)
+                                        receipt.id?.let { replyVM.getCommentsRepliesByReceiptId(it) }
                                         isVisible.value = false
                                     }
                                 },

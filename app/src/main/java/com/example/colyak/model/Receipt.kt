@@ -27,7 +27,7 @@ data class Receipt(
 
     @SerializedName("id")
     @Expose
-    val id: Long,
+    val id: Long?
 )
 
 

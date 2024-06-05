@@ -2,7 +2,6 @@ package com.example.colyak.components.cards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,7 @@ fun ReceiptCard(
     modifier: Modifier,
     image: @Composable () -> Unit
 ) {
-    Card( modifier = modifier.height(270.dp).width(200.dp),
+    Card( modifier = modifier.height(250.dp).width(200.dp),
         elevation = CardDefaults.cardElevation(6.dp),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
@@ -38,11 +37,9 @@ fun ReceiptCard(
                 Text(
                     text = it,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(all = 10.dp)
+                    modifier = Modifier.padding(all = 8.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-
         }
     }
 }

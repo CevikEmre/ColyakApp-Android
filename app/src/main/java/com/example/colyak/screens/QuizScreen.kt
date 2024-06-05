@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -62,7 +63,8 @@ fun QuizScreen(navController: NavController) {
                                 .padding(6.dp)
                                 .clickable {
                                     val quizJson = Gson().toJson(quiz)
-                                    navController.navigate("${Screens.QuizDetailScreen.screen}/$quizJson")
+                                    val formattedQuizJson =Uri.encode(quizJson)
+                                    navController.navigate("${Screens.QuizDetailScreen.screen}/$formattedQuizJson")
                                 }
                         )
                     }

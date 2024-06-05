@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -41,6 +42,19 @@ fun ReceiptTab(
                 containerColor = Color.White
             )
         ) {
+            if (descriptionList.isNullOrEmpty()){
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Bu tarife herhangi bir tarif adımı eklenmemiştir.",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
             LazyColumn(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
                 if (descriptionList != null) {
                     items(descriptionList.size) { index ->

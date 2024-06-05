@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 val mealList = listOf(
-    MealDetail(R.drawable.lunch, "Öğün", 200, 650),
+    MealDetail(R.drawable.lunch, "Öğün"),
 )
 
 var globalReceiptList: List<Receipt?>? = emptyList()

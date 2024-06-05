@@ -42,6 +42,19 @@ fun ProductsTab(
                 containerColor = Color.White
             )
         ) {
+            if (list.isNullOrEmpty()){
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Bu tarife herhangi bir ürün eklenmemiştir.",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
             LazyColumn(Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
                 if (list != null) {
                     items(list.size) {
@@ -70,13 +83,6 @@ fun ProductsTab(
                                 textAlign = TextAlign.End
                             )
                         }
-                    }
-                } else {
-                    items(1) {
-                        Text(
-                            text = "Malzeme Bulunamadı",
-                            modifier = Modifier.fillMaxWidth()
-                        )
                     }
                 }
             }

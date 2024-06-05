@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,20 +37,19 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
-fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
+fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
     val commentVM: CommentViewModel = viewModel()
     val favoriteVM: FavoriteViewModel = viewModel()
-    val commentList by commentVM.commentList.collectAsState()
     val scope = rememberCoroutineScope()
     var isReceiptFavorite by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
     LaunchedEffect(Unit) {
-        commentVM.getCommentsById(receipt.id)
+        receipt.id?.let { commentVM.getCommentsById(it) }
             val favoritedReceipts = favoriteVM.getAllFavoriteReceipts()
             if (favoritedReceipts != null) {
                 isReceiptFavorite = favoritedReceipts.any { it!!.id == receipt.id }
         }
+
     }
 
     Scaffold(
@@ -88,15 +86,16 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
                         onClick = {
                                 if (isReceiptFavorite) {
                                     scope.launch {
-                                        val favoriteData = FavoriteData(receipt.id)
-                                        favoriteVM.unlikeReceipt(favoriteData)
+                                        val favoriteData = receipt.id?.let { FavoriteData(it) }
+
+                                            favoriteVM.unlikeReceipt(favoriteData)
                                         isReceiptFavorite = false
                                         Toast.makeText(context, "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     scope.launch {
-                                        val favoriteData = FavoriteData(receipt.id)
-                                        favoriteVM.likeReceipt(favoriteData)
+                                        val favoriteData = receipt.id?.let { FavoriteData(it) }
+                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
                                         isReceiptFavorite = true
                                         Toast.makeText(context, "Favorilere eklendi", Toast.LENGTH_SHORT).show()
                                     }
@@ -114,12 +113,12 @@ fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
         },
         content = { padding ->
             ReceiptDetailCard(
-                productList = receipt.receiptItems,
-                description = receipt.receiptDetails,
-                modifier = Modifier.padding(padding),
-                receipt,
-                navController
-            )
+                    productList = receipt.receiptItems,
+                    description = receipt.receiptDetails,
+                    modifier = Modifier.padding(padding),
+                    receipt,
+                    navController
+                )
         }
     )
 }

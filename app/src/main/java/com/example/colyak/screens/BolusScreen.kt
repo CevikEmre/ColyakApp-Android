@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -166,22 +167,28 @@ fun BolusScreen() {
                                 contentDescription = "",
                                 modifier = Modifier.size(40.dp)
                             )
-                            Input(
-                                tfValue = printedEatTime,
-                                onValueChange = {},
-                                label = "Yemeği yediğiniz saat",
-                                isPassword = false,
-                                keybordType = KeyboardType.Number,
-                                trailingIcon = R.drawable.time,
-                                trailingIconClick = {
-                                    showTimePicker = true
-                                },
-                                readOnly = true,
-                                modifier = Modifier.clickable {
-                                    showTimePicker = true
-                                }
-
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        showTimePicker = true
+                                    }
+                            ) {
+                                Input(
+                                    tfValue = printedEatTime,
+                                    onValueChange = {},
+                                    label = "Yemeği yediğiniz saat",
+                                    isPassword = false,
+                                    trailingIcon = R.drawable.time,
+                                    trailingIconClick = {
+                                        showTimePicker = true
+                                    },
+                                    readOnly = true,
+                                    modifier = Modifier.clickable {
+                                        showTimePicker = true
+                                    }
+                                )
+                            }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),

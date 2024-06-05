@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.colyak.R
@@ -29,7 +30,7 @@ fun PdfCard(
     Card(
         modifier = modifier
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -41,14 +42,21 @@ fun PdfCard(
         ) {
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 2.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp, horizontal = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = topic,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(all = 10.dp)
+                    modifier = Modifier
+                        .padding(all = 10.dp)
+                        .weight(1f),
+                    maxLines = 2,
+                    softWrap = true,
+                    overflow = TextOverflow.Clip,
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_right),

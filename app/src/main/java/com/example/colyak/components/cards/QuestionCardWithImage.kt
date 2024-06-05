@@ -27,12 +27,12 @@ fun QuestionCardWithImage(
 ) {
     Card(
         modifier = modifier
-            .height(270.dp)
+            .height(225.dp)
             .width(200.dp)
             .padding(6.dp)
             .clickable { onCardClick() },
-        elevation = CardDefaults.cardElevation(6.dp),
-        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
+        shape = RoundedCornerShape(6.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )

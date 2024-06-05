@@ -23,5 +23,5 @@ interface CommentInterface {
     suspend fun deleteComment(@Path("commentId") commentId: Long):Response<Void>
 
     @PUT("/api/comments/{commentId}")
-    suspend fun uptadeComment(@Path("commentId") commentId: Long, @Body comment: String): Response<Void>
+    suspend fun uptadeComment(@Path("commentId") commentId: Long, @Body comment: String): Response<Unit>
 }

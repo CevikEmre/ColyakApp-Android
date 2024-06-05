@@ -14,7 +14,6 @@ import com.example.colyak.model.CommentRepliesResponse
 import com.example.colyak.model.MealDetail
 import com.example.colyak.model.PDFResponse
 import com.example.colyak.model.Quiz
-import com.example.colyak.model.ReadyFoods
 import com.example.colyak.model.Receipt
 import com.example.colyak.viewmodel.answerList
 import com.google.gson.Gson
@@ -41,10 +40,11 @@ fun PageNavigations() {
             navArgument("receipt") {
                 type = NavType.StringType
             }
-            val json = it.arguments?.getString("receipt")
-            val receipt = Gson().fromJson(json, Receipt::class.java)
+            val receiptJson = it.arguments?.getString("receipt")
+            val receipt = Gson().fromJson(receiptJson, Receipt::class.java)
             ReceiptDetailScreen(receipt = receipt, navController = navController)
         }
+
         composable("${Screens.MealDetail.screen}/{meal}") {
             navArgument("meal") {
                 type = NavType.StringType
@@ -55,26 +55,7 @@ fun PageNavigations() {
         }
         composable("${Screens.AddMealScreen.screen}/{mealName}") {
             val mealName = it.arguments?.getString("mealName") ?: ""
-            AddMealScreen(
-                mealName = mealName,
-                navController = navController
-            )
-        }
-        composable("${Screens.AddReceiptScreen.screen}/{receiptDetail}") {
-            navArgument("receiptDetail") {
-                type = NavType.StringType
-            }
-            val json = it.arguments?.getString("receiptDetail")
-            val choose = Gson().fromJson(json, Receipt::class.java)
-            AddReceiptScreen(receipt = choose, navController = navController)
-        }
-        composable("${Screens.AddReadyFoodScreen.screen}/{readyFoodDetail}") {
-            navArgument("readyFoodDetail") {
-                type = NavType.StringType
-            }
-            val json = it.arguments?.getString("readyFoodDetail")
-            val choose = Gson().fromJson(json, ReadyFoods::class.java)
-            AddReadyFoodScreen(readyFoods = choose, navController = navController)
+            AddMealScreen(mealName = mealName, navController = navController)
         }
         composable(Screens.QuizScreen.screen) {
             QuizScreen(navController)
@@ -83,7 +64,7 @@ fun PageNavigations() {
             navArgument("quiz") {
                 type = NavType.StringType
             }
-            val json = it.arguments?.getString("quiz")?.replace("?", "")
+            val json = it.arguments?.getString("quiz")
             val quiz = Gson().fromJson(json, Quiz::class.java)
             QuizDetailScreen(quiz, navController)
         }
@@ -112,7 +93,7 @@ fun PageNavigations() {
             UsefulInformationScreen(navController)
         }
         composable("${Screens.PdfDetailScreen.screen}/{pdf}") {
-            navArgument("comment") {
+            navArgument("pdf") {
                 type = NavType.StringType
             }
             val json = it.arguments?.getString("pdf")

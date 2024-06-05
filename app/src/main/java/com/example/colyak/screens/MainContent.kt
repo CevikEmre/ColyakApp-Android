@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -217,22 +218,23 @@ fun MainContent(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.person),
                             contentDescription = "",
-                            tint = Color.LightGray
+                            tint = Color.Gray,
+                            modifier = Modifier
+                                .padding(end = 8.dp)
                         )
                         Text(
-                            text = "Hoşgeldin , " + loginResponse.userName + " !",
+                            text = "Hoşgeldin , " + loginResponse.userName ,
                             fontSize = 20.sp,
-                            fontWeight = FontWeight.W600
                         )
                     }
+
                     Column {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -240,7 +242,7 @@ fun MainContent(navController: NavController) {
                             modifier = Modifier.padding(vertical = 4.dp)
                         ) {
                             Text(
-                                text = "En çok tercih edilen 5 tarifimiz :)",
+                                text = "En çok tercih edilen 5 tarifimiz ☺",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.Black
@@ -273,7 +275,8 @@ fun MainContent(navController: NavController) {
                                                 scope.launch {
                                                     try {
                                                         val receiptJson = Gson().toJson(receipt)
-                                                        navController.navigate("${Screens.ReceiptDetailScreen.screen}/$receiptJson")
+                                                        val formattedReceiptJson = Uri.encode(receiptJson)
+                                                        navController.navigate("${Screens.ReceiptDetailScreen.screen}/$formattedReceiptJson")
                                                     } catch (e: Exception) {
                                                         Log.e(
                                                             "NavigationError",

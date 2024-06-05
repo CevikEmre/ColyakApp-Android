@@ -1,6 +1,7 @@
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -102,7 +103,8 @@ fun MealReportScreen(navController: NavController) {
                                 .padding(start = 2.dp, top = 4.dp, end = 2.dp)
                                 .clickable {
                                     val mealJson = Gson().toJson(meal)
-                                    navController.navigate("${Screens.MealReportDetailScreen.screen}/$mealJson")
+                                    val formattedMealJson = Uri.encode(mealJson)
+                                    navController.navigate("${Screens.MealReportDetailScreen.screen}/$formattedMealJson")
                                 },
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White

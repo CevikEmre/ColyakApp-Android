@@ -27,8 +27,7 @@ import com.rizzi.bouquet.rememberVerticalPdfReaderState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PdfDetailScreen(pdfResponse: PDFResponse,navController: NavController) {
-    val pdfState =
-        rememberVerticalPdfReaderState(
+    val pdfState = rememberVerticalPdfReaderState(
             resource = ResourceType.Remote("https://api.colyakdiyabet.com.tr/api/image/get/${pdfResponse.id}"),
             isZoomEnable = true,
         )
@@ -52,7 +51,7 @@ fun PdfDetailScreen(pdfResponse: PDFResponse,navController: NavController) {
                 }
             )
         },
-        content = {padding ->
+        content = { padding ->
             VerticalPDFReader(
                 state = pdfState,
                 modifier = Modifier

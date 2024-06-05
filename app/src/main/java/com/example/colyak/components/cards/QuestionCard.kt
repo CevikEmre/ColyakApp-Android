@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -29,8 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,7 +42,6 @@ import com.example.colyak.model.QuestionList
 import com.example.colyak.model.QuizAnswer
 import com.example.colyak.model.data.AnswerData
 import com.example.colyak.viewmodel.QuizViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
@@ -57,27 +58,20 @@ fun QuestionCard(
     answer = quizViewModel.answerResponse.collectAsState().value
 
     var showAlert by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
-    Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ),
-        modifier = Modifier.padding(all = 6.dp)
-    ) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 5.dp, horizontal = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 2.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = questionList.question.trimEnd('?'))
+            Text(questionList.question, fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (questionList.choicesList.any { it.imageId != null && it.imageId.toInt() != 0 }) {
                 LazyVerticalGrid(
-                    modifier = Modifier.heightIn(max = 700.dp),  // Provide a bounded height
+                    modifier = Modifier.heightIn(max = 700.dp),
                     columns = GridCells.Fixed(2),
                     content = {
                         items(questionList.choicesList.size) {
@@ -112,9 +106,41 @@ fun QuestionCard(
             } else {
                 questionList.choicesList.forEachIndexed { index, choice ->
                     val isSelected = selectedIndex.intValue == index
+                    Card(
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black
+                        ),
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .clickable {
+                            if (selectedIndex.intValue == -1) {
+                                selectedIndex.intValue = index
+                                scope.launch {
+                                    try {
+                                        val response = quizViewModel.questionAnswer(
+                                            AnswerData(
+                                                questionId = questionList.id,
+                                                chosenAnswer = choice.choice
+                                            ),
+                                        )
+                                        if (response != null) {
+                                            answer = response
+                                            onAnswered()
+                                            showAlert = true
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("QuestionCard", "Fail", e)
+                                    }
+                                }
+
+                            }
+                        },
+                    ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(0.8f)
+                            .fillMaxWidth()
                             .padding(horizontal = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
@@ -132,12 +158,9 @@ fun QuestionCard(
                                                     chosenAnswer = choice.choice
                                                 ),
                                             )
-
                                             if (response != null) {
                                                 answer = response
-
                                                 onAnswered()
-                                                delay(800)
                                                 showAlert = true
                                             }
                                         } catch (e: Exception) {

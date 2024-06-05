@@ -42,9 +42,9 @@ class FavoriteViewModel : ViewModel() {
         }
     }
 
-    suspend fun unlikeReceipt(favoriteData: FavoriteData) {
+    suspend fun unlikeReceipt(favoriteData: FavoriteData?) {
         try {
-            FavoriteService.unlikeReceipt(favoriteData)
+            favoriteData?.let { FavoriteService.unlikeReceipt(it) }
 
         } catch (e: Exception) {
             Log.e("CommentViewModel", "Fail", e)

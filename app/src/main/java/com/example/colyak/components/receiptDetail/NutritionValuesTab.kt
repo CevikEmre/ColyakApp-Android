@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.colyak.R
 import com.example.colyak.model.Receipt
 import kotlin.math.roundToInt
@@ -48,15 +49,17 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
             )
         ) {
             if (receipt.nutritionalValuesList?.isEmpty() == true) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Besin değerleri eklenmemiştir",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                        text = "Bu tarife herhangi bir besin değeri eklenmemiştir.",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -74,7 +77,9 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                             )
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -83,7 +88,14 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                                         Box(
                                             modifier = Modifier
                                                 .size(width = 3.dp, height = 40.dp)
-                                                .clip(RoundedCornerShape(topStart = 0.dp, topEnd = 100.dp, bottomEnd = 100.dp, bottomStart = 0.dp))
+                                                .clip(
+                                                    RoundedCornerShape(
+                                                        topStart = 0.dp,
+                                                        topEnd = 100.dp,
+                                                        bottomEnd = 100.dp,
+                                                        bottomStart = 0.dp
+                                                    )
+                                                )
                                                 .background(colorResource(id = R.color.statusBarColor))
                                         )
                                         Text(
@@ -94,7 +106,14 @@ fun NutritionValuesTab(paddingValues: PaddingValues, receipt: Receipt) {
                                         Box(
                                             modifier = Modifier
                                                 .size(width = 3.dp, height = 40.dp)
-                                                .clip(RoundedCornerShape(topStart = 100.dp, topEnd = 0.dp, bottomEnd = 0.dp, bottomStart = 100.dp))
+                                                .clip(
+                                                    RoundedCornerShape(
+                                                        topStart = 100.dp,
+                                                        topEnd = 0.dp,
+                                                        bottomEnd = 0.dp,
+                                                        bottomStart = 100.dp
+                                                    )
+                                                )
                                                 .background(colorResource(id = R.color.statusBarColor))
                                         )
                                     }
