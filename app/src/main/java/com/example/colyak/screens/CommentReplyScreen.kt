@@ -74,9 +74,8 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
     val context = LocalContext.current
     val isVisible = remember { mutableStateOf(false) }
     val isUpdating = remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val updatingReplyId = remember { mutableLongStateOf(0L) }
-
 
     LaunchedEffect(Unit) {
         replyVM.getCommentsById(comment.commentResponse.commentId)

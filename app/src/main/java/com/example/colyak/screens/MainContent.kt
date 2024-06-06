@@ -3,19 +3,21 @@ package com.example.colyak.screens
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -47,6 +49,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -213,42 +217,46 @@ fun MainContent(navController: NavController) {
             },
             content = { padding ->
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(padding),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(padding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.person),
-                            contentDescription = "",
-                            tint = Color.Gray,
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                        )
-                        Text(
-                            text = "Hoşgeldin , " + loginResponse.userName ,
-                            fontSize = 20.sp,
-                        )
-                    }
-
-                    Column {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(vertical = 4.dp)
+                            modifier = Modifier
+                                .fillMaxWidth().padding(vertical = 8.dp,horizontal = 20.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Box(
+                                modifier = Modifier.size(40.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Canvas(modifier = Modifier.size(150.dp)) {
+                                    drawArc(
+                                        color = Color.LightGray,
+                                        startAngle = -90f,
+                                        sweepAngle = 360 * 1f,
+                                        useCenter = false,
+                                        style = Stroke(5f, cap = StrokeCap.Round)
+                                    )
+                                }
+                                Icon(
+                                    painter = painterResource(id = R.drawable.person),
+                                    contentDescription = "",
+                                    tint = Color(0xFF333333),
+                                    modifier = Modifier
+
+                                )
+                            }
                             Text(
-                                text = "En çok tercih edilen 5 tarifimiz ☺",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.W400,
-                                color = Color.Black
+                                text = "Hoşgeldin , " + loginResponse.userName +"!",
+                                fontSize = 20.sp,
+                                color = Color(0xFF4A4A4A),
+                                modifier = Modifier.padding(start = 12.dp)
                             )
                         }
-                    }
                     if (loading) {
                         Column(
                             verticalArrangement = Arrangement.Center,
@@ -258,7 +266,32 @@ fun MainContent(navController: NavController) {
                             CircularIndeterminateProgressBar(isDisplay = loading)
                         }
                     } else {
-                        LazyRow(
+                        LazyColumn {
+                            items(mealList.count()) {
+                                val meal = mealList[it]
+                                val mealJson = Gson().toJson(meal)
+                                MealCard(
+                                    meal,
+                                    onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
+                                )
+                            }
+                        }
+                        Column {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = "En çok tercih edilen 5 tarifimiz ☺",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.W400,
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
                             content = {
                                 items(favoriteReceipts?.size ?: 0) {
                                     val receipt = favoriteReceipts?.get(it)
@@ -275,7 +308,8 @@ fun MainContent(navController: NavController) {
                                                 scope.launch {
                                                     try {
                                                         val receiptJson = Gson().toJson(receipt)
-                                                        val formattedReceiptJson = Uri.encode(receiptJson)
+                                                        val formattedReceiptJson =
+                                                            Uri.encode(receiptJson)
                                                         navController.navigate("${Screens.ReceiptDetailScreen.screen}/$formattedReceiptJson")
                                                     } catch (e: Exception) {
                                                         Log.e(
@@ -295,17 +329,6 @@ fun MainContent(navController: NavController) {
                                 }
                             }
                         )
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    LazyColumn {
-                        items(mealList.count()) {
-                            val meal = mealList[it]
-                            val mealJson = Gson().toJson(meal)
-                            MealCard(
-                                meal,
-                                onClick = { navController.navigate("${Screens.MealDetail.screen}/$mealJson") }
-                            )
-                        }
                     }
                 }
             }

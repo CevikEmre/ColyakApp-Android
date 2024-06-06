@@ -1,13 +1,17 @@
 package com.example.colyak.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Add
 import androidx.compose.material3.Card
@@ -22,8 +26,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -36,6 +42,7 @@ import com.example.colyak.R
 import com.example.colyak.model.MealDetail
 import com.example.colyak.model.PrintedMeal
 
+var eatenMealList = mutableStateListOf<PrintedMeal>()
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
@@ -55,7 +62,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "${mealDetail.mealName} Ekle", color = Color.White)
+                    Text(text = "${mealDetail.mealName} Detayı", color = Color.White)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -81,27 +88,61 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(padding)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 15.dp, vertical = 15.dp)
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                Box(modifier = Modifier.fillMaxWidth()){
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp),
+                        elevation = CardDefaults.cardElevation(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFF1EC),
+                        )
                     ) {
-                        Text(
-                            text = "${calculateTotalCarbs(eatenMealList)} g",
-                            fontWeight = FontWeight.W700,
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            text = "Karbonhidrat",
-                            fontWeight = FontWeight.W500,
-                            fontSize = 20.sp
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 15.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(width = 3.dp, height = 40.dp)
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = 0.dp,
+                                            topEnd = 100.dp,
+                                            bottomEnd = 100.dp,
+                                            bottomStart = 0.dp
+                                        )
+                                    )
+                                    .background(colorResource(id = R.color.statusBarColor))
+                            )
+                            Text(
+                                text = "Karbonhidrat",
+                                fontWeight = FontWeight.W500,
+                                fontSize = 18.sp
+                            )
+                            Spacer(modifier = Modifier.width(70.dp))
+                            Text(
+                                text = "${calculateTotalCarbs(eatenMealList)} Gr",
+                                fontWeight = FontWeight.W600,
+                                fontSize = 18.sp
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(width = 3.dp, height = 40.dp)
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = 100.dp,
+                                            topEnd = 0.dp,
+                                            bottomEnd = 0.dp,
+                                            bottomStart = 100.dp
+                                        )
+                                    )
+                                    .background(colorResource(id = R.color.statusBarColor))
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))

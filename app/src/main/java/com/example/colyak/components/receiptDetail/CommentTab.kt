@@ -82,7 +82,7 @@ fun CommentTab(
     val scope = rememberCoroutineScope()
     val commentVM: CommentViewModel = viewModel()
     val loading by replyVM.loading.collectAsState()
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val commentReplies by replyVM.commentRepliesList.observeAsState()
     val context = LocalContext.current
     LaunchedEffect(Unit) {

@@ -39,7 +39,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.colyak.R
@@ -98,6 +101,7 @@ fun AddReadyFoodScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.fillMaxWidth()
+                            .padding(8.dp)
                     ) {
                         readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let {
                             Row(
@@ -109,7 +113,7 @@ fun AddReadyFoodScreen(
                             )
                             {
                                 Text(text = "Kalori")
-                                Text(text = it.calorieAmount.toString())
+                                Text(text = it.calorieAmount.toString(), fontWeight = FontWeight.W500)
                             }
                             Row(
                                 modifier = Modifier
@@ -228,6 +232,11 @@ fun AddReadyFoodScreen(
                                 .padding(vertical = 4.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
+                            textStyle = TextStyle(
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
                         )
                         TextButton(
                             onClick = {
@@ -271,6 +280,7 @@ fun AddReadyFoodScreen(
                             printedMealList.value = emptyList()
                             foodList.removeAll(foodList)
                             isVisibleReadyFood.value = false
+                            visible.value = true
                             Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                         }
                     },

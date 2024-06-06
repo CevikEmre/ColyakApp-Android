@@ -36,7 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.colyak.R
@@ -62,6 +64,7 @@ fun AddReceiptScreen(
     val scope = rememberCoroutineScope()
     var textFieldHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
+
     Box(modifier = Modifier.wrapContentSize()) {
         Column(
             modifier = Modifier
@@ -171,13 +174,13 @@ fun AddReceiptScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 pairedTypes.forEach { receiptAmount ->
-                                    val isSelected = selectedButtonIndex.value == typeList.indexOf(receiptAmount)
+                                    val isSelected = selectedButtonIndex.intValue == typeList.indexOf(receiptAmount)
                                     Button(
                                         onClick = {
-                                            selectedButtonIndex.value = typeList.indexOf(receiptAmount)
+                                            selectedButtonIndex.intValue = typeList.indexOf(receiptAmount)
                                             amountType.value =
-                                                if (selectedButtonIndex.value != -1) receipt.nutritionalValuesList?.get(
-                                                    selectedButtonIndex.value
+                                                if (selectedButtonIndex.intValue != -1) receipt.nutritionalValuesList?.get(
+                                                    selectedButtonIndex.intValue
                                                 )
                                                     ?.toString()!! else ""
                                         },
@@ -232,7 +235,11 @@ fun AddReceiptScreen(
                                 .padding(vertical = 4.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
-                        )
+                            textStyle = TextStyle(
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                        ))
                         TextButton(
                             onClick = {
                                 tfAmount.intValue += 1
@@ -282,11 +289,8 @@ fun AddReceiptScreen(
                                 printedMealList.value = emptyList()
                                 foodList.removeAll(elements = foodList)
                                 isVisibleReceipt.value = false
-                                Toast.makeText(
-                                    ColyakApp.applicationContext(),
-                                    "Ekleme Başarılı",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                visible.value = true
+                                Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                             }
                         }
                     },

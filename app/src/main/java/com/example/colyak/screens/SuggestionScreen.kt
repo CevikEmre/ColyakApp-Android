@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -78,8 +79,9 @@ fun SuggestionScreen(navController: NavController) {
                 Spacer(modifier = Modifier.size(height = 25.dp, width = 0.dp))
                 Text(
                     text = "Uyguluma hakkındaki önerilerinizi iletebilirsiniz",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W600,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W500,
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.size(height = 18.dp, width = 0.dp))
                 Input(
