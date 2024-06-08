@@ -142,7 +142,7 @@ fun MainScreen(navController: NavController) {
         bottomBar = {
             BottomAppBar(
                 contentColor = MaterialTheme.colorScheme.primary,
-                containerColor = colorResource(id = R.color.appBarColor),
+                containerColor = colorResource(id = R.color.statusBarColor),
                 content = {
                     for (page in bottomNavList.indices) {
                         NavigationBarItem(
@@ -151,7 +151,7 @@ fun MainScreen(navController: NavController) {
                                 unselectedTextColor = Color.DarkGray,
                                 selectedIconColor = Color.White,
                                 selectedTextColor = Color.White,
-                                indicatorColor = colorResource(id = R.color.appBarColor),
+                                indicatorColor = colorResource(id = R.color.statusBarColor),
                             ),
                             selected = page == pageState.currentPage,
                             onClick = {

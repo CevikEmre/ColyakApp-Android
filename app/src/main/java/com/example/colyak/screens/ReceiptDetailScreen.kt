@@ -66,7 +66,7 @@ fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 navigationIcon = {
                     IconButton(
@@ -77,7 +77,7 @@ fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
@@ -105,7 +105,7 @@ fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
                         Icon(
                             painter = painterResource(id = if (isReceiptFavorite) R.drawable.favorite else R.drawable.favorite_filled),
                             contentDescription = "",
-                            tint = if (isReceiptFavorite) Color.Red else Color.White
+                            tint = if (isReceiptFavorite) Color.Red else Color.Black
                         )
                     }
                 },

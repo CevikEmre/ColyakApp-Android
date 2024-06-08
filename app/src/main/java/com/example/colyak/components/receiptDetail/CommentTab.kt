@@ -99,7 +99,7 @@ fun CommentTab(
                         isUpdating.value = false
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.appBarColor))
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.statusBarColor))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -166,7 +166,7 @@ fun CommentTab(
                                             navController.navigate("${Screens.CommentReplyScreen.screen}/$formattedCommentJson")
                                         }
                                     },
-                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White,
                                     contentColor = Color.Black
@@ -364,7 +364,7 @@ fun CommentTab(
                                     }
                                 },
                                 buttonText = if (isUpdating.value) "Güncelle" else "Ekle",
-                                backgroundColor = colorResource(id = R.color.appBarColor)
+                                backgroundColor = colorResource(id = R.color.statusBarColor)
                             )
                             Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
                         }

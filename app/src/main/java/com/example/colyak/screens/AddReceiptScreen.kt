@@ -1,8 +1,11 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +18,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -65,6 +71,16 @@ fun AddReceiptScreen(
     var textFieldHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
 
+    val typeList = mutableListOf<String>()
+    receipt.nutritionalValuesList?.forEach { receipt ->
+        if (receipt != null) {
+            receipt.type?.let { typeList.add(it) }
+            Log.e("typeList", typeList.toString())
+        }
+    }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedType by remember { mutableStateOf(typeList.firstOrNull() ?: "") }
+
     Box(modifier = Modifier.wrapContentSize()) {
         Column(
             modifier = Modifier
@@ -98,17 +114,16 @@ fun AddReceiptScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    receipt.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let {
+                    receipt.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let { receipt ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
-                        )
-                        {
+                        ) {
                             Text(text = "Kalori")
-                            Text(text = it.calorieAmount.toString())
+                            Text(text = (tfAmount.intValue.toDouble() * receipt.calorieAmount!!).toString())
                         }
                         Row(
                             modifier = Modifier
@@ -116,10 +131,9 @@ fun AddReceiptScreen(
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
-                        )
-                        {
+                        ) {
                             Text(text = "Karbonhidrat")
-                            Text(text = it.carbohydrateAmount.toString())
+                            Text(text = (tfAmount.intValue.toDouble() * receipt.carbohydrateAmount!!).toString())
                         }
                         Row(
                             modifier = Modifier
@@ -127,10 +141,9 @@ fun AddReceiptScreen(
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
-                        )
-                        {
+                        ) {
                             Text(text = "Protein")
-                            Text(text = it.proteinAmount.toString())
+                            Text(text = (tfAmount.intValue.toDouble() * receipt.proteinAmount!!).toString())
                         }
                         Row(
                             modifier = Modifier
@@ -138,10 +151,9 @@ fun AddReceiptScreen(
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
-                        )
-                        {
+                        ) {
                             Text(text = "Yağ")
-                            Text(text = it.fatAmount.toString())
+                            Text(text = (tfAmount.intValue.toDouble() * receipt.fatAmount!!).toString())
                         }
                     }
                 }
@@ -151,54 +163,46 @@ fun AddReceiptScreen(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = "Ölçü birimi seçiniz")
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .border(0.5.dp, Color.Gray)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        val typeList = mutableListOf<String>()
-                        receipt.nutritionalValuesList?.forEach { receipt ->
-                            if (receipt != null) {
-                                receipt.type?.let { typeList.add(it) }
-                                Log.e("typeList", typeList.toString())
-                            }
-                        }
-                        val pairedTypeList = typeList.chunked(2)
-                        pairedTypeList.forEach { pairedTypes ->
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                pairedTypes.forEach { receiptAmount ->
-                                    val isSelected = selectedButtonIndex.intValue == typeList.indexOf(receiptAmount)
-                                    Button(
-                                        onClick = {
-                                            selectedButtonIndex.intValue = typeList.indexOf(receiptAmount)
-                                            amountType.value =
-                                                if (selectedButtonIndex.intValue != -1) receipt.nutritionalValuesList?.get(
-                                                    selectedButtonIndex.intValue
-                                                )
-                                                    ?.toString()!! else ""
-                                        },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = if (isSelected) colorResource(id = R.color.appBarColor) else Color.LightGray,
-                                            contentColor = if (isSelected) Color.White else colorResource(
-                                                id = R.color.appBarColor
-                                            )
-                                        ),
-                                        modifier = Modifier.padding(horizontal = 4.dp).weight(1f)
-                                    ) {
-                                        Text(text = receiptAmount)
-                                    }
-                                }
-                            }
+                        TextButton(
+                            onClick = { expanded = true },
+                        ) {
+                            Text(text = selectedType)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = ""
+                            )
                         }
                     }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        typeList.forEach { type ->
+                            DropdownMenuItem(
+                                text = { Text(text = type) }, onClick = {
+                                    selectedType = type
+                                    selectedButtonIndex.intValue = typeList.indexOf(type)
+                                    amountType.value =
+                                        receipt.nutritionalValuesList?.get(selectedButtonIndex.intValue)
+                                            ?.toString() ?: ""
+                                    expanded = false
 
+                                })
+
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
@@ -229,8 +233,7 @@ fun AddReceiptScreen(
                             modifier = Modifier
                                 .width(50.dp)
                                 .onSizeChanged { size ->
-                                    textFieldHeight =
-                                        with(density) { size.height.toDp().value.toInt() }
+                                    textFieldHeight = with(density) { size.height.toDp().value.toInt() }
                                 }
                                 .padding(vertical = 4.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -239,7 +242,8 @@ fun AddReceiptScreen(
                                 color = Color.Black,
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center
-                        ))
+                            )
+                        )
                         TextButton(
                             onClick = {
                                 tfAmount.intValue += 1
@@ -249,7 +253,6 @@ fun AddReceiptScreen(
                         }
                     }
                 }
-
             }
             Column(
                 modifier = Modifier
@@ -274,9 +277,7 @@ fun AddReceiptScreen(
                                         carbonhydrate = calculatedCarbohydrate.toLong()
                                     )
                                 }?.let {
-                                    foodList.add(
-                                        it
-                                    )
+                                    foodList.add(it)
                                 }
                                 printedMealList.value += PrintedMeal(
                                     mealName = receipt.receiptName,
@@ -290,13 +291,14 @@ fun AddReceiptScreen(
                                 foodList.removeAll(elements = foodList)
                                 isVisibleReceipt.value = false
                                 visible.value = true
-                                Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
                             }
                         }
                     },
                     enabled = !receipt.nutritionalValuesList.isNullOrEmpty(),
                     buttonText = "Ekle",
-                    backgroundColor = colorResource(id = R.color.appBarColor)
+                    backgroundColor = colorResource(id = R.color.statusBarColor)
                 )
                 Spacer(modifier = Modifier.height(25.dp))
             }

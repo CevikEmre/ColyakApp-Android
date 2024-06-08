@@ -3,6 +3,7 @@ package com.example.colyak.screens
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -41,9 +44,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
@@ -51,6 +56,7 @@ import com.example.colyak.components.CircularIndeterminateProgressBar
 import com.example.colyak.components.cards.ReceiptCard
 import com.example.colyak.components.functions.ImageFromUrl
 import com.example.colyak.components.functions.SearchTextField
+import com.example.colyak.model.data.FavoriteData
 import com.example.colyak.viewmodel.FavoriteViewModel
 import com.example.colyak.viewmodel.ReceiptViewModel
 import com.google.gson.Gson
@@ -72,6 +78,7 @@ fun ReceiptScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     var searchQuery by remember { mutableStateOf("") }
 
+
     LaunchedEffect(Unit) {
         receiptViewModel.getAll()
         favoriteVM.getAllFavoriteReceipts()
@@ -79,7 +86,6 @@ fun ReceiptScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-
             Column {
                 CenterAlignedTopAppBar(
                     title = {
@@ -87,7 +93,7 @@ fun ReceiptScreen(navController: NavController) {
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = colorResource(id = R.color.appBarColor),
-                        titleContentColor = Color.White
+                        titleContentColor = Color.Black
                     ),
                     modifier = Modifier
                         .padding(horizontal = 12.dp, vertical = 12.dp)
@@ -101,7 +107,7 @@ fun ReceiptScreen(navController: NavController) {
                 }
                 TabRow(
                     selectedTabIndex = tabIndex,
-                    contentColor = colorResource(id = R.color.appBarColor),
+                    contentColor = colorResource(id = R.color.statusBarColor),
                     modifier = Modifier.background(Color.White),
                     containerColor = Color.White,
                     indicator = { tabPositions ->
@@ -109,7 +115,7 @@ fun ReceiptScreen(navController: NavController) {
                             modifier = Modifier
                                 .tabIndicatorOffset(tabPositions[tabIndex])
                                 .padding(top = 2.dp),
-                            color = colorResource(id = R.color.appBarColor)
+                            color = colorResource(id = R.color.statusBarColor)
                         )
                     }
                 ) {
@@ -155,12 +161,10 @@ fun ReceiptScreen(navController: NavController) {
                                         items(filteredReceiptList.size) { index ->
                                             val receipt = filteredReceiptList[index]
                                             if (receipt != null) {
+                                                val isFavorite = favoriteList?.any { it?.id == receipt.id } == true
                                                 val trimmedName =
                                                     if ((receipt.receiptName?.length ?: 0) > 50) {
-                                                        receipt.receiptName?.substring(
-                                                            0,
-                                                            50
-                                                        ) + "..."
+                                                        receipt.receiptName?.substring(0, 50) + "..."
                                                     } else {
                                                         receipt.receiptName
                                                     }
@@ -172,14 +176,37 @@ fun ReceiptScreen(navController: NavController) {
                                                             modifier = Modifier.aspectRatio(ratio = 1.28f)
                                                         )
                                                     },
+                                                    iconButton = {
+                                                        IconButton(
+                                                            onClick = {
+                                                                scope.launch {
+                                                                    val favoriteData = receipt.id?.let { FavoriteData(it) }
+                                                                    if (isFavorite) {
+                                                                        favoriteData?.let { favoriteVM.unlikeReceipt(it) }
+                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
+                                                                        favoriteVM.getAllFavoriteReceipts()
+                                                                    } else {
+                                                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
+                                                                        favoriteVM.getAllFavoriteReceipts()
+                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show()
+
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) {
+                                                            Icon(
+                                                                painter = painterResource(id = if (isFavorite) R.drawable.favorite else R.drawable.favorite_filled),
+                                                                contentDescription = "",
+                                                                tint = if (isFavorite) Color.Red else Color.Black
+                                                            )
+                                                        }
+                                                    },
                                                     modifier = Modifier
                                                         .clickable {
                                                             scope.launch {
                                                                 try {
-                                                                    val receiptJson =
-                                                                        Gson().toJson(receipt)
-                                                                    val encodedReceiptJson =
-                                                                        Uri.encode(receiptJson)
+                                                                    val receiptJson = Gson().toJson(receipt)
+                                                                    val encodedReceiptJson = Uri.encode(receiptJson)
                                                                     navController.navigate("${Screens.ReceiptDetailScreen.screen}/$encodedReceiptJson")
                                                                 } catch (e: Exception) {
                                                                     Log.e(
@@ -202,6 +229,7 @@ fun ReceiptScreen(navController: NavController) {
                                 },
                                 modifier = Modifier.padding(paddingValues)
                             )
+
                         }
 
                         1 -> {
@@ -237,6 +265,14 @@ fun ReceiptScreen(navController: NavController) {
                                                                 ratio = 1.28f
                                                             )
                                                         )
+                                                    },
+                                                    iconButton = {
+                                                                 IconButton(
+                                                                     onClick = { /*TODO*/ },
+                                                                     modifier = Modifier.zIndex(-1f)
+                                                                 ) {
+
+                                                                 }
                                                     },
                                                     modifier = Modifier
                                                         .clickable {

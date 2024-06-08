@@ -185,7 +185,7 @@ fun MainContent(navController: NavController) {
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = colorResource(id = R.color.appBarColor),
-                        titleContentColor = Color.White
+                        titleContentColor = Color.Black
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -201,7 +201,7 @@ fun MainContent(navController: NavController) {
                             Icon(
                                 painter = painterResource(id = R.drawable.menu),
                                 contentDescription = "",
-                                tint = Color.White
+                                tint = Color.Black
                             )
                         }
                     },
@@ -322,7 +322,6 @@ fun MainContent(navController: NavController) {
                                                         )
                                                     }
                                                 }
-
                                             }
                                             .padding(all = 5.dp)
                                     )

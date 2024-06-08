@@ -202,7 +202,7 @@ fun LoginScreen(navController: NavController) {
                 )
                 Text(
                     text = "Kayıt Ol",
-                    color = colorResource(id = R.color.appBarColor),
+                    color = colorResource(id = R.color.statusBarColor),
                     modifier = Modifier.clickable {
                         navController.navigate(Screens.Register.screen)
                     },

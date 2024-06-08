@@ -62,7 +62,7 @@ fun PdfCard(
                     painter = painterResource(id = R.drawable.arrow_right),
                     contentDescription = "",
                     tint = colorResource(
-                        id = R.color.appBarColor
+                        id = R.color.statusBarColor
                     )
                 )
             }

@@ -83,13 +83,13 @@ fun BarcodeDetailScreen(navController: NavController) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 )
             )
         },
@@ -136,7 +136,7 @@ fun BarcodeDetailScreen(navController: NavController) {
                         CustomizeButton(
                             onClick = { navController.navigate(Screens.MainScreen.screen) },
                             buttonText = "Ana Sayfa",
-                            backgroundColor = colorResource(id = R.color.appBarColor)
+                            backgroundColor = colorResource(id = R.color.statusBarColor)
                         )
 
                     }
@@ -276,7 +276,7 @@ fun BarcodeDetailScreen(navController: NavController) {
                 CustomizeButton(
                     onClick = { navController.navigate(Screens.MainScreen.screen) },
                     buttonText = "Ana Sayfa",
-                    backgroundColor = colorResource(id = R.color.appBarColor)
+                    backgroundColor = colorResource(id = R.color.statusBarColor)
                 )
                 if (barcodeAlert) {
                     AlertDialog(

@@ -23,7 +23,7 @@ fun CircularIndeterminateProgressBar(
             horizontalArrangement = Arrangement.Center
         ){
             CircularProgressIndicator(
-                color = colorResource(id = R.color.appBarColor)
+                color = colorResource(id = R.color.statusBarColor)
             )
         }
     }

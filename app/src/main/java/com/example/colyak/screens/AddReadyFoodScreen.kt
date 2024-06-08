@@ -2,6 +2,7 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,17 +13,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -68,6 +70,17 @@ fun AddReadyFoodScreen(
     val scope = rememberCoroutineScope()
     var textFieldHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
+
+    val unitList = mutableListOf<String>()
+    readyFoods.nutritionalValuesList?.forEach { unit ->
+        if (unit != null) {
+            unit.type?.let { unitList.add(it) }
+        }
+    }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedType by remember { mutableStateOf(unitList.firstOrNull() ?: "") }
+
+
     Box(modifier = Modifier.wrapContentSize()) {
         Column(
             modifier = Modifier
@@ -103,7 +116,7 @@ fun AddReadyFoodScreen(
                         modifier = Modifier.fillMaxWidth()
                             .padding(8.dp)
                     ) {
-                        readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let {
+                        readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let { readyfood ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -113,7 +126,7 @@ fun AddReadyFoodScreen(
                             )
                             {
                                 Text(text = "Kalori")
-                                Text(text = it.calorieAmount.toString(), fontWeight = FontWeight.W500)
+                                Text(text = (tfAmount.intValue * readyfood.calorieAmount!!).toString(), fontWeight = FontWeight.W500)
                             }
                             Row(
                                 modifier = Modifier
@@ -124,7 +137,7 @@ fun AddReadyFoodScreen(
                             )
                             {
                                 Text(text = "Karbonhidrat")
-                                Text(text = it.carbohydrateAmount.toString())
+                                Text(text = (tfAmount.intValue * readyfood.carbohydrateAmount!!).toString())
                             }
                             Row(
                                 modifier = Modifier
@@ -135,7 +148,7 @@ fun AddReadyFoodScreen(
                             )
                             {
                                 Text(text = "Protein")
-                                Text(text = it.proteinAmount.toString())
+                                Text(text = (tfAmount.intValue * readyfood.proteinAmount!!).toString())
                             }
                             Row(
                                 modifier = Modifier
@@ -146,7 +159,7 @@ fun AddReadyFoodScreen(
                             )
                             {
                                 Text(text = "Yağ")
-                                Text(text = it.fatAmount.toString())
+                                Text(text = (tfAmount.intValue * readyfood.fatAmount!!).toString())
                             }
                         }
                     }
@@ -156,94 +169,93 @@ fun AddReadyFoodScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(text = "Ölçü birimi seçiniz")
+                    Box(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .border(0.5.dp, Color.Gray)
                     ) {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            modifier = Modifier
-                                .padding(vertical = 8.dp, horizontal = 4.dp)
-                                .fillMaxWidth()
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            val unitList = mutableListOf<String>()
-                            readyFoods.nutritionalValuesList?.forEach { unit ->
-                                if (unit != null) {
-                                    unit.type?.let { unitList.add(it) }
-                                }
+                            TextButton(
+                                onClick = { expanded = true },
+                            ) {
+                                Text(text = selectedType)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = ""
+                                )
                             }
-                            items(unitList.size) { index ->
-                                val isSelected = selectedButtonIndex.intValue == index
-                                Button(
-                                    onClick = {
-                                        selectedButtonIndex.intValue = index
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            unitList.forEach { unit ->
+                                DropdownMenuItem(
+                                    text = { Text(text = unit) }, onClick = {
+                                        selectedType = unit
+                                        selectedButtonIndex.intValue = unitList.indexOf(unit)
                                         amountType.value =
-                                            if (selectedButtonIndex.intValue != -1) readyFoods.nutritionalValuesList?.get(
-                                                selectedButtonIndex.intValue
-                                            )
-                                                ?.toString()!! else ""
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = if (isSelected) colorResource(id = R.color.appBarColor) else Color.LightGray,
-                                        contentColor = if (isSelected) Color.White else colorResource(
-                                            id = R.color.appBarColor
-                                        )
-                                    ),
-                                    modifier = Modifier.padding(horizontal = 4.dp)
-                                ) {
-                                    Text(text = unitList[index])
-                                }
+                                            readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)
+                                                ?.toString() ?: ""
+                                        expanded = false
+                                    }
+                                )
                             }
                         }
                     }
-                }
-                Card(
-                    modifier = Modifier.padding(5.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Card(
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
                     ) {
-                        TextButton(
-                            onClick = {
-                                tfAmount.intValue -= 1
-                            }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
                         ) {
-                            Text(text = "-", fontSize = 20.sp)
-                        }
-                        BasicTextField(
-                            value = tfAmount.intValue.toString(),
-                            onValueChange = { newText ->
-                                if (newText.isEmpty()) {
-                                    tfAmount.intValue = 0
-                                } else if (newText.all { it.isDigit() }) {
-                                    tfAmount.intValue = newText.toInt()
+                            TextButton(
+                                onClick = {
+                                    tfAmount.intValue -= 1
                                 }
-                            },
-                            modifier = Modifier
-                                .width(50.dp)
-                                .onSizeChanged { size ->
-                                    textFieldHeight =
-                                        with(density) { size.height.toDp().value.toInt() }
-                                }
-                                .padding(vertical = 4.dp),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            singleLine = true,
-                            textStyle = TextStyle(
-                                color = Color.Black,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
+                            ) {
+                                Text(text = "-", fontSize = 20.sp)
+                            }
+                            BasicTextField(
+                                value = tfAmount.intValue.toString(),
+                                onValueChange = { newText ->
+                                    if (newText.isEmpty()) {
+                                        tfAmount.intValue = 0
+                                    } else if (newText.all { it.isDigit() }) {
+                                        tfAmount.intValue = newText.toInt()
+                                    }
+                                },
+                                modifier = Modifier
+                                    .width(50.dp)
+                                    .onSizeChanged { size ->
+                                        textFieldHeight = with(density) { size.height.toDp().value.toInt() }
+                                    }
+                                    .padding(vertical = 4.dp),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                singleLine = true,
+                                textStyle = TextStyle(
+                                    color = Color.Black,
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             )
-                        )
-                        TextButton(
-                            onClick = {
-                                tfAmount.intValue += 1
+                            TextButton(
+                                onClick = {
+                                    tfAmount.intValue += 1
+                                }
+                            ) {
+                                Text(text = "+", fontSize = 18.sp)
                             }
-                        ) {
-                            Text(text = "+", fontSize = 18.sp)
                         }
                     }
                 }
@@ -286,7 +298,7 @@ fun AddReadyFoodScreen(
                     },
                     buttonText = "Ekle",
                     enabled = !readyFoods.nutritionalValuesList.isNullOrEmpty(),
-                    backgroundColor = colorResource(id = R.color.appBarColor)
+                    backgroundColor = colorResource(id = R.color.statusBarColor)
                 )
                 Spacer(modifier = Modifier.height(25.dp))
             }

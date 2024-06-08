@@ -2,12 +2,10 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -46,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,7 +79,7 @@ fun AddMealScreen(mealName: String, navController: NavController) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
@@ -89,11 +89,10 @@ fun AddMealScreen(mealName: String, navController: NavController) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
-                actions = {}
             )
         },
         content = { padding ->
@@ -109,7 +108,10 @@ fun AddMealScreen(mealName: String, navController: NavController) {
         }
     )
     if (visible.value) {
-        AnimatedPopup()
+        AnimatedPopup(onClose = {
+            visible.value = false
+        },
+            visible = visible)
     }
 }
 
@@ -138,13 +140,13 @@ fun AddMealToList() {
         }
         TabRow(
             selectedTabIndex = selectedTypeIndex.intValue,
-            contentColor = colorResource(id = R.color.appBarColor),
+            contentColor = colorResource(id = R.color.statusBarColor),
             modifier = Modifier.background(Color.White),
             containerColor = Color.White,
             indicator = { tabPositions ->
                 TabRowDefaults.SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTypeIndex.intValue]),
-                    color = colorResource(id = R.color.appBarColor)
+                    color = colorResource(id = R.color.statusBarColor)
                 )
             }
         ) {
@@ -253,27 +255,26 @@ fun AddMealToList() {
 }
 
 @Composable
-fun AnimatedPopup() {
+fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
+    val density = LocalDensity.current
     LaunchedEffect(Unit) {
-        delay(1500)
-        visible.value = false
+        delay(3000)
+        onClose()
     }
-
     AnimatedVisibility(
         visible = visible.value,
-        enter = slideInVertically(
-            initialOffsetY = { -it },
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-        ) + fadeIn(initialAlpha = 0.5f),
-        exit = slideOutVertically(
-            targetOffsetY = { -it },
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-        ) + fadeOut(),
-        modifier = Modifier.wrapContentSize(Alignment.TopEnd)
+        enter = slideInVertically {
+            with(density) { -40.dp.roundToPx() }
+        } + expandVertically(
+            expandFrom = Alignment.Top
+        ) + fadeIn(
+            initialAlpha = 0.3f
+        ),
+        exit = scaleOut(),
     ) {
         Card(
             modifier = Modifier
-                .padding(top = 4.dp),
+                .padding(top = 4.dp).wrapContentSize(Alignment.TopEnd),
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFFFFF1EC)
             ),
@@ -308,9 +309,9 @@ fun AnimatedPopup() {
                                     .padding(5.dp)
                             ) {
                                 Column {
-                                    eatenMealList[it].mealName?.let { it1 ->
+                                    eatenMealList[it].mealName?.let { mealName ->
                                         Text(
-                                            text = it1,
+                                            text = mealName,
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.W600,
                                             maxLines = 2,

@@ -62,7 +62,7 @@ fun ReceiptDetailsTab(
                 indicator = { tabPositions ->
                     SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
-                        color = colorResource(id = R.color.appBarColor)
+                        color = colorResource(id = R.color.statusBarColor)
                     )
                 }
             ) {

@@ -55,14 +55,14 @@ fun SuggestionScreen(navController: NavController) {
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 }
@@ -114,7 +114,7 @@ fun SuggestionScreen(navController: NavController) {
                                     showAlert = false
                                     navController.navigate(Screens.MainScreen.screen)
                                 }, buttonText = "Tamam", backgroundColor = colorResource(
-                                    id = R.color.appBarColor
+                                    id = R.color.statusBarColor
                                 )
                             )
                         }

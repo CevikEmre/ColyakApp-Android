@@ -42,13 +42,13 @@ fun QuizScreen(navController: NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.arrow_back),
                         contentDescription = "",
-                        tint = Color.White
+                        tint = Color.Black
                     )
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = colorResource(id = R.color.appBarColor),
-                titleContentColor = Color.White
+                titleContentColor = Color.Black
             )
         )
     },

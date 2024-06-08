@@ -54,7 +54,7 @@ fun ForgotPasswordScreen(navController: NavController) {
             CenterAlignedTopAppBar(title = { Text(text = "Şifremi Unuttum") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -111,7 +111,7 @@ fun ForgotPasswordScreen(navController: NavController) {
                                     showAlert = false
                                     navController.navigate(Screens.Login.screen)
                                 }, buttonText = "Tamam", backgroundColor = colorResource(
-                                    id = R.color.appBarColor
+                                    id = R.color.statusBarColor
                                 )
                             )
                         }

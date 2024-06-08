@@ -97,7 +97,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
@@ -108,7 +108,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 }
@@ -123,7 +123,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                         isUpdating.value = false
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.appBarColor))
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.statusBarColor))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -356,7 +356,7 @@ fun CommentReplyScreen(comment: CommentRepliesResponse, navController: NavContro
                                     }
                                 },
                                 buttonText = if (isUpdating.value) "Güncelle" else "Ekle",
-                                backgroundColor = colorResource(id = R.color.appBarColor)
+                                backgroundColor = colorResource(id = R.color.statusBarColor)
                             )
                             Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
                         }

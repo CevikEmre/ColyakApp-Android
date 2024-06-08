@@ -110,5 +110,5 @@ dependencies {
     implementation("io.github.grizzi91:bouquet:1.1.2")
 
     //Image
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

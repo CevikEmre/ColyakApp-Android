@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -25,8 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.model.BolusReport
@@ -50,13 +53,13 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 )
             )
         },
@@ -96,7 +99,7 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                                 text = bolusReport.bolus.bolusValue.toString(),
                                 Modifier.padding(vertical = 10.dp),
                                 fontWeight = FontWeight.W500,
-                                )
+                            )
                         }
                         HorizontalDivider(thickness = 1.dp)
                     }
@@ -183,50 +186,51 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                 }
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(bolusReport.foodResponseList.size) {
-                        if (bolusReport.foodResponseList.isEmpty()) {
-                            Text(text = "Öğün Listesi Boş")
-                        } else {
-                            val z = bolusReport.foodResponseList[it]
-                            Card(
+                        val z = bolusReport.foodResponseList[it]
+                        Card(
+                            modifier = Modifier
+                                .padding(horizontal = 6.dp, vertical = 6.dp)
+                                .wrapContentHeight(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            )
+                        ) {
+                            Column(
                                 modifier = Modifier
-                                    .padding(horizontal = 6.dp, vertical = 6.dp)
-                                    .wrapContentHeight(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White
-                                )
+                                    .fillMaxWidth()
                             ) {
-                                Column(
+                                Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(10.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    Text(
+                                        text = z.foodName,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Visible,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+                                    Column(
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text(
-                                            text = z.foodName,
-                                            maxLines = 2,
-                                            overflow = TextOverflow.Visible,
-                                            modifier = Modifier.padding(bottom = 5.dp)
+                                            text = "Karbonhidrat",
+                                            fontWeight = FontWeight.W600
                                         )
-                                        Column(
-                                            verticalArrangement = Arrangement.Center,
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = "Karbonhidrat",
-                                                fontWeight = FontWeight.W600
-                                            )
-                                            Text(text = z.carbonhydrate.toString())
-                                        }
+                                        Text(text = z.carbonhydrate.toString())
                                     }
-                                    HorizontalDivider(thickness = 1.dp)
                                 }
+                                HorizontalDivider(thickness = 1.dp)
                             }
                         }
+                    }
+                }
+                if (bolusReport.foodResponseList.isNullOrEmpty()) {
+                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxHeight()) {
+                        Text(text = "Bu öğünde listeye yiyecek eklenmemiştir", textAlign = TextAlign.Center, fontSize = 20.sp)
                     }
                 }
             }

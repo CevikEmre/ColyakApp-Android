@@ -8,5 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="statusBarColor">#FF7A37</color>
-    <color name="appBarColor">#FF7A37</color>
+    <color name="appBarColor">#FFFFFF</color>
 </resources>

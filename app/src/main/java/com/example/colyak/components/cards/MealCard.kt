@@ -80,7 +80,8 @@ fun MealCard(
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_right),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.appBarColor)
+                    tint = colorResource(id = R.color.statusBarColor),
+                    modifier = Modifier.size(30.dp)
                 )
             }
         }

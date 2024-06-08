@@ -76,7 +76,7 @@ fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavControl
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
             )
         },

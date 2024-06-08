@@ -110,7 +110,7 @@ fun BolusScreen() {
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
                 modifier = Modifier
                     .padding(12.dp)
@@ -562,7 +562,7 @@ fun BolusScreen() {
                     },
                     buttonText = "Hesapla",
                     backgroundColor = colorResource(
-                        id = R.color.appBarColor
+                        id = R.color.statusBarColor
                     )
                 )
                 Spacer(modifier = Modifier.size(height = 25.dp, width = 0.dp))
@@ -601,7 +601,7 @@ fun BolusScreen() {
                                 onClick = {
                                     showAlert.value = false
                                 }, buttonText = "Tamam", backgroundColor = colorResource(
-                                    id = R.color.appBarColor
+                                    id = R.color.statusBarColor
                                 )
                             )
                         }

@@ -62,7 +62,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "${mealDetail.mealName} Detayı", color = Color.White)
+                    Text(text = "${mealDetail.mealName} Detayı", color = Color.Black)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -71,14 +71,14 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            tint = Color.White
+                            tint = Color.Black,
                         )
 
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
-                    titleContentColor = Color.White
+                    titleContentColor = Color.Black
                 ),
             )
 
