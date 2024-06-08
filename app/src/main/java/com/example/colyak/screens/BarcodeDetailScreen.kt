@@ -289,9 +289,6 @@ fun BarcodeDetailScreen(navController: NavController) {
                             Text(text = "Öner", modifier = Modifier.clickable {
                                 scope.launch {
                                     barcodeAlert = false
-                                    /* loading = true
-                                     delay(500)
-                                     loading = false*/
                                     isVisible.value = true
                                 }
                             }

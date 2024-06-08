@@ -9,11 +9,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,7 +35,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -64,9 +61,10 @@ import com.example.colyak.viewmodel.ReceiptViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 var typeList = listOf("Tarif", "Hazır Yemek")
 var visible = mutableStateOf(false)
+var isVisibleReceipt = mutableStateOf(false)
+var isVisibleReadyFood = mutableStateOf(false)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,21 +72,16 @@ fun AddMealScreen(mealName: String, navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "$mealName Ekle")
-                },
+                title = { Text(text = "$mealName Ekle") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }
-                    ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back),
-                            contentDescription = "",
+                            contentDescription = null,
                             tint = Color.Black
                         )
                     }
@@ -108,24 +101,17 @@ fun AddMealScreen(mealName: String, navController: NavController) {
         }
     )
     if (visible.value) {
-        AnimatedPopup(onClose = {
-            visible.value = false
-        },
-            visible = visible)
+        AnimatedPopup(onClose = { visible.value = false }, visible = visible)
     }
 }
-
-var isVisibleReceipt = mutableStateOf(false)
-var isVisibleReadyFood = mutableStateOf(false)
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddMealToList() {
-    val receiptScreenViewModel: ReceiptViewModel = viewModel()
-    val receiptList by receiptScreenViewModel.filteredReceiptList.collectAsState()
-    val selectedTypeIndex = remember { mutableIntStateOf(0) }
+    val receiptViewModel: ReceiptViewModel = viewModel()
+    val receiptList by receiptViewModel.filteredReceiptList.collectAsState()
+    val selectedTypeIndex = remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedReceipt by remember { mutableStateOf<Receipt?>(null) }
@@ -134,51 +120,38 @@ fun AddMealToList() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         Card(Modifier.padding(5.dp)) {
-            SearchTextField { query ->
-                searchQuery = query
-            }
+            SearchTextField { query -> searchQuery = query }
         }
         TabRow(
-            selectedTabIndex = selectedTypeIndex.intValue,
+            selectedTabIndex = selectedTypeIndex.value,
             contentColor = colorResource(id = R.color.statusBarColor),
             modifier = Modifier.background(Color.White),
             containerColor = Color.White,
             indicator = { tabPositions ->
                 TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTypeIndex.intValue]),
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTypeIndex.value]),
                     color = colorResource(id = R.color.statusBarColor)
                 )
             }
         ) {
             typeList.forEachIndexed { index, title ->
                 Tab(
-                    text = {
-                        Text(
-                            title,
-                            fontSize = 15.sp
-                        )
-                    },
-                    selected = selectedTypeIndex.intValue == index,
-                    onClick = {
-                        selectedTypeIndex.intValue = index
-                    }
+                    text = { Text(title, fontSize = 15.sp) },
+                    selected = selectedTypeIndex.value == index,
+                    onClick = { selectedTypeIndex.value = index }
                 )
             }
         }
 
-        when (selectedTypeIndex.intValue) {
+        when (selectedTypeIndex.value) {
             0 -> {
-                val filteredReceiptList =
-                    receiptList?.filter {
-                        it?.receiptName!!.contains(
-                            searchQuery,
-                            ignoreCase = true
-                        )
-                    }
+                val filteredReceiptList = receiptList?.filter {
+                    it?.receiptName?.contains(searchQuery, ignoreCase = true) == true
+                }
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    if (filteredReceiptList != null) {
-                        items(filteredReceiptList.size) {
-                            val receipt = filteredReceiptList[it]
+                    filteredReceiptList?.let {
+                        items(it.size) { index ->
+                            val receipt = it[index]
                             AddMealCard(cardName = receipt?.receiptName, onClick = {
                                 scope.launch {
                                     selectedReceipt = receipt
@@ -192,15 +165,12 @@ fun AddMealToList() {
 
             1 -> {
                 val filteredReadyFoodList = globalReadyFoodList?.filter {
-                    it?.name?.contains(
-                        searchQuery,
-                        ignoreCase = true
-                    ) == true
+                    it?.name?.contains(searchQuery, ignoreCase = true) == true
                 }
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    if (filteredReadyFoodList != null) {
-                        items(filteredReadyFoodList.size) {
-                            val readyFood = filteredReadyFoodList[it]
+                    filteredReadyFoodList?.let {
+                        items(it.size) { index ->
+                            val readyFood = it[index]
                             AddMealCard(cardName = readyFood?.name, onClick = {
                                 scope.launch {
                                     selectedReadyFood = readyFood
@@ -212,42 +182,33 @@ fun AddMealToList() {
                 }
             }
         }
+
         if (isVisibleReceipt.value) {
             ModalBottomSheet(
-                modifier = Modifier.height(IntrinsicSize.Min),
                 sheetState = sheetState,
-                onDismissRequest = {
-                    isVisibleReceipt.value = false
-                },
-
-                ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    selectedReceipt?.let { receipt ->
-                        AddReceiptScreen(receipt = receipt)
-                    }
-                }
-
-            }
-        }
-        if (isVisibleReadyFood.value) {
-            ModalBottomSheet(
-                sheetState = sheetState,
-                onDismissRequest = {
-                    isVisibleReadyFood.value = false
-                },
+                onDismissRequest = { isVisibleReceipt.value = false },
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    selectedReadyFood?.let { readyFood ->
-                        AddReadyFoodScreen(readyFoods = readyFood)
-                    }
+                    selectedReceipt?.let { AddReceiptScreen(receipt = it) }
+                }
+            }
+        }
+
+        if (isVisibleReadyFood.value) {
+            ModalBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = { isVisibleReadyFood.value = false },
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    selectedReadyFood?.let { AddReadyFoodScreen(readyFoods = it) }
                 }
             }
         }
@@ -263,21 +224,14 @@ fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
     }
     AnimatedVisibility(
         visible = visible.value,
-        enter = slideInVertically {
-            with(density) { -40.dp.roundToPx() }
-        } + expandVertically(
-            expandFrom = Alignment.Top
-        ) + fadeIn(
-            initialAlpha = 0.3f
-        ),
+        enter = slideInVertically { with(density) { -40.dp.roundToPx() } } + expandVertically(expandFrom = Alignment.Top) + fadeIn(initialAlpha = 0.3f),
         exit = scaleOut(),
     ) {
         Card(
             modifier = Modifier
-                .padding(top = 4.dp).wrapContentSize(Alignment.TopEnd),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFFFF1EC)
-            ),
+                .padding(top = 4.dp)
+                .wrapContentSize(Alignment.TopEnd),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1EC)),
         ) {
             Column(
                 modifier = Modifier
@@ -292,24 +246,19 @@ fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
                     textAlign = TextAlign.Center
                 )
                 LazyColumn(
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 ) {
-                    items(eatenMealList.size)
-                    {
+                    items(eatenMealList.size) { index ->
                         Row(
-                            Modifier
-                                .padding(horizontal = 5.dp, vertical = 5.dp),
+                            Modifier.padding(horizontal = 5.dp, vertical = 5.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
-
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(5.dp)
+                                modifier = Modifier.padding(5.dp)
                             ) {
                                 Column {
-                                    eatenMealList[it].mealName?.let { mealName ->
+                                    eatenMealList[index].mealName?.let { mealName ->
                                         Text(
                                             text = mealName,
                                             fontSize = 14.sp,
@@ -320,7 +269,7 @@ fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
                                         )
                                     }
                                     Text(
-                                        text = "Karbonhidrat : ${eatenMealList[it].carb} Gram",
+                                        text = "Karbonhidrat : ${eatenMealList[index].carb} Gram",
                                         fontSize = 14.sp
                                     )
                                 }
@@ -332,4 +281,3 @@ fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
         }
     }
 }
-

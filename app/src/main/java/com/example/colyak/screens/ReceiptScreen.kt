@@ -48,7 +48,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.colyak.R
@@ -247,6 +246,7 @@ fun ReceiptScreen(navController: NavController) {
                                         items(filteredFavoriteList.size) { index ->
                                             val favoriteReceipt = filteredFavoriteList[index]
                                             if (favoriteReceipt != null) {
+                                                val isFavorite = favoriteList?.any { it?.id == favoriteReceipt.id } == true
                                                 val trimmedName =
                                                     if ((favoriteReceipt.receiptName?.length ?: 0) > 50) {
                                                         favoriteReceipt.receiptName?.substring(
@@ -267,12 +267,29 @@ fun ReceiptScreen(navController: NavController) {
                                                         )
                                                     },
                                                     iconButton = {
-                                                                 IconButton(
-                                                                     onClick = { /*TODO*/ },
-                                                                     modifier = Modifier.zIndex(-1f)
-                                                                 ) {
+                                                        IconButton(
+                                                            onClick = {
+                                                                scope.launch {
+                                                                    val favoriteData = favoriteReceipt.id?.let { FavoriteData(it) }
+                                                                    if (isFavorite) {
+                                                                        favoriteData?.let { favoriteVM.unlikeReceipt(it) }
+                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
+                                                                        favoriteVM.getAllFavoriteReceipts()
+                                                                    } else {
+                                                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
+                                                                        favoriteVM.getAllFavoriteReceipts()
+                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show()
 
-                                                                 }
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) {
+                                                            Icon(
+                                                                painter = painterResource(id = if (isFavorite) R.drawable.favorite else R.drawable.favorite_filled),
+                                                                contentDescription = "",
+                                                                tint = if (isFavorite) Color.Red else Color.Black
+                                                            )
+                                                        }
                                                     },
                                                     modifier = Modifier
                                                         .clickable {
