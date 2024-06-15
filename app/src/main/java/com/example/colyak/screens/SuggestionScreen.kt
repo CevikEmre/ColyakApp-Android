@@ -121,9 +121,6 @@ fun SuggestionScreen(navController: NavController) {
                     )
                 }
             }
-
         }
     )
-
-
 }

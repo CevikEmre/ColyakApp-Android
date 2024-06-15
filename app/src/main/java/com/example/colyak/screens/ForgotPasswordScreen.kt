@@ -120,5 +120,4 @@ fun ForgotPasswordScreen(navController: NavController) {
             }
         }
     )
-
 }

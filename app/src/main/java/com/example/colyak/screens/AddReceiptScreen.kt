@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -93,16 +94,17 @@ fun AddReceiptScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 12.dp)
             ) {
-                receipt.receiptName?.let {
+                receipt.receiptName?.let { receiptName ->
                     Text(
-                        text = it,
-                        fontSize = 18.sp
+                        text = receiptName,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600
                     )
                 }
             }
             HorizontalDivider(thickness = 1.dp)
             Card(
-                elevation = CardDefaults.cardElevation(18.dp),
+                elevation = CardDefaults.cardElevation(6.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp, vertical = 6.dp),

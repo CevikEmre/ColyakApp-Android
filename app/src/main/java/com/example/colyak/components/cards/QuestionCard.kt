@@ -171,7 +171,7 @@ fun QuestionCard(
                                 }
                             },
                             colors = RadioButtonDefaults.colors(
-                                selectedColor = colorResource(id = R.color.appBarColor),
+                                selectedColor = colorResource(id = R.color.statusBarColor),
                                 unselectedColor = Color.LightGray
                             )
                         )

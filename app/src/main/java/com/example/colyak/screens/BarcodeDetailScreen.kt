@@ -274,10 +274,14 @@ fun BarcodeDetailScreen(navController: NavController) {
                     }
                 }
                 CustomizeButton(
-                    onClick = { navController.navigate(Screens.MainScreen.screen) },
+                    onClick = {
+                        navController.navigate(Screens.MainScreen.screen)
+                        barcode.id = 0
+                    },
                     buttonText = "Ana Sayfa",
                     backgroundColor = colorResource(id = R.color.statusBarColor)
                 )
+                Spacer(modifier = Modifier.height(12.dp))
                 if (barcodeAlert) {
                     AlertDialog(
                         onDismissRequest = {
@@ -347,10 +351,9 @@ fun BarcodeDetailScreen(navController: NavController) {
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         isVisible.value = false
-
                                     }
                                 },
-                                buttonText = "Ekle",
+                                buttonText = "Ana ",
                                 backgroundColor = colorResource(id = R.color.appBarColor)
                             )
                             Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))

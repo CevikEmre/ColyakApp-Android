@@ -59,7 +59,7 @@ fun ReceiptCard(
                 Text(
                     text = it,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(all = 8.dp)
+                    modifier = Modifier.padding(all = 6.dp)
                 )
             }
         }

@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddReadyFoodScreen(
-    readyFoods: ReadyFoods,
+    readyFood: ReadyFoods,
 ) {
     val selectedButtonIndex = remember { mutableIntStateOf(0) }
     val tfAmount = remember { mutableIntStateOf(1) }
@@ -72,7 +72,7 @@ fun AddReadyFoodScreen(
     val density = LocalDensity.current
 
     val unitList = mutableListOf<String>()
-    readyFoods.nutritionalValuesList?.forEach { unit ->
+    readyFood.nutritionalValuesList?.forEach { unit ->
         if (unit != null) {
             unit.type?.let { unitList.add(it) }
         }
@@ -90,20 +90,21 @@ fun AddReadyFoodScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                readyFoods.name?.let { name ->
+                readyFood.name?.let { name ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
                             text = name,
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.W600
                         )
                     }
                 }
                 HorizontalDivider(thickness = 1.dp)
                 Card(
-                    elevation = CardDefaults.cardElevation(18.dp),
+                    elevation = CardDefaults.cardElevation(6.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -113,55 +114,60 @@ fun AddReadyFoodScreen(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp)
                     ) {
-                        readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)?.let { readyfood ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Text(text = "Kalori")
-                                Text(text = (tfAmount.intValue * readyfood.calorieAmount!!).toString(), fontWeight = FontWeight.W500)
+                        readyFood.nutritionalValuesList?.get(selectedButtonIndex.intValue)
+                            ?.let { readyfood ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Text(text = "Kalori")
+                                    Text(
+                                        text = (tfAmount.intValue * readyfood.calorieAmount!!).toString(),
+                                        fontWeight = FontWeight.W500
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Text(text = "Karbonhidrat")
+                                    Text(text = (tfAmount.intValue * readyfood.carbohydrateAmount!!).toString())
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Text(text = "Protein")
+                                    Text(text = (tfAmount.intValue * readyfood.proteinAmount!!).toString())
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Text(text = "Yağ")
+                                    Text(text = (tfAmount.intValue * readyfood.fatAmount!!).toString())
+                                }
                             }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Text(text = "Karbonhidrat")
-                                Text(text = (tfAmount.intValue * readyfood.carbohydrateAmount!!).toString())
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Text(text = "Protein")
-                                Text(text = (tfAmount.intValue * readyfood.proteinAmount!!).toString())
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Text(text = "Yağ")
-                                Text(text = (tfAmount.intValue * readyfood.fatAmount!!).toString())
-                            }
-                        }
                     }
                 }
                 Column(
@@ -201,7 +207,7 @@ fun AddReadyFoodScreen(
                                         selectedType = unit
                                         selectedButtonIndex.intValue = unitList.indexOf(unit)
                                         amountType.value =
-                                            readyFoods.nutritionalValuesList?.get(selectedButtonIndex.intValue)
+                                            readyFood.nutritionalValuesList?.get(selectedButtonIndex.intValue)
                                                 ?.toString() ?: ""
                                         expanded = false
                                     }
@@ -238,7 +244,8 @@ fun AddReadyFoodScreen(
                                 modifier = Modifier
                                     .width(50.dp)
                                     .onSizeChanged { size ->
-                                        textFieldHeight = with(density) { size.height.toDp().value.toInt() }
+                                        textFieldHeight =
+                                            with(density) { size.height.toDp().value.toInt() }
                                     }
                                     .padding(vertical = 4.dp),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -271,18 +278,18 @@ fun AddReadyFoodScreen(
                     onClick = {
                         scope.launch {
                             val lastCarbAmount: Int =
-                                (tfAmount.intValue.toDouble() * (readyFoods.nutritionalValuesList?.get(
+                                (tfAmount.intValue.toDouble() * (readyFood.nutritionalValuesList?.get(
                                     selectedButtonIndex.intValue
                                 )?.carbohydrateAmount!!)).toInt()
                             foodList.add(
                                 FoodList(
                                     foodType = FoodType.BARCODE,
-                                    foodId = readyFoods.id,
+                                    foodId = readyFood.id,
                                     carbonhydrate = lastCarbAmount.toLong()
                                 )
                             )
                             printedMealList.value += PrintedMeal(
-                                mealName = readyFoods.name!!,
+                                mealName = readyFood.name!!,
                                 amount = tfAmount.intValue,
                                 unit = amountType.value,
                                 carb = lastCarbAmount
@@ -293,11 +300,15 @@ fun AddReadyFoodScreen(
                             foodList.removeAll(foodList)
                             isVisibleReadyFood.value = false
                             visible.value = true
-                            Toast.makeText(ColyakApp.applicationContext(), "Ekleme Başarılı", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                ColyakApp.applicationContext(),
+                                "Ekleme Başarılı",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     buttonText = "Ekle",
-                    enabled = !readyFoods.nutritionalValuesList.isNullOrEmpty(),
+                    enabled = !readyFood.nutritionalValuesList.isNullOrEmpty(),
                     backgroundColor = colorResource(id = R.color.statusBarColor)
                 )
                 Spacer(modifier = Modifier.height(25.dp))

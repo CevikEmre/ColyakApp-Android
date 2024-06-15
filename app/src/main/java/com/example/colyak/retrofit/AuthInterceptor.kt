@@ -12,14 +12,16 @@ import com.example.colyak.session.SessionManager
 import com.example.colyak.viewmodel.loginResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 
 class AuthInterceptor : Interceptor {
-    val sessionManager = SessionManager(ColyakApp.applicationContext())
+    private val sessionManager = SessionManager(ColyakApp.applicationContext())
     val scope = CoroutineScope(Dispatchers.IO)
+    @Volatile
     private var alertDialogShown = false
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url.toString()
@@ -32,18 +34,31 @@ class AuthInterceptor : Interceptor {
                 .build()
         }
 
-        val response = chain.proceed(modifiedRequest)
+        var response = chain.proceed(modifiedRequest)
         if (response.code == 401 || response.code == 601) {
-            scope.launch {
-                sessionManager.refreshToken(loginResponse.refreshToken)
+            runBlocking {
+                response.close()
+                val isTokenRefreshed = sessionManager.refreshToken(loginResponse.refreshToken)
+                if (isTokenRefreshed) {
+                    val newToken = loginResponse.token
+                    val newRequest = modifiedRequest.newBuilder()
+                        .removeHeader("Authorization")
+                        .addHeader("Authorization", "Bearer $newToken")
+                        .build()
+                    response = chain.proceed(newRequest)
+                }
             }
         }
+
         if (response.code == 602) {
             Handler(Looper.getMainLooper()).post {
-                showRefreshTokenExpiredAlert(ColyakApp.applicationContext())
-                alertDialogShown = true
+                if (!alertDialogShown) {
+                    alertDialogShown = true
+                    showRefreshTokenExpiredAlert(ColyakApp.applicationContext())
+                }
             }
         }
+
         return response
     }
 
@@ -66,6 +81,7 @@ class AuthInterceptor : Interceptor {
     private fun navigateToLogin() {
         NavControllerHolder.navController?.navigate(Screens.Login.screen) {
             popUpTo(Screens.Login.screen) { inclusive = true }
+            sessionManager.clearSession()
         }
     }
 

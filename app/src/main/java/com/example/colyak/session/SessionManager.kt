@@ -17,7 +17,6 @@ class SessionManager(context: Context) {
         private const val KEY_REFRESH_TOKEN = "key_refresh_token"
         private const val EMAIL = "email"
         private const val KEY_USERNAME = "key_username"
-
     }
 
     private val sharedPreferences: SharedPreferences =
@@ -46,21 +45,26 @@ class SessionManager(context: Context) {
         }
     }
 
-     suspend fun refreshToken(refreshToken: String) {
-        val tokenResponse = withContext(Dispatchers.IO) {
-            RefreshTokenService.refreshToken(TokenData(refreshToken))
-        }
-        tokenResponse?.let {
-            saveToken(it.token, it.refreshToken, it.userName)
-            it.token.let { token -> loginResponse.token = token }
-            it.refreshToken.let { refreshToken -> loginResponse.refreshToken = refreshToken }
-            it.userName.let { userName -> loginResponse.userName = userName }
-            Log.e("USER", tokenResponse.toString())
-        } ?: run {
+    suspend fun refreshToken(refreshToken: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val tokenResponse = RefreshTokenService.refreshToken(TokenData(refreshToken))
+            tokenResponse?.let {
+                saveToken(it.token, it.refreshToken, it.userName)
+                it.token.let { token -> loginResponse.token = token }
+                it.refreshToken.let { refreshToken -> loginResponse.refreshToken = refreshToken }
+                it.userName.let { userName -> loginResponse.userName = userName }
+                Log.e("USER", tokenResponse.toString())
+                true
+            } ?: run {
+                clearSession()
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("SessionManager", "Token refresh failed", e)
             clearSession()
+            false
         }
     }
-
     suspend fun saveToken(token: String?, refreshToken: String?, userName: String?) {
         sharedPreferences.edit {
             putString(KEY_TOKEN, token)

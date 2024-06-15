@@ -154,5 +154,4 @@ fun NutritionInfoCard(
             }
         }
     }
-
 }

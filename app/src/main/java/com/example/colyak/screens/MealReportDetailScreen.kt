@@ -60,7 +60,16 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
-                )
+                ),
+                actions = {
+                    IconButton(onClick = { navController.navigate(Screens.MainScreen.screen) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_home),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                }
             )
         },
 
@@ -209,8 +218,11 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                                     Text(
                                         text = z.foodName,
                                         maxLines = 2,
-                                        overflow = TextOverflow.Visible,
-                                        modifier = Modifier.padding(bottom = 5.dp)
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(vertical = 10.dp),
+                                        textAlign = TextAlign.Start
                                     )
                                     Column(
                                         verticalArrangement = Arrangement.Center,
@@ -229,8 +241,16 @@ fun MealReportDetailScreen(bolusReport: BolusReport, navController: NavControlle
                     }
                 }
                 if (bolusReport.foodResponseList.isNullOrEmpty()) {
-                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxHeight()) {
-                        Text(text = "Bu öğünde listeye yiyecek eklenmemiştir", textAlign = TextAlign.Center, fontSize = 20.sp)
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Text(
+                            text = "Bu öğünde listeye yiyecek eklenmemiştir",
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }

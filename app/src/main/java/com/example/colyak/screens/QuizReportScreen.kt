@@ -224,10 +224,10 @@ fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavControl
                                 },
                                 buttonText = "Ana Sayfa",
                                 backgroundColor = colorResource(
-                                    id = R.color.appBarColor
+                                    id = R.color.statusBarColor
                                 )
                             )
-                            Spacer(modifier = Modifier.height(18.dp))
+                            Spacer(modifier = Modifier.height(25.dp))
                         }
                     }
                 }

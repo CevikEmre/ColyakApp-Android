@@ -1,6 +1,5 @@
 package com.example.colyak.service
 
-import android.content.Context
 import android.util.Log
 import com.example.colyak.`interface`.ReadyFoodInterface
 import com.example.colyak.model.ReadyFoods
@@ -11,33 +10,32 @@ import retrofit2.awaitResponse
 
 
 class ReadyFoodService {
-    companion object{
-    suspend fun getAllReadyFoods(): List<ReadyFoods?>? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = RetrofitClient.getClient(baseUrl)
-                    .create(ReadyFoodInterface::class.java)
-                    .getAllReadyFoods()
-                    .awaitResponse()
+    companion object {
+        suspend fun getAllReadyFoods(): List<ReadyFoods?>? {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = RetrofitClient.getClient(baseUrl)
+                        .create(ReadyFoodInterface::class.java)
+                        .getAllReadyFoods()
+                        .awaitResponse()
 
-                if (response.isSuccessful) {
-                    response.body()
-                }
-                else {
-                    val errorCode = response.code()
-                    val errorMessage = response.errorBody()?.string()
-                    Log.e(
-                        "ReadyFoods",
-                        "getAll request failed with code: $errorCode, message: $errorMessage"
-                    )
+                    if (response.isSuccessful) {
+                        response.body()
+                    } else {
+                        val errorCode = response.code()
+                        val errorMessage = response.errorBody()?.string()
+                        Log.e(
+                            "ReadyFoods",
+                            "getAll request failed with code: $errorCode, message: $errorMessage"
+                        )
+                        null
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("APIService", "Error sending getAll request", e)
                     null
                 }
-
-            } catch (e: Exception) {
-                Log.e("APIService", "Error sending getAll request", e)
-                null
             }
         }
     }
-}
 }

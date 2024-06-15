@@ -111,7 +111,6 @@ val navList = listOf(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainContent(navController: NavController) {
-    val isExpanded = remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val selectedItemIndex by rememberSaveable { mutableIntStateOf(-1) }
@@ -190,11 +189,10 @@ fun MainContent(navController: NavController) {
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {
-                                drawerState.apply {
-                                    isExpanded.value = !isExpanded.value
-                                    if (isExpanded.value) {
-                                        open()
-                                    } else close()
+                                if (drawerState.isOpen) {
+                                    drawerState.close()
+                                } else {
+                                    drawerState.open()
                                 }
                             }
                         }) {
@@ -223,40 +221,40 @@ fun MainContent(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth().padding(vertical = 8.dp,horizontal = 20.dp),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth().padding(vertical = 8.dp,horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier.size(40.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Box(
-                                modifier = Modifier.size(40.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Canvas(modifier = Modifier.size(150.dp)) {
-                                    drawArc(
-                                        color = Color.LightGray,
-                                        startAngle = -90f,
-                                        sweepAngle = 360 * 1f,
-                                        useCenter = false,
-                                        style = Stroke(5f, cap = StrokeCap.Round)
-                                    )
-                                }
-                                Icon(
-                                    painter = painterResource(id = R.drawable.person),
-                                    contentDescription = "",
-                                    tint = Color(0xFF333333),
-                                    modifier = Modifier
-
+                            Canvas(modifier = Modifier.size(150.dp)) {
+                                drawArc(
+                                    color = Color.LightGray,
+                                    startAngle = -90f,
+                                    sweepAngle = 360 * 1f,
+                                    useCenter = false,
+                                    style = Stroke(5f, cap = StrokeCap.Round)
                                 )
                             }
-                            Text(
-                                text = "Hoşgeldin , " + loginResponse.userName +"!",
-                                fontSize = 20.sp,
-                                color = Color(0xFF4A4A4A),
-                                modifier = Modifier.padding(start = 12.dp)
+                            Icon(
+                                painter = painterResource(id = R.drawable.person),
+                                contentDescription = "",
+                                tint = Color(0xFF333333),
+                                modifier = Modifier
+
                             )
                         }
+                        Text(
+                            text = "Hoşgeldin , " + loginResponse.userName +"!",
+                            fontSize = 20.sp,
+                            color = Color(0xFF4A4A4A),
+                            modifier = Modifier.padding(start = 12.dp)
+                        )
+                    }
                     if (loading) {
                         Column(
                             verticalArrangement = Arrangement.Center,

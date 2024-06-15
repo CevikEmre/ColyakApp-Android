@@ -208,7 +208,7 @@ fun AddMealToList() {
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    selectedReadyFood?.let { AddReadyFoodScreen(readyFoods = it) }
+                    selectedReadyFood?.let { AddReadyFoodScreen(readyFood = it) }
                 }
             }
         }

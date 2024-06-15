@@ -137,7 +137,6 @@ fun MealReportScreen(navController: NavController) {
                 }
             }
         )
-
     }
 }
 
