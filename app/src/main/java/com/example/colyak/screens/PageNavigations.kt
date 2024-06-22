@@ -120,5 +120,8 @@ fun PageNavigations() {
             val meal = Gson().fromJson(json, BolusReport::class.java)
             MealReportDetailScreen(bolusReport = meal, navController = navController)
         }
+        composable(Screens.BolusScreen.screen) {
+            BolusScreen(navController)
+        }
     }
 }

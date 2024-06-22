@@ -108,7 +108,7 @@ fun MainScreen(navController: NavController) {
 
     val scope = rememberCoroutineScope()
     val bottomNavList = listOf(
-        "Ana Sayfa", "Tarifler", "Bolus"
+        "Ana Sayfa", "Tarifler"
     )
     val images =
         listOf(R.drawable.outline_home, R.drawable.chef, R.drawable.syringe)
@@ -182,7 +182,6 @@ fun MainScreen(navController: NavController) {
             when (page) {
                 0 -> MainContent(navController = navController)
                 1 -> ReceiptScreen(navController = navController)
-                2 -> BolusScreen()
             }
         }
     }

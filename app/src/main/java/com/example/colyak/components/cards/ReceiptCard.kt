@@ -46,12 +46,12 @@ fun ReceiptCard(
                     .height(150.dp)
             ) {
                 image()
-                iconButton?.let {
+                iconButton?.let { iconButton ->
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                     ) {
-                        it()
+                        iconButton()
                     }
                 }
             }

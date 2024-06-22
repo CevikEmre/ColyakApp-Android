@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -33,6 +34,7 @@ fun QuizScreen(navController: NavController) {
             title = {
                 Text(text = "Quiz")
             },
+            modifier = Modifier.shadow(10.dp),
             navigationIcon = {
                 IconButton(
                     onClick = {

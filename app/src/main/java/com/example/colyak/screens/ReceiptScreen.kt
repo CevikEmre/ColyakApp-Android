@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -96,7 +97,8 @@ fun ReceiptScreen(navController: NavController) {
                     ),
                     modifier = Modifier
                         .padding(horizontal = 12.dp, vertical = 12.dp)
-                        .clip(RoundedCornerShape(12.dp)),
+                        .clip(RoundedCornerShape(12.dp))
+                        .shadow(10.dp),
 
                     )
                 Card(Modifier.padding(horizontal = 5.dp)) {
@@ -160,10 +162,14 @@ fun ReceiptScreen(navController: NavController) {
                                         items(filteredReceiptList.size) { index ->
                                             val receipt = filteredReceiptList[index]
                                             if (receipt != null) {
-                                                val isFavorite = favoriteList?.any { it?.id == receipt.id } == true
+                                                val isFavorite =
+                                                    favoriteList?.any { it?.id == receipt.id } == true
                                                 val trimmedName =
                                                     if ((receipt.receiptName?.length ?: 0) > 50) {
-                                                        receipt.receiptName?.substring(0, 50) + "..."
+                                                        receipt.receiptName?.substring(
+                                                            0,
+                                                            50
+                                                        ) + "..."
                                                     } else {
                                                         receipt.receiptName
                                                     }
@@ -179,15 +185,34 @@ fun ReceiptScreen(navController: NavController) {
                                                         IconButton(
                                                             onClick = {
                                                                 scope.launch {
-                                                                    val favoriteData = receipt.id?.let { FavoriteData(it) }
+                                                                    val favoriteData =
+                                                                        receipt.id?.let {
+                                                                            FavoriteData(it)
+                                                                        }
                                                                     if (isFavorite) {
-                                                                        favoriteData?.let { favoriteVM.unlikeReceipt(it) }
-                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
+                                                                        favoriteData?.let {
+                                                                            favoriteVM.unlikeReceipt(
+                                                                                it
+                                                                            )
+                                                                        }
+                                                                        Toast.makeText(
+                                                                            ColyakApp.applicationContext(),
+                                                                            "Favorilerden çıkarıldı",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
                                                                         favoriteVM.getAllFavoriteReceipts()
                                                                     } else {
-                                                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
+                                                                        favoriteData?.let {
+                                                                            favoriteVM.likeReceipt(
+                                                                                it
+                                                                            )
+                                                                        }
                                                                         favoriteVM.getAllFavoriteReceipts()
-                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show()
+                                                                        Toast.makeText(
+                                                                            ColyakApp.applicationContext(),
+                                                                            "Favorilere eklendi",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
 
                                                                     }
                                                                 }
@@ -204,8 +229,10 @@ fun ReceiptScreen(navController: NavController) {
                                                         .clickable {
                                                             scope.launch {
                                                                 try {
-                                                                    val receiptJson = Gson().toJson(receipt)
-                                                                    val encodedReceiptJson = Uri.encode(receiptJson)
+                                                                    val receiptJson =
+                                                                        Gson().toJson(receipt)
+                                                                    val encodedReceiptJson =
+                                                                        Uri.encode(receiptJson)
                                                                     navController.navigate("${Screens.ReceiptDetailScreen.screen}/$encodedReceiptJson")
                                                                 } catch (e: Exception) {
                                                                     Log.e(
@@ -246,9 +273,12 @@ fun ReceiptScreen(navController: NavController) {
                                         items(filteredFavoriteList.size) { index ->
                                             val favoriteReceipt = filteredFavoriteList[index]
                                             if (favoriteReceipt != null) {
-                                                val isFavorite = favoriteList?.any { it?.id == favoriteReceipt.id } == true
+                                                val isFavorite =
+                                                    favoriteList?.any { it?.id == favoriteReceipt.id } == true
                                                 val trimmedName =
-                                                    if ((favoriteReceipt.receiptName?.length ?: 0) > 50) {
+                                                    if ((favoriteReceipt.receiptName?.length
+                                                            ?: 0) > 50
+                                                    ) {
                                                         favoriteReceipt.receiptName?.substring(
                                                             0,
                                                             50
@@ -270,15 +300,34 @@ fun ReceiptScreen(navController: NavController) {
                                                         IconButton(
                                                             onClick = {
                                                                 scope.launch {
-                                                                    val favoriteData = favoriteReceipt.id?.let { FavoriteData(it) }
+                                                                    val favoriteData =
+                                                                        favoriteReceipt.id?.let {
+                                                                            FavoriteData(it)
+                                                                        }
                                                                     if (isFavorite) {
-                                                                        favoriteData?.let { favoriteVM.unlikeReceipt(it) }
-                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
+                                                                        favoriteData?.let {
+                                                                            favoriteVM.unlikeReceipt(
+                                                                                it
+                                                                            )
+                                                                        }
+                                                                        Toast.makeText(
+                                                                            ColyakApp.applicationContext(),
+                                                                            "Favorilerden çıkarıldı",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
                                                                         favoriteVM.getAllFavoriteReceipts()
                                                                     } else {
-                                                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
+                                                                        favoriteData?.let {
+                                                                            favoriteVM.likeReceipt(
+                                                                                it
+                                                                            )
+                                                                        }
                                                                         favoriteVM.getAllFavoriteReceipts()
-                                                                        Toast.makeText(ColyakApp.applicationContext(), "Favorilere eklendi", Toast.LENGTH_SHORT).show()
+                                                                        Toast.makeText(
+                                                                            ColyakApp.applicationContext(),
+                                                                            "Favorilere eklendi",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
 
                                                                     }
                                                                 }

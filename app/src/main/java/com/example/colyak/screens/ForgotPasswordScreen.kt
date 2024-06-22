@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -51,7 +52,11 @@ fun ForgotPasswordScreen(navController: NavController) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text(text = "Şifremi Unuttum") },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = "Şifremi Unuttum")
+                },
+                modifier = Modifier.shadow(10.dp),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
@@ -92,8 +97,12 @@ fun ForgotPasswordScreen(navController: NavController) {
                 CustomizeButton(
                     onClick = {
                         scope.launch {
-                            val result = forgotPasswordVM.forgotPassword(tfValue.value,context,navController)
-                            Log.e("passwordReset",result.toString())
+                            val result = forgotPasswordVM.forgotPassword(
+                                tfValue.value,
+                                context,
+                                navController
+                            )
+                            Log.e("passwordReset", result.toString())
                         }
                     }, buttonText = "Gönder",
                     backgroundColor = colorResource(id = R.color.statusBarColor)

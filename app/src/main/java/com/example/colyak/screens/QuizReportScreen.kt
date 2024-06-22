@@ -8,10 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +21,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -31,24 +30,27 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
-import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.model.QuizAnswer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavController) {
-    val (correctAnswersCount, incorrectAnswersCount) = countCorrectAndIncorrectAnswers(quizReportList)
+    val (correctAnswersCount, incorrectAnswersCount) = countCorrectAndIncorrectAnswers(
+        quizReportList
+    )
     val score = calculateScore(correctAnswersCount, quizReportList.size)
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
@@ -74,10 +76,20 @@ fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavControl
                 title = {
                     Text(text = "Sonuç Sayfası")
                 },
+                modifier = Modifier.shadow(10.dp),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
                 ),
+                actions = {
+                    IconButton(onClick = { navController.navigate(Screens.MainScreen.screen) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_home),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                },
             )
         },
         content = { padding ->
@@ -213,33 +225,18 @@ fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavControl
                             }
                         }
                     }
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Absolute.Center
-                        ) {
-                            CustomizeButton(
-                                onClick = {
-                                    navController.navigate(Screens.MainScreen.screen)
-                                },
-                                buttonText = "Ana Sayfa",
-                                backgroundColor = colorResource(
-                                    id = R.color.statusBarColor
-                                )
-                            )
-                            Spacer(modifier = Modifier.height(25.dp))
-                        }
-                    }
                 }
             }
         }
     )
 }
+
 fun countCorrectAndIncorrectAnswers(quizReportList: List<QuizAnswer>): Pair<Int, Int> {
     val correctAnswersCount = quizReportList.count { it.correct }
     val incorrectAnswersCount = quizReportList.size - correctAnswersCount
     return Pair(correctAnswersCount, incorrectAnswersCount)
 }
+
 fun calculateScore(correctAnswersCount: Int, totalQuestions: Int): Int {
     return if (totalQuestions > 0) {
         (correctAnswersCount * 100) / totalQuestions

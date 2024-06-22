@@ -18,11 +18,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -68,6 +70,7 @@ fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
                 ),
+                modifier = Modifier.shadow(10.dp),
                 navigationIcon = {
                     IconButton(
                         onClick = {

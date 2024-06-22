@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
@@ -75,6 +76,7 @@ fun VerificationScreen(navController: NavController) {
                         text = "Doğrulama Ekranı"
                     )
                 },
+                modifier = Modifier.shadow(10.dp),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black

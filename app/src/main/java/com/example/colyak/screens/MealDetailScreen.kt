@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -39,10 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.colyak.R
+import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.model.MealDetail
 import com.example.colyak.model.PrintedMeal
 
 var eatenMealList = mutableStateListOf<PrintedMeal>()
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
@@ -64,6 +67,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                 title = {
                     Text(text = "${mealDetail.mealName} Detayı", color = Color.Black)
                 },
+                modifier = Modifier.shadow(10.dp),
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -88,7 +92,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(padding)
             ) {
-                Box(modifier = Modifier.fillMaxWidth()){
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -146,6 +150,15 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
+                if (eatenMealList.isNotEmpty()) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CustomizeButton(onClick = { navController.navigate(Screens.BolusScreen.screen) }, buttonText = "Bolus Hesapla")
+                    }
+                }
                 Text(
                     text = mealDetail.mealName,
                     Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
@@ -157,12 +170,7 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                     modifier = Modifier
                         .padding(vertical = 4.dp)
                 ) {
-                    items(
-                        when (mealDetail.mealName) {
-                            "Öğün" -> eatenMealList.size
-                            else -> 0
-                        }
-                    ) {
+                    items(eatenMealList.size) {
                         Row(
                             Modifier
                                 .fillMaxWidth()

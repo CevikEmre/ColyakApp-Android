@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colyak.R
 import com.example.colyak.model.PDFResponse
@@ -40,6 +42,7 @@ fun PdfDetailScreen(pdfResponse: PDFResponse,navController: NavController) {
                     containerColor = colorResource(id = R.color.appBarColor),
                     titleContentColor = Color.Black
                 ),
+                modifier = Modifier.shadow(10.dp),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

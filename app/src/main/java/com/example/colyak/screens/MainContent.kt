@@ -75,6 +75,11 @@ import kotlinx.coroutines.launch
 
 val navList = listOf(
     NavigationItem(
+        title = "Bolus Hesapla",
+        selectedIcon = R.drawable.syringe,
+        unselectedIcon = R.drawable.syringe,
+    ),
+    NavigationItem(
         title = "Quiz",
         selectedIcon = R.drawable.quiz,
         unselectedIcon = R.drawable.quiz,
@@ -136,12 +141,13 @@ fun MainContent(navController: NavController) {
                         selected = index == selectedItemIndex,
                         onClick = {
                             when (index) {
-                                0 -> navController.navigate(Screens.QuizScreen.screen)
-                                1 -> navController.navigate(Screens.SuggestionScreen.screen)
-                                2 -> navController.navigate(Screens.UsefulInformationScreen.screen)
-                                3 -> navController.navigate(Screens.BarcodeScreen.screen)
-                                4 -> navController.navigate(Screens.DateRangePickerScreen.screen)
-                                5 -> showAlert = true
+                                0 -> navController.navigate(Screens.BolusScreen.screen)
+                                1 -> navController.navigate(Screens.QuizScreen.screen)
+                                2 -> navController.navigate(Screens.SuggestionScreen.screen)
+                                3 -> navController.navigate(Screens.UsefulInformationScreen.screen)
+                                4 -> navController.navigate(Screens.BarcodeScreen.screen)
+                                5 -> navController.navigate(Screens.DateRangePickerScreen.screen)
+                                6 -> showAlert = true
                             }
                             scope.launch {
                                 drawerState.close()
