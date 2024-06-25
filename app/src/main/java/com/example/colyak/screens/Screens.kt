@@ -28,5 +28,6 @@ sealed class Screens(
     data object MealReportScreen : Screens("mealReportScreen")
     data object MealReportDetailScreen : Screens("mealReportDetailScreen")
     data object BolusScreen : Screens("bolusScreen")
+    data object UserGuideScreen : Screens("userGuideScreen")
 
 }

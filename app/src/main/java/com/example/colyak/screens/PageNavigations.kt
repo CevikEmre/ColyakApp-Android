@@ -123,5 +123,8 @@ fun PageNavigations() {
         composable(Screens.BolusScreen.screen) {
             BolusScreen(navController)
         }
+        composable(Screens.UserGuideScreen.screen) {
+            UserGuideScreen(navController)
+        }
     }
 }

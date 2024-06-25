@@ -132,7 +132,7 @@ fun QuizReportScreen(quizReportList: List<QuizAnswer>, navController: NavControl
                                 }
                                 Canvas(modifier = Modifier.size(200.dp)) {
                                     val sweepAngle =
-                                        360 * correctAnswersCount.toFloat() / quizReportList.size
+                                        360 * correctAnswersCount.toFloat() / quizReportList.size.toFloat()
                                     drawArc(
                                         color = Color.Green,
                                         startAngle = -90f,

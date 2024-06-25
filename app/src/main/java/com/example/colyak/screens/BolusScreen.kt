@@ -2,7 +2,6 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,13 +11,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -63,7 +62,9 @@ import com.example.colyak.R
 import com.example.colyak.components.consts.CustomizeButton
 import com.example.colyak.components.consts.Input
 import com.example.colyak.model.Bolus
+import com.example.colyak.model.FoodList
 import com.example.colyak.model.data.BolusData
+import com.example.colyak.model.enum.FoodType
 import com.example.colyak.viewmodel.BolusScreenViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -89,7 +90,7 @@ fun BolusScreen(navController: NavController) {
     val insulinCarbRatio = remember { mutableStateOf("") }
     val idf = remember { mutableStateOf("") }
     val result = remember { mutableDoubleStateOf(0.0) }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val isVisible = remember { mutableStateOf(false) }
     val bolusScreenViewModel: BolusScreenViewModel = viewModel()
     val showAlert = remember { mutableStateOf(false) }
@@ -97,12 +98,7 @@ fun BolusScreen(navController: NavController) {
     val timePickerState = rememberTimePickerState()
     var showTimePicker by remember { mutableStateOf(false) }
     var printedEatTime by remember { mutableStateOf("") }
-    var mealEatTime by remember {
-        mutableStateOf(
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    }
-
+    var mealEatTime by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) }
     carbohydrateTf.value = carbohydrate.toString()
     Scaffold(
         topBar = {
@@ -164,7 +160,6 @@ fun BolusScreen(navController: NavController) {
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.W500,
                             )
-
                         }
                         Row(
                             modifier = Modifier
@@ -616,11 +611,19 @@ fun BolusScreen(navController: NavController) {
                             if (carbohydrateTf.value.isEmpty() || bloodGlucose.value.isEmpty() || targetBloodGlucose.value.isEmpty() || insulinCarbRatio.value.isEmpty() || idf.value.isEmpty() || idf.value.toInt() == 0 || insulinCarbRatio.value.toInt() == 0) {
                                 showAlert.value = true
                             } else {
-                                if (extraCarbTf.value != ""){
-                                    result.doubleValue = (((carbohydrate.toDouble() + extraCarbTf.value.toDouble()) / insulinCarbRatio.value.toDouble()) + (bloodGlucose.value.toDouble() - targetBloodGlucose.value.toDouble()) / idf.value.toDouble())
-                                }
-                                else{
-                                    result.doubleValue = ((carbohydrate.toDouble() / insulinCarbRatio.value.toDouble()) + (bloodGlucose.value.toDouble() - targetBloodGlucose.value.toDouble()) / idf.value.toDouble())
+                                if (extraCarbTf.value != "") {
+                                    bolusList.add(
+                                        FoodList(
+                                            FoodType.BARCODE,
+                                            248,
+                                            extraCarbTf.value.toLong()
+                                        )
+                                    )
+                                    result.doubleValue =
+                                        (((carbohydrate.toDouble() + extraCarbTf.value.toDouble()) / insulinCarbRatio.value.toDouble()) + (bloodGlucose.value.toDouble() - targetBloodGlucose.value.toDouble()) / idf.value.toDouble())
+                                } else {
+                                    result.doubleValue =
+                                        ((carbohydrate.toDouble() / insulinCarbRatio.value.toDouble()) + (bloodGlucose.value.toDouble() - targetBloodGlucose.value.toDouble()) / idf.value.toDouble())
                                 }
 
                                 isVisible.value = true
@@ -633,7 +636,7 @@ fun BolusScreen(navController: NavController) {
                                             bolusValue = result.doubleValue.roundToLong(),
                                             insulinCarbonhydrateRatio = insulinCarbRatio.value.toLong(),
                                             insulinTolerateFactor = idf.value.toLong(),
-                                            totalCarbonhydrate = if (extraCarbTf.value != ""){
+                                            totalCarbonhydrate = if (extraCarbTf.value != "") {
                                                 carbohydrate.toLong() + extraCarbTf.value.toLong()
                                             } else
                                                 carbohydrate.toLong(),
@@ -641,7 +644,8 @@ fun BolusScreen(navController: NavController) {
                                         )
                                     )
                                 )
-                                Log.e("bolusList", bolusList.toString())
+                                bolusList.clear()
+                                eatenMealList.clear()
                             }
                         }
                     },
@@ -660,8 +664,9 @@ fun BolusScreen(navController: NavController) {
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxHeight(0.18f)
-                                .fillMaxWidth(),
+                                .wrapContentHeight()
+                                .fillMaxWidth()
+                                .padding(vertical = 25.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
@@ -671,6 +676,7 @@ fun BolusScreen(navController: NavController) {
                                 fontSize = 25.sp,
                                 fontWeight = FontWeight.W600,
                             )
+                            Spacer(modifier = Modifier.height(25.dp))
                         }
                     }
                 }

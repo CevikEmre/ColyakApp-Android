@@ -24,17 +24,14 @@ class QuizViewModel : ViewModel() {
     val answerResponse: StateFlow<QuizAnswer?> = _answerResponse
 
     suspend fun getAllQuiz(): List<Quiz> {
-        viewModelScope.launch {
             try {
                 val response = QuizService().getAllQuizs()
                 _quizList.value = response ?: emptyList()
                 quizList = _quizList.value
-                Log.e("QuizList", response.toString())
 
             } catch (e: Exception) {
                 Log.e("QuizViewModel", "Fail", e)
             }
-        }
         return _quizList.value
     }
 
@@ -44,8 +41,6 @@ class QuizViewModel : ViewModel() {
                 if (response != null) {
                     _answerResponse.value = response
                 }
-
-                Log.e("questionAnswer", response.toString())
 
             } catch (e: Exception) {
                 Log.e("questionAnswer", "Fail", e)
@@ -60,9 +55,6 @@ class QuizViewModel : ViewModel() {
                 _answerList.value = response ?: emptyList()
                 answerList = _answerList.value.toMutableStateList()
                 answerList = response?.toMutableStateList()!!
-                Log.e("ANSWERLİST", answerList.toString())
-                Log.e("AnswerList", response.toString())
-
             } catch (e: Exception) {
                 Log.e("QuizViewModel", "Fail", e)
             }

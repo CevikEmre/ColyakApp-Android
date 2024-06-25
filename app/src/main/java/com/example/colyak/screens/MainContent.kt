@@ -105,6 +105,11 @@ val navList = listOf(
         unselectedIcon = R.drawable.meal_report,
     ),
     NavigationItem(
+        title = "Uygulama Nasıl Kullanılır",
+        selectedIcon = R.drawable.meal_report,
+        unselectedIcon = R.drawable.meal_report,
+    ),
+    NavigationItem(
         title = "Çıkış Yap",
         selectedIcon = R.drawable.logout,
         unselectedIcon = R.drawable.logout,
@@ -147,7 +152,8 @@ fun MainContent(navController: NavController) {
                                 3 -> navController.navigate(Screens.UsefulInformationScreen.screen)
                                 4 -> navController.navigate(Screens.BarcodeScreen.screen)
                                 5 -> navController.navigate(Screens.DateRangePickerScreen.screen)
-                                6 -> showAlert = true
+                                6 -> navController.navigate(Screens.UserGuideScreen.screen)
+                                7 -> showAlert = true
                             }
                             scope.launch {
                                 drawerState.close()
@@ -359,22 +365,6 @@ fun MainContent(navController: NavController) {
                 }
                 )
             },
-        )
-    }
-    if (showTokenAlert) {
-        AlertDialog(
-            onDismissRequest = {
-                showAlert = false
-            },
-            title = { Text("Oturum Süresi") },
-            text = { Text("Oturum süreniz doldu lütfen tekrar giriş yapınız") },
-            confirmButton = {
-                Text(text = "Tamam", modifier = Modifier.clickable {
-                    showAlert = false
-                    navController.navigate(Screens.Login.screen)
-                }
-                )
-            }
         )
     }
 }

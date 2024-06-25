@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,14 +56,13 @@ fun LoginScreen(navController: NavController) {
     val passwordState = remember { mutableStateOf("emrex14789") }
     val scope = rememberCoroutineScope()
     var isPassword by remember { mutableStateOf(true) }
-    val context = LocalContext.current
-    val sessionManager = SessionManager(context = context)
+    val sessionManager = SessionManager(context = ColyakApp.applicationContext())
     val loading by loginScreenViewModel.loading.collectAsState()
     var checkToken by remember { mutableStateOf(false) }
     var tokenChecked by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        checkToken = loginScreenViewModel.checkToken(context)
+        checkToken = loginScreenViewModel.checkToken(ColyakApp.applicationContext())
         if (checkToken) {
             val token = sessionManager.getToken()
             val refreshToken = sessionManager.getRefreshToken()
@@ -82,7 +80,6 @@ fun LoginScreen(navController: NavController) {
         }
         tokenChecked = true
     }
-
     if (!tokenChecked) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -146,7 +143,7 @@ fun LoginScreen(navController: NavController) {
                     val email = emailState.value
                     val password = passwordState.value
                     scope.launch {
-                        val response = loginScreenViewModel.login(email = email, password, navController, context)
+                        val response = loginScreenViewModel.login(email = email, password, navController, ColyakApp.applicationContext())
                         if (response) {
                             scope.launch {
                                 sessionManager.saveToken(

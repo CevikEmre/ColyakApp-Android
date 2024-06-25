@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -146,7 +147,7 @@ fun BarcodeDetailScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(12.dp))
                     ImageFromUrl(
                         url = "https://api.colyakdiyabet.com.tr/api/image/get/${barcode.imageId}",
-                        modifier = Modifier.size(250.dp)
+                        modifier = Modifier.aspectRatio(4/3f)
                     )
                     barcode.name?.let { name -> Text(text = name) }
                     if (barcode.glutenFree == true) {

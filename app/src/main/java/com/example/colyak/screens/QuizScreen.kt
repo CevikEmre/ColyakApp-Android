@@ -65,7 +65,7 @@ fun QuizScreen(navController: NavController) {
                                 .padding(6.dp)
                                 .clickable {
                                     val quizJson = Gson().toJson(quiz)
-                                    val formattedQuizJson =Uri.encode(quizJson)
+                                    val formattedQuizJson = Uri.encode(quizJson)
                                     navController.navigate("${Screens.QuizDetailScreen.screen}/$formattedQuizJson")
                                 }
                         )

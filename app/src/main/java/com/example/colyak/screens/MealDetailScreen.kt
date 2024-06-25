@@ -156,7 +156,10 @@ fun MealDetailScreen(mealDetail: MealDetail, navController: NavController) {
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CustomizeButton(onClick = { navController.navigate(Screens.BolusScreen.screen) }, buttonText = "Bolus Hesapla")
+                        CustomizeButton(
+                            onClick = { navController.navigate(Screens.BolusScreen.screen) },
+                            buttonText = "Bolus Hesapla"
+                        )
                     }
                 }
                 Text(

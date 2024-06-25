@@ -53,8 +53,8 @@ class AuthInterceptor : Interceptor {
         if (response.code == 602) {
             Handler(Looper.getMainLooper()).post {
                 if (!alertDialogShown) {
-                    alertDialogShown = true
                     showRefreshTokenExpiredAlert(ColyakApp.applicationContext())
+                    alertDialogShown = true
                 }
             }
         }

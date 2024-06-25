@@ -2,10 +2,10 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -113,7 +113,7 @@ fun AddMealScreen(mealName: String, navController: NavController) {
 fun AddMealToList() {
     val receiptViewModel: ReceiptViewModel = viewModel()
     val receiptList by receiptViewModel.filteredReceiptList.collectAsState()
-    val selectedTypeIndex = remember { mutableStateOf(0) }
+    val selectedTypeIndex = remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedReceipt by remember { mutableStateOf<Receipt?>(null) }
@@ -125,13 +125,13 @@ fun AddMealToList() {
             SearchTextField { query -> searchQuery = query }
         }
         TabRow(
-            selectedTabIndex = selectedTypeIndex.value,
+            selectedTabIndex = selectedTypeIndex.intValue,
             contentColor = colorResource(id = R.color.statusBarColor),
             modifier = Modifier.background(Color.White),
             containerColor = Color.White,
             indicator = { tabPositions ->
                 TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTypeIndex.value]),
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTypeIndex.intValue]),
                     color = colorResource(id = R.color.statusBarColor)
                 )
             }
@@ -139,13 +139,13 @@ fun AddMealToList() {
             typeList.forEachIndexed { index, title ->
                 Tab(
                     text = { Text(title, fontSize = 15.sp) },
-                    selected = selectedTypeIndex.value == index,
-                    onClick = { selectedTypeIndex.value = index }
+                    selected = selectedTypeIndex.intValue == index,
+                    onClick = { selectedTypeIndex.intValue = index }
                 )
             }
         }
 
-        when (selectedTypeIndex.value) {
+        when (selectedTypeIndex.intValue) {
             0 -> {
                 val filteredReceiptList = receiptList?.filter {
                     it?.receiptName?.contains(searchQuery, ignoreCase = true) == true
@@ -219,15 +219,25 @@ fun AddMealToList() {
 
 @Composable
 fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
-    val density = LocalDensity.current
-    LaunchedEffect(Unit) {
-        delay(3000)
-        onClose()
+    LaunchedEffect(visible.value) {
+        if (visible.value) {
+            delay(3000)
+            onClose()
+        }
     }
+
     AnimatedVisibility(
         visible = visible.value,
-        enter = slideInVertically { with(density) { -40.dp.roundToPx() } } + expandVertically(expandFrom = Alignment.Top) + fadeIn(initialAlpha = 0.3f),
-        exit = scaleOut(),
+        enter = slideInHorizontally(
+            initialOffsetX = { fullWidth -> fullWidth }
+        ) + fadeIn(
+            initialAlpha = 0.3f
+        ),
+        exit = slideOutHorizontally(
+            targetOffsetX = { fullWidth -> fullWidth }
+        ) + fadeOut(
+            targetAlpha = 0.3f
+        )
     ) {
         Card(
             modifier = Modifier

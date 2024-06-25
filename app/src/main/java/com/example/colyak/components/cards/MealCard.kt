@@ -35,9 +35,9 @@ fun MealCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 15.dp, vertical = 4.dp)
+            .padding(horizontal = 12.dp, vertical = 4.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(3.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -52,11 +52,11 @@ fun MealCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     contentAlignment = Alignment.Center, modifier = Modifier
-                        .size(50.dp)
+                        .size(40.dp)
                         .fillMaxWidth()
-                        .padding(5.dp)
+
                 ) {
-                    Canvas(modifier = Modifier.size(150.dp)) {
+                    Canvas(modifier = Modifier.size(40.dp)) {
                         drawArc(
                             color = Color(0xFFFF8911),
                             -90f,
@@ -73,7 +73,11 @@ fun MealCard(
                     }
                 }
                 Column(Modifier.padding(start = 10.dp), verticalArrangement = Arrangement.Center) {
-                    Text(text = mealDetail.mealName + " Ekle", fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = mealDetail.mealName + " Ekle",
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
                 }
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
@@ -81,7 +85,7 @@ fun MealCard(
                     painter = painterResource(id = R.drawable.arrow_right),
                     contentDescription = "",
                     tint = colorResource(id = R.color.statusBarColor),
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
