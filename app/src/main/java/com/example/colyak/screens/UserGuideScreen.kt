@@ -1,6 +1,8 @@
 package com.example.colyak.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,17 +25,31 @@ import com.example.colyak.R
 import com.example.colyak.model.onBoardPages
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 @Composable
 fun UserGuideScreen(navController: NavController) {
-    val pagerState = com.google.accompanist.pager.rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(initialPage = 0)
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.Top
     ) {
+        HorizontalPager(
+            count = onBoardPages.size, state = pagerState, modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) { page ->
+            OnBoardScreenContent(onBoardPage = onBoardPages[page])
+        }
+        HorizontalPagerIndicator(
+            pagerState = pagerState, modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(2.dp),
+            activeColor = colorResource(id = R.color.statusBarColor)
+        )
         if (pagerState.currentPage != onBoardPages.lastIndex) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 TextButton(onClick = {
@@ -49,27 +65,18 @@ fun UserGuideScreen(navController: NavController) {
                 }
             }
         }
-        HorizontalPager(
-            count = onBoardPages.size, state = pagerState, modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) { page ->
-            OnBoardScrenContent(onBoardPages[page])
-        }
-        HorizontalPagerIndicator(
-            pagerState = pagerState, modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp),
-            activeColor = colorResource(id = R.color.statusBarColor)
-        )
-        AnimatedVisibility(visible = pagerState.currentPage == onBoardPages.lastIndex) {
+        AnimatedVisibility(
+            visible = pagerState.currentPage == onBoardPages.lastIndex,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
             Button(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 12.dp),
                 onClick = {
-                    navController.navigate(Screens.MainScreen.screen)
+                    navController.popBackStack()
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = colorResource(

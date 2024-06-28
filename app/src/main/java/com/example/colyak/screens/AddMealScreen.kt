@@ -2,8 +2,6 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -228,16 +226,8 @@ fun AnimatedPopup(visible: MutableState<Boolean>, onClose: () -> Unit) {
 
     AnimatedVisibility(
         visible = visible.value,
-        enter = slideInHorizontally(
-            initialOffsetX = { fullWidth -> fullWidth }
-        ) + fadeIn(
-            initialAlpha = 0.3f
-        ),
-        exit = slideOutHorizontally(
-            targetOffsetX = { fullWidth -> fullWidth }
-        ) + fadeOut(
-            targetAlpha = 0.3f
-        )
+        enter = slideInHorizontally(initialOffsetX = { it }),
+        exit = slideOutHorizontally(targetOffsetX = { it })
     ) {
         Card(
             modifier = Modifier

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 var barcode = Barcode(0, 0, "", 0, false, false, emptyList())
 class BarcodeViewModel : ViewModel() {
     private val _barcode = MutableLiveData(Barcode(0, 0, "", 0, false, false, emptyList()))
+    //val barcode: MutableLiveData<Barcode> = _barcode
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
@@ -21,18 +22,15 @@ class BarcodeViewModel : ViewModel() {
             _loading.value = true
             try {
                 val result = BarcodeService.getBarcode(code)
-                _barcode.value = result
                 if (result != null) {
+                    _barcode.value = result
                     barcode = result
                 }
-                Log.e("barcode", _barcode.value.toString())
-
             } catch (e: Exception) {
                 Log.e("BarcodeViewModel", "Fail", e)
             } finally {
                 _loading.value = false
             }
-
         }
         return _barcode.value
     }

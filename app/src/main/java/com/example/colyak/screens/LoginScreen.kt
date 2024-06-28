@@ -1,6 +1,5 @@
 package com.example.colyak.screens
 
-
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -29,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +60,7 @@ fun LoginScreen(navController: NavController) {
     val loading by loginScreenViewModel.loading.collectAsState()
     var checkToken by remember { mutableStateOf(false) }
     var tokenChecked by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         checkToken = loginScreenViewModel.checkToken(ColyakApp.applicationContext())
@@ -143,7 +144,12 @@ fun LoginScreen(navController: NavController) {
                     val email = emailState.value
                     val password = passwordState.value
                     scope.launch {
-                        val response = loginScreenViewModel.login(email = email, password, navController, ColyakApp.applicationContext())
+                        val response = loginScreenViewModel.login(
+                            email = email,
+                            password,
+                            navController,
+                            context
+                        )
                         if (response) {
                             scope.launch {
                                 sessionManager.saveToken(

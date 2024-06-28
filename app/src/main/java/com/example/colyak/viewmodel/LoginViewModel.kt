@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import com.example.colyak.model.LoginResponse
 import com.example.colyak.service.LoginService
 import com.example.colyak.session.SessionManager
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -18,7 +17,6 @@ class LoginViewModel : ViewModel() {
     private val _loading = MutableStateFlow<Boolean>(false)
     val loading = _loading
     private val _checkToken = MutableStateFlow<Boolean>(false)
-    val checkToken = _checkToken
     @SuppressLint("SuspiciousIndentation")
     suspend fun login(email: String, password: String,navController: NavController,context: Context): Boolean {
         var isLoginSuccessful = false
@@ -49,7 +47,6 @@ class LoginViewModel : ViewModel() {
         } catch (e: Exception) {
             Log.e("LoginVM", "Fail", e)
         } finally {
-            delay(2000)
             _loading.value = false
         }
         return _checkToken.value

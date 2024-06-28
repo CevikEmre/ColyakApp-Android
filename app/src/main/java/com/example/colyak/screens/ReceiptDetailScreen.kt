@@ -2,6 +2,8 @@ package com.example.colyak.screens
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,9 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,22 +39,21 @@ import com.example.colyak.viewmodel.CommentViewModel
 import com.example.colyak.viewmodel.FavoriteViewModel
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
-fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
+fun ReceiptDetailScreen(receipt: Receipt, navController: NavController) {
     val commentVM: CommentViewModel = viewModel()
     val favoriteVM: FavoriteViewModel = viewModel()
     val scope = rememberCoroutineScope()
     var isReceiptFavorite by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         receipt.id?.let { commentVM.getCommentsById(it) }
-            val favoritedReceipts = favoriteVM.getAllFavoriteReceipts()
-            if (favoritedReceipts != null) {
-                isReceiptFavorite = favoritedReceipts.any { it!!.id == receipt.id }
+        val favoritedReceipts = favoriteVM.getAllFavoriteReceipts()
+        if (favoritedReceipts != null) {
+            isReceiptFavorite = favoritedReceipts.any { it!!.id == receipt.id }
         }
-
     }
 
     Scaffold(
@@ -87,41 +89,54 @@ fun ReceiptDetailScreen(receipt: Receipt,navController: NavController) {
                 actions = {
                     IconButton(
                         onClick = {
+                            scope.launch {
                                 if (isReceiptFavorite) {
-                                    scope.launch {
-                                        val favoriteData = receipt.id?.let { FavoriteData(it) }
-
-                                            favoriteVM.unlikeReceipt(favoriteData)
-                                        isReceiptFavorite = false
-                                        Toast.makeText(context, "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
-                                    }
+                                    val favoriteData = receipt.id?.let { FavoriteData(it) }
+                                    favoriteVM.unlikeReceipt(favoriteData)
+                                    isReceiptFavorite = false
+                                    Toast.makeText(
+                                        ColyakApp.applicationContext(),
+                                        "Favorilerden çıkarıldı",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 } else {
-                                    scope.launch {
-                                        val favoriteData = receipt.id?.let { FavoriteData(it) }
-                                        favoriteData?.let { favoriteVM.likeReceipt(it) }
-                                        isReceiptFavorite = true
-                                        Toast.makeText(context, "Favorilere eklendi", Toast.LENGTH_SHORT).show()
-                                    }
+                                    val favoriteData = receipt.id?.let { FavoriteData(it) }
+                                    favoriteData?.let { favoriteVM.likeReceipt(it) }
+                                    isReceiptFavorite = true
+                                    Toast.makeText(
+                                        ColyakApp.applicationContext(),
+                                        "Favorilere eklendi",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     ) {
+                        val scale by animateFloatAsState(
+                            targetValue = if (isReceiptFavorite) 1.05f else 1f,
+                            animationSpec = tween(durationMillis = 250), label = ""
+                        )
                         Icon(
                             painter = painterResource(id = if (isReceiptFavorite) R.drawable.favorite else R.drawable.favorite_filled),
                             contentDescription = "",
-                            tint = if (isReceiptFavorite) Color.Red else Color.Black
+                            tint = if (isReceiptFavorite) Color.Red else Color.Black,
+                            modifier = Modifier
+                                .scale(scale)
+                                .graphicsLayer(scaleX = scale, scaleY = scale)
                         )
                     }
+
                 },
             )
         },
         content = { padding ->
             ReceiptDetailCard(
-                    productList = receipt.receiptItems,
-                    description = receipt.receiptDetails,
-                    modifier = Modifier.padding(padding),
-                    receipt,
-                    navController
-                )
+                productList = receipt.receiptItems,
+                description = receipt.receiptDetails,
+                modifier = Modifier.padding(padding),
+                receipt,
+                navController
+            )
         }
     )
 }

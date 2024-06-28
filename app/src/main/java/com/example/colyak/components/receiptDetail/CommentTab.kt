@@ -43,7 +43,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +58,7 @@ import com.example.colyak.components.consts.Input
 import com.example.colyak.components.functions.timeSince
 import com.example.colyak.model.Receipt
 import com.example.colyak.model.data.CommentData
+import com.example.colyak.screens.ColyakApp
 import com.example.colyak.screens.Screens
 import com.example.colyak.viewmodel.CommentViewModel
 import com.example.colyak.viewmodel.ReplyViewModel
@@ -84,11 +84,10 @@ fun CommentTab(
     val loading by replyVM.loading.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val commentReplies by replyVM.commentRepliesList.observeAsState()
-    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         receipt.id?.let { replyVM.getCommentsRepliesByReceiptId(it) }
     }
-
     Scaffold(
         floatingActionButton = {
             Button(
@@ -105,12 +104,11 @@ fun CommentTab(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text = "Yorum Ekle")
-                    Spacer(modifier = Modifier.size(width = 3.dp, height = 0.dp))
+                    Spacer(modifier = Modifier.size(width = 4.dp, height = 0.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.comment),
                         contentDescription = ""
                     )
-
                 }
             }
         },
@@ -208,7 +206,6 @@ fun CommentTab(
                                                 DropdownMenu(
                                                     expanded = expanded.value,
                                                     onDismissRequest = { expanded.value = false },
-                                                    modifier = Modifier.fillMaxWidth(0.5f)
                                                 ) {
                                                     DropdownMenuItem(
                                                         text = { Text("Düzenle") },
@@ -240,7 +237,7 @@ fun CommentTab(
                                                             expanded.value = false
                                                             scope.launch {
                                                                 Toast.makeText(
-                                                                    context,
+                                                                    ColyakApp.applicationContext(),
                                                                     "Silme İşlemi Başarılı",
                                                                     Toast.LENGTH_SHORT
                                                                 ).show()
@@ -328,11 +325,9 @@ fun CommentTab(
                                 onValueChange = {
                                     commentTf.value = it
                                 },
-
                                 label = if (isUpdating.value) "Yorumu Güncelle" else "Yorum Ekle",
                                 isPassword = false
                             )
-
                             Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
                             CustomizeButton(
                                 onClick = {
@@ -342,21 +337,13 @@ fun CommentTab(
                                                 commentId = updatingCommentId.longValue,
                                                 comment = commentTf.value
                                             )
-                                            Toast.makeText(
-                                                context,
-                                                "Yorum Başarıyla Güncellendi",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                            Toast.makeText(ColyakApp.applicationContext(), "Yorum Başarıyla Güncellendi", Toast.LENGTH_SHORT).show()
                                         } else {
                                             receipt.id?.let { CommentData(it, commentTf.value) }
                                                 ?.let { receiptId ->
                                                     commentVM.createComment(receiptId)
                                                 }
-                                            Toast.makeText(
-                                                context,
-                                                "Yorum Başarıyla Eklendi",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                            Toast.makeText(ColyakApp.applicationContext(), "Yorum Başarıyla Eklendi", Toast.LENGTH_SHORT).show()
                                         }
                                         commentTf.value = ""
                                         receipt.id?.let { replyVM.getCommentsRepliesByReceiptId(it) }

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
@@ -47,7 +46,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -105,11 +103,6 @@ val navList = listOf(
         unselectedIcon = R.drawable.meal_report,
     ),
     NavigationItem(
-        title = "Uygulama Nasıl Kullanılır",
-        selectedIcon = R.drawable.meal_report,
-        unselectedIcon = R.drawable.meal_report,
-    ),
-    NavigationItem(
         title = "Çıkış Yap",
         selectedIcon = R.drawable.logout,
         unselectedIcon = R.drawable.logout,
@@ -152,8 +145,7 @@ fun MainContent(navController: NavController) {
                                 3 -> navController.navigate(Screens.UsefulInformationScreen.screen)
                                 4 -> navController.navigate(Screens.BarcodeScreen.screen)
                                 5 -> navController.navigate(Screens.DateRangePickerScreen.screen)
-                                6 -> navController.navigate(Screens.UserGuideScreen.screen)
-                                7 -> showAlert = true
+                                6 -> showAlert = true
                             }
                             scope.launch {
                                 drawerState.close()
@@ -215,9 +207,16 @@ fun MainContent(navController: NavController) {
                             )
                         }
                     },
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .clip(RoundedCornerShape(12.dp)),
+                    actions = {
+                        IconButton(onClick = { navController.navigate(Screens.UserGuideScreen.screen) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.question_mark),
+                                contentDescription = "",
+                                tint = Color.Black
+                            )
+
+                        }
+                    },
                 )
             },
             snackbarHost = {
@@ -235,7 +234,8 @@ fun MainContent(navController: NavController) {
                 ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth().padding(vertical = 8.dp,horizontal = 20.dp),
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 20.dp),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -261,7 +261,7 @@ fun MainContent(navController: NavController) {
                             )
                         }
                         Text(
-                            text = "Hoşgeldin , " + loginResponse.userName +"!",
+                            text = "Hoşgeldin , " + loginResponse.userName + "!",
                             fontSize = 20.sp,
                             color = Color(0xFF4A4A4A),
                             modifier = Modifier.padding(start = 12.dp)

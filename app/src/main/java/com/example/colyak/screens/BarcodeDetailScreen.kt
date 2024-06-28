@@ -348,16 +348,12 @@ fun BarcodeDetailScreen(navController: NavController) {
                                 onClick = {
                                     scope.launch {
                                         suggestionVM.addSuggestion(SuggestionData(sugggestionTf.value))
-                                        Toast.makeText(
-                                            context,
-                                            "Öneri Gönderildi Teşekkürler ☺",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Toast.makeText(context, "Öneri Gönderildi Teşekkürler ☺", Toast.LENGTH_SHORT).show()
                                         isVisible.value = false
                                     }
                                 },
-                                buttonText = "Ana ",
-                                backgroundColor = colorResource(id = R.color.appBarColor)
+                                buttonText = "Ana Sayfa",
+                                backgroundColor = colorResource(id = R.color.statusBarColor)
                             )
                             Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
                         }
